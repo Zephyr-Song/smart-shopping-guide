@@ -73,10 +73,10 @@ export default function MarketingCalendar() {
                   <div className="p-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div
-                        className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
+                        className="h-10 rounded-lg flex items-center justify-center text-white font-bold text-sm flex-shrink-0 px-2.5 min-w-[2.5rem]"
                         style={{ background: monthData.color }}
                       >
-                        {monthData.monthName.split('-')[0]}
+                        {monthData.monthName}
                       </div>
                       <div>
                         <h3 className="font-semibold text-gray-900 flex items-center gap-2">
