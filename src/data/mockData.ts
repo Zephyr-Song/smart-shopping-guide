@@ -252,113 +252,120 @@ export const CATEGORIES = [
 ]
 
 // ============================================================
-// 2026 BFC 全年营销活动日历（基于官方资料）
+// 2026 BFC 全年营销活动日历（基于官方资料图片）
+// 左侧标注：③ S级活动(3个) / ⑥ A类活动(6个) / X 主题活动(大量)
 // ============================================================
 export const MARKETING_CALENDAR: MarketingEvent[] = [
   {
-    month: 1,
-    monthName: '1月',
-    theme: '新消费 / 新年消费季',
-    color: '#ef4444',
-    events: [
-      { name: '新年消费季', level: 'S', location: '全域', description: 'BFC 新年消费季，全场联动促销' },
-      { name: 'BFC外滩圣诞季延续', level: 'A', location: '北区', description: '圣诞氛围延续至新年' },
-      { name: 'BFC七周年庆', level: 'S', location: '全域', description: 'BFC七周年庆典活动' },
-    ],
-  },
-  {
     month: 2,
-    monthName: '2月',
-    theme: '新民俗 / 新春灯会',
+    monthName: '2-3月',
+    theme: '新民俗',
     color: '#dc2626',
     events: [
-      { name: '新春灯会', level: 'S', location: '北区', description: '古风NPC巡游、外滩国潮面包节' },
-      { name: 'BFC年中大促', level: 'A', location: '全域', description: '春节档期大促活动' },
-      { name: '女生节市集', level: 'theme', location: '北区', description: '闪闪发光的你-女生节市集' },
-    ],
-  },
-  {
-    month: 3,
-    monthName: '3月',
-    theme: '新民俗 / 春日焕新',
-    color: '#f97316',
-    events: [
-      { name: '外滩国际面包节', level: 'theme', location: '北区', description: '国际烘焙品牌齐聚' },
-      { name: '了不起汉堡节', level: 'theme', location: '美食街', description: '全球人气汉堡品牌' },
-      { name: '野雀求合集', level: 'theme', location: '北区', description: '独立设计师市集' },
+      // S级（3个之一）
+      { name: '新春灯会', level: 'S', location: '全域', description: 'BFC年度核心S级活动，古风NPC巡游、传统灯会、民俗表演' },
+      // 主题活动
+      { name: '古风NPC巡游', level: 'theme', location: '全域', description: '沉浸式古风角色互动巡游' },
+      { name: '外滩国潮面包节', level: 'theme', location: '北区', description: '国潮烘焙品牌齐聚外滩' },
+      { name: '野餐食合集', level: 'theme', location: '北区B2', description: '春日野餐主题美食市集' },
+      { name: '闪闪发光的你·女生节市集', level: 'theme', location: '北区', description: '三八女生节主题创意市集' },
     ],
   },
   {
     month: 4,
     monthName: '4-5月',
-    theme: '新花朝 / 花神大豫园',
+    theme: '新花朝',
     color: '#ec4899',
     events: [
-      { name: '花神大豫园', level: 'S', location: '全域', description: '大豫园春日主题活动' },
-      { name: 'SANTU 艺术展', level: 'A', location: '北区', description: '国际艺术家联名展' },
-      { name: 'G-DRAGON 818 Bloom', level: 'A', location: '北区', description: '时尚IP联名活动' },
-      { name: '花道宇宙', level: 'theme', location: '南区', description: '东方花道体验展' },
+      // A类（6个之一、之二）
+      { name: '花花大豫园', level: 'A', location: '全域', description: '春日花卉主题大型活动，花神巡游、花艺装置' },
+      { name: '外滩超现实未来花园', level: 'A', location: '外滩', description: '上海国际花卉节 SANTU G-DRAGON 818 Bloom 龙道宇宙' },
+      // 主题活动
+      { name: '了不起汉服节', level: 'theme', location: '南区B2', description: '汉服文化展示与体验活动' },
+      { name: '花神巡游', level: 'theme', location: '全域', description: '十二花神主题巡游表演' },
+      { name: 'TZ House演艺', level: 'theme', location: '北区B2', description: '春日主题音乐现场演出' },
     ],
   },
   {
     month: 6,
     monthName: '6月',
-    theme: '新艺术 / 电影节',
+    theme: '新艺之城',
     color: '#8b5cf6',
     events: [
-      { name: '上海国际电影节', level: 'S', location: '北区', description: '上海国际电影节大豫园分会场' },
-      { name: 'BFC国际电影专场', level: 'A', location: '博纳影城', description: '电影节专属场次' },
-      { name: 'BFC年中大促', level: 'A', location: '全域', description: '618年中大促' },
-      { name: '外滩宠物嘉年华', level: 'theme', location: '北区B1', description: '宠物友好主题活动' },
+      // S级（3个之二）
+      { name: '上海国际电影节·大豫园分会场', level: 'S', location: '北区', description: '上海国际电影节官方分会场，星光红毯、首映礼' },
+      { name: '外滩国际电影节专场', level: 'S', location: '博纳影城', description: '电影节专属展映场次，导演见面会' },
+      // 主题活动
+      { name: '珠宝功能区启幕仪式', level: 'theme', location: '南区B1/L2', description: '设计师珠宝+东方非遗珠宝双区启幕' },
+      { name: '硅基好吃节', level: 'theme', location: '美食街', description: '科技主题创意美食节' },
+      { name: '冷饮饮品嘉年华', level: 'theme', location: '北区', description: '夏日冷饮特调与创意饮品市集' },
     ],
   },
   {
     month: 7,
     monthName: '7-8月',
-    theme: '新次元 / 夏日游园',
+    theme: '新次元',
     color: '#06b6d4',
     events: [
-      { name: '大豫园夏日奇幻夜', level: 'S', location: '全域', description: '夏日夜间主题活动' },
-      { name: '外滩夏日游乐园', level: 'A', location: '北区', description: '夏日户外游乐体验' },
-      { name: 'IP国际文化节', level: 'A', location: '全域', description: '泼水节/美食市集/非遗联动' },
-      { name: '夏日水世界', level: 'theme', location: '北区', description: '夏日水上主题活动' },
-      { name: '夏日音乐节', level: 'theme', location: '北区B2', description: 'TZ House 夏日音乐季' },
+      // A类（6个之三、之四）
+      { name: '大豫园夏日海夜宴', level: 'A', location: '全域', description: '国际IP夏日主题季，IP关联主题文化体验' },
+      { name: '外滩夏日游乐园', level: 'A', location: '外滩', description: '夏日户外游乐体验，美食市集、非遗联动' },
+      // 主题活动
+      { name: '夏日冰世界', level: 'theme', location: '北区', description: '室内冰雪主题体验空间' },
+      { name: '夏邑露音乐节', level: 'theme', location: '北区B2', description: 'TZ House夏日露天音乐节' },
+      { name: '时光代理人快闪·生日会·主唱LIVE', level: 'theme', location: '北区', description: 'IP联名快闪活动与音乐现场' },
+      { name: '人宠友好时尚步行街AIRPARK', level: 'theme', location: '北区B1', description: '宠物友好主题时尚步行街区' },
+      { name: '周周有活动·月月有精彩', level: 'theme', location: '全域', description: '暑期常态主题活动不间断' },
     ],
   },
   {
     month: 9,
     monthName: '9月',
-    theme: '新科技 / 光影节',
+    theme: '新科技',
     color: '#3b82f6',
     events: [
-      { name: '上海国际光影节', level: 'S', location: '全域', description: '上海年度光影艺术盛会' },
-      { name: '外滩国际光影节', level: 'S', location: '外滩', description: '外滩灯光艺术装置' },
-      { name: 'BFC VIP DAY', level: 'A', location: '全域', description: 'VIP会员专属活动日' },
-      { name: '中秋露台主题场景', level: 'theme', location: '北区L4', description: '中秋赏月露台布置' },
+      // A类（6个之五）
+      { name: '外滩国际光影节', level: 'A', location: '外滩', description: '上海年度光影艺术盛会，BFC VIP DAY联动' },
+      // 主题活动
+      { name: '国风露台派对', level: 'theme', location: '北区L4', description: '中秋国风主题露台派对' },
+      { name: '中泰菲对话（市集/mini展）', level: 'theme', location: '南区B2', description: '东南亚文化主题市集与微型展览' },
+      { name: '中秋非遗创意workshop', level: 'theme', location: '南区B2', description: '中秋主题非遗手作体验工坊' },
+      { name: 'BFC VIP DAY', level: 'theme', location: '全域', description: 'VIP会员专属活动日与积分兑换' },
+      { name: '中秋露台主题场景', level: 'theme', location: '北区L4', description: '中秋赏月露台美陈布置' },
     ],
   },
   {
     month: 10,
     monthName: '10-11月',
-    theme: '新非遗 / 珠宝非遗季',
+    theme: '新非遗',
     color: '#f59e0b',
     events: [
-      { name: '大豫园珠宝月', level: 'S', location: '南区', description: '珠宝功能区年度盛典' },
-      { name: '非遗季', level: 'S', location: '全域', description: '东方非遗文化展示周' },
-      { name: 'BFC珠宝功能区启幕', level: 'A', location: '南区B1/L2', description: '设计师珠宝+非遗珠宝双区' },
-      { name: '外滩东方造物场', level: 'A', location: '南区B2', description: '非遗手作体验市集' },
-      { name: '艺术中心十周年', level: 'A', location: '北区', description: 'BFC艺术中心十周年庆典' },
+      // A类（6个之六）
+      { name: '外滩非遗季·珠宝节', level: 'A', location: '全域', description: '大豫园珠宝玉/非遗季，东方非遗文化展示' },
+      // 主题活动
+      { name: 'BFC珠宝功能区启幕', level: 'theme', location: '南区B1/L2', description: '珠宝功能区域启幕，主邻季活动' },
+      { name: '艺术东方浩拍场', level: 'theme', location: '北区', description: '艺术品拍卖与鉴赏活动' },
+      { name: '艺术中心十周年', level: 'theme', location: '北区', description: 'BFC艺术中心十周年庆典展览' },
+      { name: '外滩宠咖嘉年华', level: 'theme', location: '北区B1', description: '宠物主题嘉年华活动' },
+      { name: '潮星市集', level: 'theme', location: '北区', description: '潮流明星联名主题市集' },
+      { name: '墨西哥文化夜', level: 'theme', location: '北区B2', description: '墨西哥主题文化体验夜' },
+      { name: '外滩鸡尾酒节', level: 'theme', location: '北区L4', description: '外滩露台鸡尾酒文化体验' },
+      { name: '露台长桌宴', level: 'theme', location: '北区L4', description: '秋日露台长桌晚宴' },
     ],
   },
   {
     month: 12,
     monthName: '12月',
-    theme: '新消费 / 圣诞新年季',
+    theme: '新消费',
     color: '#ef4444',
     events: [
-      { name: 'BFC外滩圣诞季', level: 'S', location: '全域', description: '外滩年度圣诞灯光秀' },
-      { name: '新年消费季', level: 'S', location: '全域', description: '跨年消费季系列活动' },
-      { name: 'BFC七周年庆', level: 'A', location: '全域', description: '年度会员庆典' },
+      // S级（3个之三）
+      { name: 'BFC外滩圣诞季', level: 'S', location: '全域', description: '外滩年度圣诞灯光秀与圣诞市集' },
+      { name: '新年消费季', level: 'S', location: '全域', description: '跨年消费季系列活动，全场联动促销' },
+      // 主题活动
+      { name: '露台迎新舞会', level: 'theme', location: '北区L4', description: '新年露台主题舞会派对' },
+      { name: '必吃榜·黑珍珠市集', level: 'theme', location: '美食街', description: '年度必吃榜单与黑珍珠餐厅联名市集' },
+      { name: '北欧圣诞文化市集·workshop', level: 'theme', location: '北区', description: '北欧传统圣诞文化体验市集与手作坊' },
     ],
   },
 ]
