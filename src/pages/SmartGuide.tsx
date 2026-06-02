@@ -11,10 +11,12 @@ import {
   Sparkles,
   RotateCcw,
   TrendingUp,
-  Crown,
   Baby,
-  Zap,
-  Gem,
+  Briefcase,
+  Palette,
+  Globe,
+  Flame,
+  Smartphone,
 } from 'lucide-react'
 import type { UserProfile, Recommendation } from '../data/mockData'
 import { STORES, CATEGORIES, BFC_SEGMENTS, generateRecommendations } from '../data/mockData'
@@ -24,7 +26,7 @@ const PERSONA_OPTIONS = BFC_SEGMENTS.map(s => ({
   label: s.name,
   nameEn: s.nameEn,
   description: s.description,
-  icon: s.id === 'hnw-pop' ? Crown : s.id === 'urban-family' ? Baby : s.id === 'gen-z' ? Zap : Gem,
+  icon: s.id === 'white-collar' ? Briefcase : s.id === 'artist-designer' ? Palette : s.id === 'high-income-family' ? Baby : s.id === 'tourists' ? Globe : s.id === 'young-hipster' ? Flame : Smartphone,
   traits: s.traits,
   color: s.color,
 }))
@@ -104,7 +106,7 @@ export default function SmartGuide() {
 
   const generateResults = () => {
     const fullProfile: UserProfile = {
-      persona: profile.persona || '都市潮人',
+      persona: profile.persona || '年轻潮人',
       age: profile.age || '25-30',
       companion: profile.companion || 'friends',
       priority: profile.priority || '社交打卡',

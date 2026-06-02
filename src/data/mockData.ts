@@ -87,25 +87,38 @@ export interface BFCSegment {
 }
 
 // ============================================================
-// BFC 四大核心客群画像（基于官方资料）
+// BFC 六大核心客群画像（基于官方资料 - BFC Consumer Portrait）
+// 图片中左侧列出6类人群，右侧归为4大类别
 // ============================================================
 export const BFC_SEGMENTS: BFCSegment[] = [
   {
-    id: 'hnw-pop',
-    name: '高净值人群',
-    nameEn: 'High Net-Worth Population',
-    percentage: 28,
-    avgSpend: 2800,
-    revisitRate: 0.48,
+    id: 'white-collar',
+    name: '白领',
+    nameEn: 'White Collar',
+    percentage: 18,
+    avgSpend: 2600,
+    revisitRate: 0.52,
     color: '#c9a96e',
     description: '周边写字楼白领、金融商务人士，高购买力，追求品味与高端体验',
-    traits: ['西装革履', '注重品质', '商务宴请', 'VIP会员'],
-    keywords: ['高端', '米其林', '珠宝', '设计师品牌'],
+    traits: ['西装革履', '商务宴请', '注重品质', '工作日午餐'],
+    keywords: ['高端', '米其林', '商务', '精致餐饮'],
   },
   {
-    id: 'urban-family',
-    name: '都市家庭',
-    nameEn: 'Urban Family',
+    id: 'artist-designer',
+    name: '艺术家/设计师',
+    nameEn: 'Artist / Designer',
+    percentage: 10,
+    avgSpend: 1800,
+    revisitRate: 0.45,
+    color: '#b8a97a',
+    description: '创意行业从业者，对设计感、美学、文化体验有高度敏感度',
+    traits: ['艺术品味', '设计敏感', '文化消费', '独立审美'],
+    keywords: ['艺术空间', '设计师品牌', '文创', '展览'],
+  },
+  {
+    id: 'high-income-family',
+    name: '高收入家庭',
+    nameEn: 'High-Income Families',
     percentage: 26,
     avgSpend: 1200,
     revisitRate: 0.42,
@@ -115,28 +128,40 @@ export const BFC_SEGMENTS: BFCSegment[] = [
     keywords: ['亲子', '宠物友好', '家庭', '休闲餐饮'],
   },
   {
-    id: 'gen-z',
-    name: '都市潮人',
-    nameEn: 'Metropolitan Strength',
-    percentage: 30,
-    avgSpend: 580,
-    revisitRate: 0.35,
-    color: '#81b29a',
-    description: '年轻潮流GEN Z，个性时尚+网红打卡+宠物友好+社交媒体活跃',
-    traits: ['网红打卡', '个性时尚', '社交分享', '宠物陪伴'],
-    keywords: ['打卡', '潮牌', 'IP联名', '网红店'],
+    id: 'tourists',
+    name: '本国外国游客',
+    nameEn: 'Domestic or Foreign Tourists',
+    percentage: 12,
+    avgSpend: 1500,
+    revisitRate: 0.18,
+    color: '#6d8fa0',
+    description: '来沪旅游客群，彩色都市体验，打卡地标与特色文化消费',
+    traits: ['打卡拍照', '文化体验', '伴手礼', '观光游览'],
+    keywords: ['外滩', '打卡', '非遗', '文创', '上海特色'],
   },
   {
-    id: 'hni',
-    name: '高净值个人',
-    nameEn: 'HNI',
+    id: 'young-hipster',
+    name: '年轻潮人',
+    nameEn: 'Young Hipsters',
+    percentage: 18,
+    avgSpend: 580,
+    revisitRate: 0.38,
+    color: '#81b29a',
+    description: '追求个性时尚，社交媒体活跃，热衷网红打卡与潮牌消费',
+    traits: ['网红打卡', '个性时尚', '社交分享', '潮牌穿搭'],
+    keywords: ['打卡', '潮牌', 'IP联名', '网红店', '社交'],
+  },
+  {
+    id: 'gen-z-influencer',
+    name: 'Z世代/网红',
+    nameEn: 'GEN Z / Influencers',
     percentage: 16,
-    avgSpend: 5200,
-    revisitRate: 0.55,
+    avgSpend: 450,
+    revisitRate: 0.40,
     color: '#3d405b',
-    description: '享受专属权益和兴趣，VIP专属沙龙活动，一对一尊享服务',
-    traits: ['私人定制', 'VIP服务', '艺术鉴赏', '高端消费'],
-    keywords: ['VIP', '私人定制', '艺术品', '限定'],
+    description: 'GEN Z与社交媒体创作者，热衷内容创作、品牌联名与限量商品',
+    traits: ['内容创作', '限量追求', '品牌联名', '社交媒体'],
+    keywords: ['限量', '联名', '打卡', '内容', '潮流'],
   },
 ]
 
@@ -413,10 +438,12 @@ export const AB_TESTS: ABTestConfig[] = [
 // ============================================================
 export function generateRecommendations(profile: UserProfile): Recommendation[] {
   const personaBoost: Record<string, string[]> = {
-    '高净值人群': ['精致餐饮', '米其林餐厅', '设计师珠宝', '国际精品', '高茶', '旗舰精品'],
-    '都市家庭': ['美食街', '休闲餐饮', '宠物服务', '文化空间', '文化体验', '影院'],
-    '都市潮人': ['设计师品牌', '运动时尚', '精品咖啡', '文艺空间', '生活方式', '休闲餐饮'],
-    '高净值个人': ['米其林餐厅', '设计师珠宝', '旗舰精品', '精致餐饮', '国际精品'],
+    '白领': ['精致餐饮', '米其林餐厅', '国际精品', '高茶', '旗舰精品', '精品咖啡'],
+    '艺术家/设计师': ['艺术空间', '设计师品牌', '生活方式', '文化空间', '文创精品', '文化体验'],
+    '高收入家庭': ['休闲餐饮', '文化空间', '文化体验', '高茶', '生活方式', '宠物服务'],
+    '本国外国游客': ['东方非遗珠宝', '文创精品', '文化空间', '文化体验', '旗舰精品', '休闲餐饮'],
+    '年轻潮人': ['设计师品牌', '运动时尚', '精品咖啡', '生活方式', '休闲餐饮', '文创精品'],
+    'Z世代/网红': ['精品咖啡', '生活方式', '设计师品牌', '运动时尚', '休闲餐饮', '文创精品'],
   }
 
   const priorityBoost: Record<string, string[]> = {
