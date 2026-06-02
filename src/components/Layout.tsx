@@ -9,12 +9,14 @@ import {
   Menu,
   X,
   Sparkles,
+  Calendar,
 } from 'lucide-react'
 
 const NAV_ITEMS = [
   { path: '/', label: '首页', icon: Sparkles },
   { path: '/guide', label: '智能导购', icon: ShoppingBag },
   { path: '/map', label: '商场地图', icon: Map },
+  { path: '/calendar', label: '营销日历', icon: Calendar },
   { path: '/analytics', label: '商圈分析', icon: BarChart3 },
   { path: '/experiment', label: '实验中心', icon: FlaskConical },
   { path: '/about', label: '关于项目', icon: Info },

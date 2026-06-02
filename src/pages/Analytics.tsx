@@ -160,10 +160,10 @@ export default function Analytics() {
       {/* Summary Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {[
-          { label: '今日客流', value: '11,960', change: '+12.3%', up: true, icon: Users, color: 'text-primary-500' },
-          { label: '总转化率', value: '18.7%', change: '+3.2%', up: true, icon: TrendingUp, color: 'text-emerald-500' },
-          { label: '日均营业额', value: '¥98.4万', change: '+8.7%', up: true, icon: DollarSign, color: 'text-amber-500' },
-          { label: 'AI 推荐点击率', value: '34.5%', change: '+15.1%', up: true, icon: BarChart3, color: 'text-rose-500' },
+          { label: '今日客流', value: '14,260', change: '+18.6%', up: true, icon: Users, color: 'text-primary-500' },
+          { label: '总转化率', value: '21.3%', change: '+5.8%', up: true, icon: TrendingUp, color: 'text-emerald-500' },
+          { label: '日均营业额', value: '¥156.8万', change: '+12.4%', up: true, icon: DollarSign, color: 'text-amber-500' },
+          { label: 'AI 推荐点击率', value: '38.2%', change: '+22.1%', up: true, icon: BarChart3, color: 'text-rose-500' },
         ].map((card, i) => {
           const Icon = card.icon
           return (

@@ -5,17 +5,18 @@ import {
   BarChart3,
   FlaskConical,
   ArrowRight,
-  TrendingUp,
   Users,
   Store,
-  Zap,
+  Calendar,
+  Building2,
+  Gem,
 } from 'lucide-react'
 
 const FEATURES = [
   {
     icon: ShoppingBag,
     title: '智能导购',
-    desc: '基于消费者画像的 AI 个性化推荐，提升购物体验与决策效率',
+    desc: '基于BFC四大客群画像的AI个性化推荐，提升购物体验与决策效率',
     path: '/guide',
     color: 'bg-primary-500',
     lightColor: 'bg-primary-50',
@@ -23,26 +24,35 @@ const FEATURES = [
   },
   {
     icon: Map,
-    title: '商场导航',
-    desc: '交互式商场地图，实时客流热力图，智能路线规划',
+    title: '商场地图',
+    desc: 'BFC南北双区交互式平面图，实时客流热力图，7层真实业态',
     path: '/map',
     color: 'bg-emerald-500',
     lightColor: 'bg-emerald-50',
     textColor: 'text-emerald-600',
   },
   {
-    icon: BarChart3,
-    title: '商圈分析',
-    desc: '客流趋势、转化漏斗、客群画像、营销 ROI 全景数据看板',
-    path: '/analytics',
+    icon: Calendar,
+    title: '营销日历',
+    desc: '2026全年12个月BFC营销活动规划，S/A/主题活动分级展示',
+    path: '/calendar',
     color: 'bg-amber-500',
     lightColor: 'bg-amber-50',
     textColor: 'text-amber-600',
   },
   {
+    icon: BarChart3,
+    title: '商圈分析',
+    desc: 'BFC四大客群客流趋势、转化漏斗、客群画像、营销ROI全景数据',
+    path: '/analytics',
+    color: 'bg-violet-500',
+    lightColor: 'bg-violet-50',
+    textColor: 'text-violet-600',
+  },
+  {
     icon: FlaskConical,
     title: '实验中心',
-    desc: 'A/B 测试框架，精准营销策略验证，数据驱动决策',
+    desc: 'A/B测试框架，客群定向推荐策略验证，数据驱动决策',
     path: '/experiment',
     color: 'bg-rose-500',
     lightColor: 'bg-rose-50',
@@ -51,10 +61,45 @@ const FEATURES = [
 ]
 
 const STATS = [
-  { icon: Store, value: '12', label: '入驻品牌', color: 'text-primary-500' },
-  { icon: Users, value: '2,400+', label: '日客流量', color: 'text-emerald-500' },
-  { icon: TrendingUp, value: '23%', label: 'AI 提升转化', color: 'text-amber-500' },
-  { icon: Zap, value: '96%', label: '推荐准确率', color: 'text-rose-500' },
+  { icon: Building2, value: '96,000m²', label: '总商业面积', color: 'text-primary-500' },
+  { icon: Store, value: '22', label: '入驻品牌', color: 'text-emerald-500' },
+  { icon: Users, value: '14,000+', label: '日客流量', color: 'text-amber-500' },
+  { icon: Gem, value: '¥1,800', label: '平均客单价', color: 'text-violet-500' },
+]
+
+const BFC_SEGMENTS_PREVIEW = [
+  {
+    name: '高净值人群',
+    nameEn: 'High Net-Worth Population',
+    percentage: 28,
+    avgSpend: '¥2,800',
+    color: '#c9a96e',
+    desc: '周边写字楼白领、金融商务人士',
+  },
+  {
+    name: '都市家庭',
+    nameEn: 'Urban Family',
+    percentage: 26,
+    avgSpend: '¥1,200',
+    color: '#e07a5f',
+    desc: '注重家庭成员生活质量',
+  },
+  {
+    name: '都市潮人',
+    nameEn: 'Metropolitan Strength',
+    percentage: 30,
+    avgSpend: '¥580',
+    color: '#81b29a',
+    desc: '年轻潮流GEN Z，个性时尚',
+  },
+  {
+    name: '高净值个人',
+    nameEn: 'HNI',
+    percentage: 16,
+    avgSpend: '¥5,200',
+    color: '#3d405b',
+    desc: 'VIP专属沙龙，尊享服务',
+  },
 ]
 
 export default function Home() {
@@ -70,10 +115,10 @@ export default function Home() {
             西浦校外导师科研项目 #26054
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold mb-3 leading-tight">
-            AI 智能导购系统
+            BFC AI 智能导购系统
           </h1>
           <p className="text-white/80 text-base sm:text-lg leading-relaxed max-w-xl">
-            探究 AI 精准营销对线下商业综合体消费者购物体验与购买决策的影响，为实体商业数字化转型提供实证依据
+            基于 BFC 外滩金融中心真实商业数据，探究 AI 精准营销对线下商业综合体消费者购物体验与购买决策的影响
           </p>
           <div className="flex flex-wrap gap-3 mt-6">
             <Link
@@ -83,12 +128,42 @@ export default function Home() {
               开始导购体验 <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
-              to="/analytics"
+              to="/map"
               className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm text-white font-medium px-5 py-2.5 rounded-xl hover:bg-white/25 transition no-underline text-sm border border-white/20"
             >
-              查看数据分析
+              查看商场地图
             </Link>
           </div>
+        </div>
+      </div>
+
+      {/* BFC Core Segments */}
+      <div>
+        <h2 className="text-xl font-bold text-gray-900 mb-5 flex items-center gap-2">
+          <Users className="w-5 h-5 text-primary-500" />
+          BFC 四大核心客群
+        </h2>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {BFC_SEGMENTS_PREVIEW.map((seg, i) => (
+            <div
+              key={i}
+              className="bg-white rounded-xl border border-gray-100 p-5 hover:shadow-md transition-shadow"
+            >
+              <div
+                className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-sm mb-3"
+                style={{ background: seg.color }}
+              >
+                {seg.name.charAt(0)}
+              </div>
+              <h3 className="font-semibold text-gray-900 text-sm">{seg.name}</h3>
+              <p className="text-[10px] text-gray-400 mt-0.5">{seg.nameEn}</p>
+              <p className="text-xs text-gray-500 mt-2">{seg.desc}</p>
+              <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-50">
+                <span className="text-xs text-gray-400">占比 {seg.percentage}%</span>
+                <span className="text-xs font-semibold text-gray-700">客单 {seg.avgSpend}</span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -118,7 +193,7 @@ export default function Home() {
       {/* Feature Cards */}
       <div>
         <h2 className="text-xl font-bold text-gray-900 mb-5">核心功能模块</h2>
-        <div className="grid sm:grid-cols-2 gap-4">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {FEATURES.map(feature => {
             const Icon = feature.icon
             return (
@@ -146,6 +221,39 @@ export default function Home() {
               </Link>
             )
           })}
+        </div>
+      </div>
+
+      {/* BFC Zone Overview */}
+      <div className="grid sm:grid-cols-2 gap-4">
+        <div className="bg-white rounded-xl border border-gray-100 p-6">
+          <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+            <Building2 className="w-4 h-4 text-primary-500" />
+            南区 South Retail
+          </h3>
+          <p className="text-sm text-gray-500 mb-3">建筑面积 60,000m²</p>
+          <div className="space-y-2 text-xs text-gray-600">
+            <div className="flex justify-between py-1 border-b border-gray-50"><span>L4</span><span className="text-gray-400">精致餐饮 Fine Dining</span></div>
+            <div className="flex justify-between py-1 border-b border-gray-50"><span>L3</span><span className="text-gray-400">设计师精品·艺术空间</span></div>
+            <div className="flex justify-between py-1 border-b border-gray-50"><span>L2</span><span className="text-gray-400">运动时尚·设计师珠宝孵化平台</span></div>
+            <div className="flex justify-between py-1 border-b border-gray-50"><span>L1</span><span className="text-gray-400">国际潮流·生活方式</span></div>
+            <div className="flex justify-between py-1 border-b border-gray-50"><span>B1</span><span className="text-gray-400">休闲餐饮·东方非遗珠宝区</span></div>
+            <div className="flex justify-between py-1"><span>B2</span><span className="text-gray-400">东方美学文化区</span></div>
+          </div>
+        </div>
+        <div className="bg-white rounded-xl border border-gray-100 p-6">
+          <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+            <Building2 className="w-4 h-4 text-emerald-500" />
+            北区 North Retail
+          </h3>
+          <p className="text-sm text-gray-500 mb-3">建筑面积 36,000m² · 车位 1,524</p>
+          <div className="space-y-2 text-xs text-gray-600">
+            <div className="flex justify-between py-1 border-b border-gray-50"><span>L3</span><span className="text-gray-400">米其林星级餐厅</span></div>
+            <div className="flex justify-between py-1 border-b border-gray-50"><span>L2</span><span className="text-gray-400">高茶下午茶</span></div>
+            <div className="flex justify-between py-1 border-b border-gray-50"><span>L1</span><span className="text-gray-400">旗舰店精品店</span></div>
+            <div className="flex justify-between py-1 border-b border-gray-50"><span>B1</span><span className="text-gray-400">博纳影城·宠物友好</span></div>
+            <div className="flex justify-between py-1"><span>B2</span><span className="text-gray-400">文艺空间·美食街·Livehouse</span></div>
+          </div>
         </div>
       </div>
 
