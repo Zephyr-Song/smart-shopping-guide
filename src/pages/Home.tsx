@@ -251,7 +251,7 @@ export default function Home() {
           <div className="space-y-2 text-xs text-gray-600">
             <div className="flex justify-between py-1 border-b border-gray-50"><span>4F</span><span className="text-gray-400">品质中餐聚集区（7家）</span></div>
             <div className="flex justify-between py-1 border-b border-gray-50"><span>3F</span><span className="text-gray-400">时尚餐饮·生活方式</span></div>
-            <div className="flex justify-between py-1 border-b border-gray-50"><span>2F</span><span className="text-gray-400">潮流买手·运动时尚</span></div>
+            <div className="flex justify-between py-1 border-b border-gray-50"><span>2F</span><span className="text-gray-400">设计师买手·运动时尚</span></div>
             <div className="flex justify-between py-1 border-b border-gray-50"><span>1F</span><span className="text-gray-400">国际精品最密集（19家）</span></div>
             <div className="flex justify-between py-1 border-b border-gray-50"><span>B1</span><span className="text-gray-400">快餐·美容·珠宝·健身</span></div>
             <div className="flex justify-between py-1"><span>B2/B3/S1</span><span className="text-gray-400">数码·宠物·汽车·健身</span></div>

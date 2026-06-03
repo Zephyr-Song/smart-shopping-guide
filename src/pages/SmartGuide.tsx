@@ -54,9 +54,9 @@ const COMPANION_OPTIONS = [
 
 // 优先级 = 今日体验目的（体验维度，不与品类重叠）
 const PRIORITY_OPTIONS = [
-  { value: '品质美食', label: '品质美食', desc: '探索BFC精选餐饮', icon: '🍽️' },
+  { value: '品质美食', label: '品质美食', desc: '探索精选餐饮', icon: '🍽️' },
   { value: '潮流购物', label: '潮流购物', desc: '国际精品与买手店', icon: '🛍️' },
-  { value: '休闲娱乐', label: '休闲娱乐', desc: '养生健身放松', icon: '♨️' },
+  { value: '休闲娱乐', label: '休闲娱乐', desc: '养生放松与健身', icon: '♨️' },
   { value: '社交打卡', label: '社交打卡', desc: '网红拍照与体验分享', icon: '📸' },
 ]
 
@@ -73,7 +73,7 @@ const INTEREST_OPTIONS = [
   { name: '快餐轻食', icon: '🥗', keywords: ['轻食', '快餐', '简餐'] },
   { name: '咖啡茶饮', icon: '☕', keywords: ['咖啡', '茶饮', '精品'] },
   { name: '国际精品', icon: '👜', keywords: ['奢侈', '设计师', '高定'] },
-  { name: '潮流买手', icon: '🎯', keywords: ['买手', '先锋', '潮牌'] },
+  { name: '设计师买手', icon: '🎯', keywords: ['买手', '设计师', '潮牌'] },
   { name: '运动健身', icon: '🏋️', keywords: ['运动', '健身', '瑜伽'] },
   { name: '茶馆SPA', icon: '🧖', keywords: ['SPA', '养生', '茶馆'] },
   { name: '宠物服务', icon: '🐾', keywords: ['宠物', '萌宠', '互动'] },

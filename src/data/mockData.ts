@@ -185,17 +185,17 @@ export const STORES: Store[] = [
   { id: 's010', name: '炙焰炉子炉馆', category: '品质中餐', floor: 'S-L3', x: 54, y: 34, description: '明火烤炉料理', tags: ['烤炉', '创意'], rating: 4.3, avgPrice: 200, visitorCount: 600, conversionRate: 0.68, heatmap: 0.62 },
   { id: 's011', name: 'A&M CROWNED SALON', category: '美容美发', floor: 'S-L3', x: 74, y: 34, description: '高端美发沙龙', tags: ['美发', '高端'], rating: 4.5, avgPrice: 500, visitorCount: 280, conversionRate: 0.55, heatmap: 0.45 },
   { id: 's012', name: 'MOMODA', category: '网红餐饮', floor: 'S-L3', x: 90, y: 34, description: '网红创意轻食', tags: ['网红', '轻食'], rating: 4.2, avgPrice: 80, visitorCount: 1100, conversionRate: 0.60, heatmap: 0.75 },
-  // 2F - 潮流买手 + 运动（6家）
+  // 2F - 设计师买手 + 运动（6家）
   { id: 's013', name: "Sir Rudy's Pro Shop", category: '运动健身', floor: 'S-L2', x: 8, y: 46, description: '高尔夫专业装备', tags: ['高尔夫', '运动'], rating: 4.4, avgPrice: 2800, visitorCount: 150, conversionRate: 0.25, heatmap: 0.35 },
-  { id: 's014', name: 'OUTCICS', category: '潮流买手', floor: 'S-L2', x: 26, y: 46, description: '小众设计师集合', tags: ['小众', '设计师'], rating: 4.3, avgPrice: 1800, visitorCount: 400, conversionRate: 0.18, heatmap: 0.48 },
-  { id: 's015', name: 'ON/OFF', category: '潮流买手', floor: 'S-L2', x: 42, y: 46, description: '先锋买手店', tags: ['先锋', '买手'], rating: 4.4, avgPrice: 2200, visitorCount: 480, conversionRate: 0.15, heatmap: 0.52 },
+  { id: 's014', name: 'OUTCICS', category: '设计师买手', floor: 'S-L2', x: 26, y: 46, description: '小众设计师集合', tags: ['小众', '设计师'], rating: 4.3, avgPrice: 1800, visitorCount: 400, conversionRate: 0.18, heatmap: 0.48 },
+  { id: 's015', name: 'ON/OFF', category: '设计师买手', floor: 'S-L2', x: 42, y: 46, description: '先锋买手店', tags: ['先锋', '买手'], rating: 4.4, avgPrice: 2200, visitorCount: 480, conversionRate: 0.15, heatmap: 0.52 },
   { id: 's016', name: 'J.Lindeberg', category: '运动时尚', floor: 'S-L2', x: 56, y: 46, description: '瑞典运动时尚品牌', tags: ['运动', '时尚'], rating: 4.3, avgPrice: 1500, visitorCount: 600, conversionRate: 0.22, heatmap: 0.58 },
-  { id: 's017', name: 'PIU', category: '潮流买手', floor: 'S-L2', x: 72, y: 46, description: '韩系潮流集合店', tags: ['韩系', '潮流'], rating: 4.2, avgPrice: 800, visitorCount: 750, conversionRate: 0.28, heatmap: 0.65 },
-  { id: 's018', name: 'gudgood', category: '潮流买手', floor: 'S-L2', x: 88, y: 46, description: '生活方式买手店', tags: ['生活', '买手'], rating: 4.3, avgPrice: 600, visitorCount: 650, conversionRate: 0.30, heatmap: 0.60 },
+  { id: 's017', name: 'PIU', category: '设计师买手', floor: 'S-L2', x: 72, y: 46, description: '韩系潮流集合店', tags: ['韩系', '潮流'], rating: 4.2, avgPrice: 800, visitorCount: 750, conversionRate: 0.28, heatmap: 0.65 },
+  { id: 's018', name: 'gudgood', category: '设计师买手', floor: 'S-L2', x: 88, y: 46, description: '生活方式买手店', tags: ['生活', '买手'], rating: 4.3, avgPrice: 600, visitorCount: 650, conversionRate: 0.30, heatmap: 0.60 },
   // 1F - 国际精品 + 奢侈品 + 咖啡（最密集区，约19家分两行）
   { id: 's019', name: 'Alexander Wang', category: '国际精品', floor: 'S-L1', x: 5, y: 56, description: '纽约先锋设计师品牌', tags: ['设计师', '先锋'], rating: 4.5, avgPrice: 4500, visitorCount: 850, conversionRate: 0.14, heatmap: 0.68 },
-  { id: 's020', name: 'I.T', category: '潮流买手', floor: 'S-L1', x: 17, y: 56, description: '香港潮流集合店', tags: ['潮流', '集合'], rating: 4.4, avgPrice: 2500, visitorCount: 1200, conversionRate: 0.20, heatmap: 0.72 },
-  { id: 's021', name: 'NEITH', category: '潮流买手', floor: 'S-L1', x: 27, y: 56, description: '独立设计师品牌', tags: ['独立', '设计师'], rating: 4.3, avgPrice: 1800, visitorCount: 500, conversionRate: 0.16, heatmap: 0.55 },
+  { id: 's020', name: 'I.T', category: '设计师买手', floor: 'S-L1', x: 17, y: 56, description: '香港潮流集合店', tags: ['潮流', '集合'], rating: 4.4, avgPrice: 2500, visitorCount: 1200, conversionRate: 0.20, heatmap: 0.72 },
+  { id: 's021', name: 'NEITH', category: '设计师买手', floor: 'S-L1', x: 27, y: 56, description: '独立设计师品牌', tags: ['独立', '设计师'], rating: 4.3, avgPrice: 1800, visitorCount: 500, conversionRate: 0.16, heatmap: 0.55 },
   { id: 's022', name: 'Paul Smith', category: '国际精品', floor: 'S-L1', x: 37, y: 56, description: '英国设计师品牌', tags: ['英伦', '设计师'], rating: 4.5, avgPrice: 3200, visitorCount: 700, conversionRate: 0.18, heatmap: 0.62 },
   { id: 's023', name: '华为', category: '科技数码', floor: 'S-L1', x: 49, y: 56, description: '华为旗舰体验店', tags: ['科技', '旗舰'], rating: 4.6, avgPrice: 5000, visitorCount: 2500, conversionRate: 0.22, heatmap: 0.85 },
   { id: 's024', name: 'BALLY', category: '国际精品', floor: 'S-L1', x: 58, y: 56, description: '瑞士奢侈皮具品牌', tags: ['皮具', '奢侈'], rating: 4.5, avgPrice: 5000, visitorCount: 600, conversionRate: 0.15, heatmap: 0.58 },
@@ -207,7 +207,7 @@ export const STORES: Store[] = [
   { id: 's029', name: 'THE ATELIER', category: '珠宝配饰', floor: 'S-L1', x: 17, y: 64, description: '高端婚纱礼服定制', tags: ['婚纱', '定制'], rating: 4.7, avgPrice: 20000, visitorCount: 120, conversionRate: 0.08, heatmap: 0.38 },
   { id: 's030', name: '尊界 MAEXTRO', category: '汽车体验', floor: 'S-L1', x: 30, y: 64, description: '华为尊界豪华汽车体验中心', tags: ['汽车', '豪华'], rating: 4.6, avgPrice: 500000, visitorCount: 600, conversionRate: 0.05, heatmap: 0.55 },
   { id: 's031', name: 'Wolford', category: '国际精品', floor: 'S-L1', x: 43, y: 64, description: '奥地利奢华丝袜内衣', tags: ['内衣', '奢华'], rating: 4.4, avgPrice: 800, visitorCount: 400, conversionRate: 0.22, heatmap: 0.48 },
-  { id: 's032', name: 'Knatify', category: '潮流买手', floor: 'S-L1', x: 53, y: 64, description: '新锐设计师品牌集合', tags: ['新锐', '设计师'], rating: 4.2, avgPrice: 1200, visitorCount: 350, conversionRate: 0.18, heatmap: 0.45 },
+  { id: 's032', name: 'Knatify', category: '设计师买手', floor: 'S-L1', x: 53, y: 64, description: '新锐设计师品牌集合', tags: ['新锐', '设计师'], rating: 4.2, avgPrice: 1200, visitorCount: 350, conversionRate: 0.18, heatmap: 0.45 },
   { id: 's033', name: 'DJULA', category: '珠宝配饰', floor: 'S-L1', x: 63, y: 64, description: '巴黎先锋珠宝品牌', tags: ['珠宝', '先锋'], rating: 4.5, avgPrice: 8000, visitorCount: 280, conversionRate: 0.12, heatmap: 0.42 },
   { id: 's034', name: 'Maison Kitsune', category: '国际精品', floor: 'S-L1', x: 73, y: 64, description: '法日融合生活方式品牌', tags: ['法日', '生活方式'], rating: 4.4, avgPrice: 2500, visitorCount: 550, conversionRate: 0.20, heatmap: 0.55 },
   { id: 's035', name: 'Starbucks', category: '咖啡茶饮', floor: 'S-L1', x: 85, y: 64, description: '星巴克臻选门店', tags: ['咖啡', '臻选'], rating: 4.3, avgPrice: 40, visitorCount: 3500, conversionRate: 0.82, heatmap: 0.90 },
@@ -255,13 +255,13 @@ export const STORES: Store[] = [
   { id: 'n008', name: '隐溪茶馆 SPA', category: '茶馆SPA', floor: 'N-L2-2F', x: 40, y: 50, description: '精品茶馆与SPA养生空间', tags: ['茶馆', 'SPA', '养生'], rating: 4.6, avgPrice: 300, visitorCount: 500, conversionRate: 0.58, heatmap: 0.55 },
   { id: 'n009', name: '白茸', category: '网红餐饮', floor: 'N-L2-1F', x: 10, y: 58, description: '新派创意料理', tags: ['创意', '新派'], rating: 4.3, avgPrice: 180, visitorCount: 900, conversionRate: 0.62, heatmap: 0.65 },
   { id: 'n010', name: '复兴面王深夜食堂', category: '网红餐饮', floor: 'N-L2-1F', x: 28, y: 58, description: '深夜人气面馆', tags: ['面馆', '深夜'], rating: 4.4, avgPrice: 45, visitorCount: 2200, conversionRate: 0.75, heatmap: 0.82 },
-  { id: 'n011', name: 'PHANTACI', category: '潮流买手', floor: 'N-L2-1F', x: 48, y: 58, description: '周杰伦潮流品牌店', tags: ['周杰伦', '潮牌'], rating: 4.3, avgPrice: 1200, visitorCount: 1500, conversionRate: 0.20, heatmap: 0.72 },
+  { id: 'n011', name: 'PHANTACI', category: '设计师买手', floor: 'N-L2-1F', x: 48, y: 58, description: '周杰伦潮流品牌店', tags: ['周杰伦', '潮牌'], rating: 4.3, avgPrice: 1200, visitorCount: 1500, conversionRate: 0.20, heatmap: 0.72 },
   { id: 'n012', name: '橘炭胡同·乌喜', category: '网红餐饮', floor: 'N-L2-1F', x: 66, y: 58, description: '日式烧鸟居酒屋', tags: ['烧鸟', '居酒屋'], rating: 4.4, avgPrice: 200, visitorCount: 600, conversionRate: 0.68, heatmap: 0.58 },
   { id: 'n013', name: '哥哥的深夜食堂', category: '网红餐饮', floor: 'N-L2-1F', x: 86, y: 58, description: '深夜日式食堂', tags: ['日式', '深夜'], rating: 4.2, avgPrice: 100, visitorCount: 800, conversionRate: 0.65, heatmap: 0.60 },
   // N1
   { id: 'n014', name: 'PEANUT BUTTER', category: '网红餐饮', floor: 'N-L1-1F', x: 18, y: 68, description: '美式创意汉堡', tags: ['汉堡', '美式'], rating: 4.2, avgPrice: 75, visitorCount: 1100, conversionRate: 0.70, heatmap: 0.68 },
   { id: 'n039', name: '满堂 by Bar Choice', category: '精致餐饮', floor: 'N-L1-1F', x: 50, y: 68, description: '精品鸡尾酒餐吧', tags: ['鸡尾酒', '餐吧'], rating: 4.5, avgPrice: 280, visitorCount: 600, conversionRate: 0.55, heatmap: 0.62 },
-  { id: 'n015', name: 'NUMATA·SOU 沼田双', category: '潮流买手', floor: 'N-L1-1F', x: 82, y: 68, description: '日系买手集合店', tags: ['日系', '买手'], rating: 4.3, avgPrice: 1500, visitorCount: 450, conversionRate: 0.18, heatmap: 0.48 },
+  { id: 'n015', name: 'NUMATA·SOU 沼田双', category: '设计师买手', floor: 'N-L1-1F', x: 82, y: 68, description: '日系买手集合店', tags: ['日系', '买手'], rating: 4.3, avgPrice: 1500, visitorCount: 450, conversionRate: 0.18, heatmap: 0.48 },
   // B1 - 餐饮/宠物/便利
   { id: 'n016', name: '不入川豆花馆', category: '快餐轻食', floor: 'N-B1', x: 6, y: 76, description: '地道川味豆花', tags: ['川味', '豆花'], rating: 4.3, avgPrice: 30, visitorCount: 1200, conversionRate: 0.68, heatmap: 0.62 },
   { id: 'n017', name: '米崎', category: '快餐轻食', floor: 'N-B1', x: 20, y: 76, description: '日式便当', tags: ['日式', '便当'], rating: 4.2, avgPrice: 40, visitorCount: 900, conversionRate: 0.65, heatmap: 0.55 },
@@ -293,7 +293,7 @@ export const STORES: Store[] = [
 export const CATEGORIES = [
   { id: 'fine-dining', name: '精致餐饮', icon: '🍽️', color: '#c9a96e' },
   { id: 'luxury', name: '国际精品', icon: '👜', color: '#ec4899' },
-  { id: 'curated-fashion', name: '潮流买手', icon: '🎯', color: '#6366f1' },
+  { id: 'curated-fashion', name: '设计师买手', icon: '🎯', color: '#6366f1' },
   { id: 'sports-fashion', name: '运动时尚', icon: '🏃', color: '#10b981' },
   { id: 'chinese-cuisine', name: '品质中餐', icon: '🥢', color: '#d97706' },
   { id: 'trendy-dining', name: '网红餐饮', icon: '🔥', color: '#f97316' },
@@ -514,19 +514,19 @@ export const AB_TESTS: ABTestConfig[] = [
 export function generateRecommendations(profile: UserProfile): Recommendation[] {
   const personaBoost: Record<string, string[]> = {
     '白领': ['精致餐饮', '国际精品', '咖啡茶饮', '生活方式', '科技数码', '茶馆SPA'],
-    '艺术家/设计师': ['潮流买手', '文创杂货', '国际精品', '生活方式', '珠宝配饰', '咖啡茶饮'],
+    '艺术家/设计师': ['设计师买手', '文创杂货', '国际精品', '生活方式', '珠宝配饰', '咖啡茶饮'],
     '高收入家庭': ['精致餐饮', '品质中餐', '宠物服务', '运动健身', '生活方式', '汽车体验'],
-    '本国外国游客': ['文创杂货', '珠宝配饰', '品质中餐', '咖啡茶饮', '精致餐饮', '潮流买手'],
-    '年轻潮人': ['潮流买手', '网红餐饮', '运动时尚', '咖啡茶饮', '科技数码', '文创杂货'],
-    'Z世代/网红': ['网红餐饮', '运动时尚', '咖啡茶饮', '潮流买手', '文创杂货', '生活方式'],
-    '其他': ['精致餐饮', '咖啡茶饮', '生活方式', '潮流买手', '运动健身', '文创杂货'],
+    '本国外国游客': ['文创杂货', '珠宝配饰', '品质中餐', '咖啡茶饮', '精致餐饮', '设计师买手'],
+    '年轻潮人': ['设计师买手', '网红餐饮', '运动时尚', '咖啡茶饮', '科技数码', '文创杂货'],
+    'Z世代/网红': ['网红餐饮', '运动时尚', '咖啡茶饮', '设计师买手', '文创杂货', '生活方式'],
+    '其他': ['精致餐饮', '咖啡茶饮', '生活方式', '设计师买手', '运动健身', '文创杂货'],
   }
 
   const priorityBoost: Record<string, string[]> = {
     '品质美食': ['精致餐饮', '品质中餐', '网红餐饮', '快餐轻食', '咖啡茶饮', '茶馆SPA'],
-    '潮流购物': ['国际精品', '潮流买手', '珠宝配饰', '运动时尚', '文创杂货', '科技数码'],
+    '潮流购物': ['国际精品', '设计师买手', '珠宝配饰', '运动时尚', '文创杂货', '科技数码'],
     '休闲娱乐': ['茶馆SPA', '运动健身', '汽车体验', '生活方式', '美容美发', '咖啡茶饮'],
-    '社交打卡': ['网红餐饮', '咖啡茶饮', '潮流买手', '文创杂货', '宠物服务', '生活方式'],
+    '社交打卡': ['网红餐饮', '咖啡茶饮', '设计师买手', '文创杂货', '宠物服务', '生活方式'],
   }
 
   const budgetMap: Record<string, number[]> = {
