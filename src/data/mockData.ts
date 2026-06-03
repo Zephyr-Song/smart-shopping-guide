@@ -258,8 +258,9 @@ export const STORES: Store[] = [
   { id: 'n012', name: '橘炭胡同·乌喜', category: '网红餐饮', floor: 'N-L2-1F', x: 66, y: 58, description: '日式烧鸟居酒屋', tags: ['烧鸟', '居酒屋'], rating: 4.4, avgPrice: 200, visitorCount: 600, conversionRate: 0.68, heatmap: 0.58 },
   { id: 'n013', name: '哥哥的深夜食堂', category: '网红餐饮', floor: 'N-L2-1F', x: 86, y: 58, description: '深夜日式食堂', tags: ['日式', '深夜'], rating: 4.2, avgPrice: 100, visitorCount: 800, conversionRate: 0.65, heatmap: 0.60 },
   // N1
-  { id: 'n014', name: 'PEANUT BUTTER', category: '网红餐饮', floor: 'N-L1-1F', x: 28, y: 68, description: '美式创意汉堡', tags: ['汉堡', '美式'], rating: 4.2, avgPrice: 75, visitorCount: 1100, conversionRate: 0.70, heatmap: 0.68 },
-  { id: 'n015', name: 'NUMATA·SOU 沼田双', category: '潮流买手', floor: 'N-L1-1F', x: 68, y: 68, description: '日系买手集合店', tags: ['日系', '买手'], rating: 4.3, avgPrice: 1500, visitorCount: 450, conversionRate: 0.18, heatmap: 0.48 },
+  { id: 'n014', name: 'PEANUT BUTTER', category: '网红餐饮', floor: 'N-L1-1F', x: 18, y: 68, description: '美式创意汉堡', tags: ['汉堡', '美式'], rating: 4.2, avgPrice: 75, visitorCount: 1100, conversionRate: 0.70, heatmap: 0.68 },
+  { id: 'n039', name: '满堂 by Bar Choice', category: '精致餐饮', floor: 'N-L1-1F', x: 50, y: 68, description: '精品鸡尾酒餐吧', tags: ['鸡尾酒', '餐吧'], rating: 4.5, avgPrice: 280, visitorCount: 600, conversionRate: 0.55, heatmap: 0.62 },
+  { id: 'n015', name: 'NUMATA·SOU 沼田双', category: '潮流买手', floor: 'N-L1-1F', x: 82, y: 68, description: '日系买手集合店', tags: ['日系', '买手'], rating: 4.3, avgPrice: 1500, visitorCount: 450, conversionRate: 0.18, heatmap: 0.48 },
   // B1 - 餐饮/宠物/便利
   { id: 'n016', name: '不入川豆花馆', category: '快餐轻食', floor: 'N-B1', x: 6, y: 76, description: '地道川味豆花', tags: ['川味', '豆花'], rating: 4.3, avgPrice: 30, visitorCount: 1200, conversionRate: 0.68, heatmap: 0.62 },
   { id: 'n017', name: '米崎', category: '快餐轻食', floor: 'N-B1', x: 20, y: 76, description: '日式便当', tags: ['日式', '便当'], rating: 4.2, avgPrice: 40, visitorCount: 900, conversionRate: 0.65, heatmap: 0.55 },

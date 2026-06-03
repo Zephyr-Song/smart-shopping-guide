@@ -272,7 +272,7 @@ export default function MallMap() {
             {zone === 'north' && currentFloorId === 'N-L3-1F' && 'N3-1F 莱珀妮 · 陆家居 · 梅赛德斯-迈巴赫城市品牌中心'}
             {zone === 'north' && currentFloorId === 'N-L2-2F' && 'N2-2F 隐溪茶馆 SPA · 精品茶馆与养生空间'}
             {zone === 'north' && currentFloorId === 'N-L2-1F' && 'N2-1F 网红餐饮 · 白茸、复兴面王、PHANTACI、橘炭胡同、哥哥的深夜食堂'}
-            {zone === 'north' && currentFloorId === 'N-L1-1F' && 'N1-1F PEANUT BUTTER · NUMATA·SOU 沼田双'}
+            {zone === 'north' && currentFloorId === 'N-L1-1F' && 'N1-1F PEANUT BUTTER · 满堂 by Bar Choice · NUMATA·SOU 沼田双'}
             {zone === 'north' && currentFloorId === 'N-B1' && 'B1 餐饮/宠物/便利 · MANNER、火星宠物超市、AirPark、PET MART、全家'}
             {zone === 'north' && currentFloorId === 'N-B2' && 'B2 餐饮/文创 · 茶姬、东发道、九木杂物社、多抓鱼、READ&SOCIAL'}
           </div>
@@ -375,7 +375,7 @@ export default function MallMap() {
                   {currentFloorId === 'N-L3-1F' && <p>北区N3-1F，莱珀妮奢华护肤、陆家居高端家居、梅赛德斯-迈巴赫城市品牌中心</p>}
                   {currentFloorId === 'N-L2-2F' && <p>北区N2-2F，隐溪茶馆 SPA，精品茶馆与养生空间（非高茶）</p>}
                   {currentFloorId === 'N-L2-1F' && <p>北区N2-1F，网红餐饮集群：白茸、复兴面王深夜食堂、PHANTACI（周杰伦潮牌）、橘炭胡同·乌喜、哥哥的深夜食堂</p>}
-                  {currentFloorId === 'N-L1-1F' && <p>北区N1-1F，PEANUT BUTTER美式汉堡 + NUMATA·SOU 沼田双日系买手</p>}
+                  {currentFloorId === 'N-L1-1F' && <p>北区N1-1F，PEANUT BUTTER美式汉堡 + 满堂 by Bar Choice鸡尾酒餐吧 + NUMATA·SOU 沼田双日系买手</p>}
                   {currentFloorId === 'N-B1' && <p>北区B1，餐饮（不入川豆花/云海肴/MANNER等多品牌）+ 宠物（火星宠物超市/AirPark/PET MART）+ 全家便利店</p>}
                   {currentFloorId === 'N-B2' && <p>北区B2，餐饮（茶姬/湖南饭店/东发道等）+ 文创（九木杂物社/多抓鱼/READ&SOCIAL/CLAWGALLERY）</p>}
                 </>
