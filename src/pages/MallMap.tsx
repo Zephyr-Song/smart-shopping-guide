@@ -61,7 +61,7 @@ export default function MallMap() {
 
   const floors = zone === 'south' ? SOUTH_FLOORS : NORTH_FLOORS
 
-  const currentFloorId = selectedFloor.startsWith(zone === 'south' ? 'S-' : 'N-')
+  const currentFloorId = selectedFloor.startsWith(zone === 'south' ? 'S' : 'N')
     ? selectedFloor
     : zone === 'south' ? 'S-L1' : 'N-L3-3F'
 
