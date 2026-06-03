@@ -199,8 +199,8 @@ export default function MallMap() {
               </text>
 
               {/* Entrance */}
-              <rect x="42" y="94" width="16" height="5" rx="1" fill="#6366f1" opacity="0.3" />
-              <text x="50" y="98" textAnchor="middle" fontSize="2.5" fill="#6366f1" fontWeight="600">主入口</text>
+              <rect x="42" y="96" width="16" height="3.5" rx="1" fill="#6366f1" opacity="0.3" />
+              <text x="50" y="99.2" textAnchor="middle" fontSize="2.2" fill="#6366f1" fontWeight="600">主入口</text>
 
               {/* Elevator */}
               <rect x="47" y="45" width="6" height="6" rx="1" fill="#d1d5db" />
