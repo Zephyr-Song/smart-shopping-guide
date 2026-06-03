@@ -56,7 +56,7 @@ const COMPANION_OPTIONS = [
 const PRIORITY_OPTIONS = [
   { value: '品质美食', label: '品质美食', desc: '探索BFC精选餐饮', icon: '🍽️' },
   { value: '潮流购物', label: '潮流购物', desc: '国际精品与买手店', icon: '🛍️' },
-  { value: '休闲娱乐', label: '休闲娱乐', desc: 'SPA养生·健身·汽车体验', icon: '🧘' },
+  { value: '休闲娱乐', label: '休闲娱乐', desc: '养生健身放松', icon: '♨️' },
   { value: '社交打卡', label: '社交打卡', desc: '网红拍照与体验分享', icon: '📸' },
 ]
 
