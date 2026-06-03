@@ -17,7 +17,7 @@ const SOUTH_FLOORS: FloorInfo[] = [
   { id: 'S-B1', label: 'B1', desc: '快餐·美容·珠宝·健身', icon: <MapPin className="w-3 h-3" /> },
   { id: 'S-B2', label: 'B2', desc: '数码·宠物·快餐', icon: <MapPin className="w-3 h-3" /> },
   { id: 'S-B3', label: 'B3', desc: '汽车体验', icon: <Building2 className="w-3 h-3" /> },
-  { id: 'S-S1', label: 'S1-S5', desc: '健身会馆', icon: <Building2 className="w-3 h-3" /> },
+  { id: 'S1-5F', label: 'S1-5F', desc: '健身会馆', icon: <Building2 className="w-3 h-3" /> },
 ]
 
 const NORTH_FLOORS: FloorInfo[] = [
@@ -265,7 +265,7 @@ export default function MallMap() {
             {zone === 'south' && currentFloorId === 'S-B1' && 'B1 快餐 / 美容 / 珠宝 / 健身 · 麦当劳、超级猩猩、周大福'}
             {zone === 'south' && currentFloorId === 'S-B2' && 'B2 数码 / 餐饮 / 宠物 · 小米、哈曼卡顿、喜茶、PET WISH'}
             {zone === 'south' && currentFloorId === 'S-B3' && 'B3 GALAXY AUTO STUDIO 车皇汽车体验中心'}
-            {zone === 'south' && currentFloorId === 'S-S1' && 'S1-S5 BFC健身会馆 · 泳池/私教/团课'}
+            {zone === 'south' && currentFloorId === 'S1-5F' && 'S1-5F BFC健身会馆 · 泳池/私教/团课'}
             {zone === 'north' && currentFloorId === 'N-L3-5F' && 'N3-5F 上海滩餐厅 · 外滩地标餐饮旗舰'}
             {zone === 'north' && currentFloorId === 'N-L3-3F' && 'N3-3F 新荣记 · DA Vittorio Shanghai · 米其林星级'}
             {zone === 'north' && currentFloorId === 'N-L3-2F' && 'N3-2F 柴门荟 · 高端川菜'}
@@ -364,7 +364,7 @@ export default function MallMap() {
                   {currentFloorId === 'S-B1' && <p>南区B1，快餐（麦当劳/SUBWAY/么蛮）+美容（丽拉瓦迪SPA/丝域养发/美妆灵感空间）+珠宝（周大福）+健身（超级猩猩）</p>}
                   {currentFloorId === 'S-B2' && <p>南区B2，数码体验（小米/华为小爱同学/哈曼卡顿）+ 宠物（PET WISH/PonyStar）+ 快餐（喜茶/莆田/台湾食堂）</p>}
                   {currentFloorId === 'S-B3' && <p>南区B3，GALAXY AUTO STUDIO 车皇汽车体验中心</p>}
-                  {currentFloorId === 'S-S1' && <p>南区S1-S5，BFC高端健身会馆，配备游泳池、私教区、团课教室</p>}
+                  {currentFloorId === 'S1-5F' && <p>南区S1-5F，BFC高端健身会馆，配备游泳池、私教区、团课教室</p>}
                 </>
               )}
               {zone === 'north' && (

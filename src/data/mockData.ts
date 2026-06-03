@@ -237,9 +237,9 @@ export const STORES: Store[] = [
   { id: 's058', name: 'PET WISH', category: '宠物服务', floor: 'S-B2', x: 86, y: 78, description: '宠物愿望清单商店', tags: ['宠物', '用品'], rating: 4.2, avgPrice: 150, visitorCount: 500, conversionRate: 0.55, heatmap: 0.40 },
   { id: 's059', name: '全家', category: '便利生活', floor: 'S-B2', x: 20, y: 84, description: '24小时便利店', tags: ['便利店', '24h'], rating: 4.1, avgPrice: 15, visitorCount: 5000, conversionRate: 0.85, heatmap: 0.92 },
   { id: 's060', name: 'PonyStar', category: '宠物服务', floor: 'S-B2', x: 42, y: 84, description: '萌宠互动体验馆', tags: ['萌宠', '互动'], rating: 4.3, avgPrice: 80, visitorCount: 800, conversionRate: 0.60, heatmap: 0.52 },
-  // B3 + S1-S5 - 汽车/健身
+  // B3 + S1-5F - 汽车/健身
   { id: 's061', name: 'GALAXY AUTO STUDIO', category: '汽车体验', floor: 'S-B3', x: 40, y: 90, description: '车皇汽车体验中心', tags: ['汽车', '体验'], rating: 4.6, avgPrice: 300000, visitorCount: 300, conversionRate: 0.04, heatmap: 0.42 },
-  { id: 's062', name: 'BFC健身会馆', category: '运动健身', floor: 'S-S1', x: 75, y: 99, description: '高端健身会馆，泳池/私教/团课', tags: ['健身', '高端'], rating: 4.5, avgPrice: 800, visitorCount: 380, conversionRate: 0.35, heatmap: 0.48 },
+  { id: 's062', name: 'BFC健身会馆', category: '运动健身', floor: 'S1-5F', x: 75, y: 50, description: '高端健身会馆，泳池/私教/团课', tags: ['健身', '高端'], rating: 4.5, avgPrice: 800, visitorCount: 380, conversionRate: 0.35, heatmap: 0.48 },
 
   // ==================== 北区 North Retail ====================
   // N3 - 精致餐饮集群
