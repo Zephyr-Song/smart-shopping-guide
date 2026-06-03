@@ -25,7 +25,6 @@ import { STORES, CATEGORIES, BFC_SEGMENTS, generateRecommendations } from '../da
 const GENDER_OPTIONS = [
   { value: 'male', label: '男', emoji: '👨' },
   { value: 'female', label: '女', emoji: '👩' },
-  { value: 'other', label: '其他', emoji: '🧑' },
 ]
 
 const AGE_OPTIONS = ['18-24', '24-30', '30-38', '38+']
@@ -177,46 +176,7 @@ export default function SmartGuide() {
         </div>
       )}
 
-      {/* Selected context preview */}
-      {(profile.gender || profile.age || profile.persona) && !isResultsStep && step > 0 && (
-        <div className="bg-white rounded-xl border border-gray-100 p-4 flex items-center gap-4">
-          {selectedPersona && (
-            <div
-              className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg flex-shrink-0"
-              style={{ background: selectedPersona.color }}
-            >
-              {selectedPersona.label.charAt(0)}
-            </div>
-          )}
-          <div className="flex-1 min-w-0">
-            {selectedPersona && (
-              <>
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold text-gray-900">{selectedPersona.label}</span>
-                  <span className="text-xs text-gray-400">{selectedPersona.nameEn}</span>
-                </div>
-                <p className="text-xs text-gray-500 mt-0.5">{selectedPersona.description}</p>
-                <div className="flex flex-wrap gap-1 mt-1.5">
-                  {selectedPersona.traits.map(t => (
-                    <span key={t} className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 text-gray-500">
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </>
-            )}
-            {!selectedPersona && profile.gender && (
-              <div className="flex items-center gap-2">
-                <span className="font-semibold text-gray-900">
-                  {GENDER_OPTIONS.find(g => g.value === profile.gender)?.emoji}{' '}
-                  {GENDER_OPTIONS.find(g => g.value === profile.gender)?.label}
-                </span>
-                {profile.age && <span className="text-xs text-gray-400">{profile.age}岁</span>}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+      {/* Selected context preview - removed per user request */}
 
       {/* Interest selection step */}
       {isInterestStep && (
