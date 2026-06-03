@@ -265,7 +265,7 @@ export default function MallMap() {
             {zone === 'south' && currentFloorId === 'S-B1' && 'B1 快餐 / 美容 / 珠宝 / 健身 · 麦当劳、超级猩猩、周大福'}
             {zone === 'south' && currentFloorId === 'S-B2' && 'B2 数码 / 餐饮 / 宠物 · 小米、哈曼卡顿、喜茶、PET WISH'}
             {zone === 'south' && currentFloorId === 'S-B3' && 'B3 GALAXY AUTO STUDIO 车皇汽车体验中心'}
-            {zone === 'south' && currentFloorId === 'S1-5F' && 'S1-5F BFC健身会馆 · 泳池/私教/团课'}
+            {zone === 'south' && currentFloorId === 'S1-5F' && 'S1-5F BFC FITNESS健身会馆 · 泳池/私教/团课'}
             {zone === 'north' && currentFloorId === 'N-L3-5F' && 'N3-5F 上海滩餐厅 · 外滩地标餐饮旗舰'}
             {zone === 'north' && currentFloorId === 'N-L3-3F' && 'N3-3F 新荣记 · DA Vittorio Shanghai · 米其林星级'}
             {zone === 'north' && currentFloorId === 'N-L3-2F' && 'N3-2F 柴门荟 · 高端川菜'}

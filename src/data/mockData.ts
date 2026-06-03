@@ -239,7 +239,7 @@ export const STORES: Store[] = [
   { id: 's060', name: 'PonyStar', category: '宠物服务', floor: 'S-B2', x: 42, y: 84, description: '萌宠互动体验馆', tags: ['萌宠', '互动'], rating: 4.3, avgPrice: 80, visitorCount: 800, conversionRate: 0.60, heatmap: 0.52 },
   // B3 + S1-5F - 汽车/健身
   { id: 's061', name: 'GALAXY AUTO STUDIO', category: '汽车体验', floor: 'S-B3', x: 40, y: 90, description: '车皇汽车体验中心', tags: ['汽车', '体验'], rating: 4.6, avgPrice: 300000, visitorCount: 300, conversionRate: 0.04, heatmap: 0.42 },
-  { id: 's062', name: 'BFC健身会馆', category: '运动健身', floor: 'S1-5F', x: 75, y: 50, description: '高端健身会馆，泳池/私教/团课', tags: ['健身', '高端'], rating: 4.5, avgPrice: 800, visitorCount: 380, conversionRate: 0.35, heatmap: 0.48 },
+  { id: 's062', name: 'BFC FITNESS健身会馆', category: '运动健身', floor: 'S1-5F', x: 75, y: 50, description: '高端健身会馆，泳池/私教/团课', tags: ['健身', '高端'], rating: 4.5, avgPrice: 800, visitorCount: 380, conversionRate: 0.35, heatmap: 0.48 },
 
   // ==================== 北区 North Retail ====================
   // N3 - 精致餐饮集群
