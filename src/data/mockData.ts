@@ -525,9 +525,8 @@ export function generateRecommendations(profile: UserProfile): Recommendation[] 
   const priorityBoost: Record<string, string[]> = {
     '品质美食': ['精致餐饮', '品质中餐', '网红餐饮', '快餐轻食', '咖啡茶饮', '茶馆SPA'],
     '潮流购物': ['国际精品', '潮流买手', '珠宝配饰', '运动时尚', '文创杂货', '科技数码'],
-    '休闲放松': ['茶馆SPA', '生活方式', '美容美发', '咖啡茶饮', '文创杂货', '运动健身'],
+    '休闲娱乐': ['茶馆SPA', '运动健身', '汽车体验', '生活方式', '美容美发', '咖啡茶饮'],
     '社交打卡': ['网红餐饮', '咖啡茶饮', '潮流买手', '文创杂货', '宠物服务', '生活方式'],
-    '运动健康': ['运动健身', '运动时尚', '汽车体验', '茶馆SPA', '便利生活', '品质中餐'],
   }
 
   const budgetMap: Record<string, number[]> = {

@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import {
-  User,
   Users,
   Target,
   Heart,
@@ -21,11 +20,6 @@ import {
 } from 'lucide-react'
 import type { UserProfile, Recommendation } from '../data/mockData'
 import { STORES, CATEGORIES, BFC_SEGMENTS, generateRecommendations } from '../data/mockData'
-
-const GENDER_OPTIONS = [
-  { value: 'male', label: '男', emoji: '👨' },
-  { value: 'female', label: '女', emoji: '👩' },
-]
 
 const AGE_OPTIONS = ['18-24', '24-30', '30-38', '38+']
 
@@ -62,9 +56,8 @@ const COMPANION_OPTIONS = [
 const PRIORITY_OPTIONS = [
   { value: '品质美食', label: '品质美食', desc: '探索BFC精选餐饮', icon: '🍽️' },
   { value: '潮流购物', label: '潮流购物', desc: '国际精品与买手店', icon: '🛍️' },
-  { value: '休闲放松', label: '休闲放松', desc: 'SPA养生与慢生活', icon: '🧘' },
+  { value: '休闲娱乐', label: '休闲娱乐', desc: 'SPA养生·健身·汽车体验', icon: '🧘' },
   { value: '社交打卡', label: '社交打卡', desc: '网红拍照与体验分享', icon: '📸' },
-  { value: '运动健康', label: '运动健康', desc: '健身运动与汽车体验', icon: '🏃' },
 ]
 
 const BUDGET_OPTIONS = [
@@ -87,7 +80,6 @@ const INTEREST_OPTIONS = [
 ]
 
 const PROFILE_QUESTIONS = [
-  { key: 'gender' as const, label: '你的性别', icon: User, stepType: 'gender' },
   { key: 'age' as const, label: '年龄段', icon: Users, stepType: 'age' },
   { key: 'persona' as const, label: '你是哪类BFC消费者？', icon: Heart, stepType: 'persona' },
   { key: 'companion' as const, label: '和谁一起来？', icon: Users, stepType: 'companion' },
@@ -123,7 +115,7 @@ export default function SmartGuide() {
 
   const generateResults = () => {
     const fullProfile: UserProfile = {
-      gender: profile.gender || 'other',
+      gender: '',
       age: profile.age || '24-30',
       persona: profile.persona || '其他',
       companion: profile.companion || 'friends',
@@ -234,31 +226,6 @@ export default function SmartGuide() {
                   </div>
                   <h2 className="text-lg font-semibold text-gray-900">{q.label}</h2>
                 </div>
-
-                {/* Gender selection */}
-                {stepType === 'gender' && (
-                  <div className="grid grid-cols-3 gap-3">
-                    {GENDER_OPTIONS.map(opt => {
-                      const selected = profile.gender === opt.value
-                      return (
-                        <button
-                          key={opt.value}
-                          onClick={() => handleSelect(q.key, opt.value)}
-                          className={`flex flex-col items-center gap-2 px-4 py-5 rounded-xl border text-center transition-all cursor-pointer ${
-                            selected
-                              ? 'bg-primary-50 border-primary-300'
-                              : 'bg-white border-gray-200 hover:border-gray-300'
-                          }`}
-                        >
-                          <span className="text-3xl">{opt.emoji}</span>
-                          <span className={`text-sm font-medium ${selected ? 'text-primary-700' : 'text-gray-700'}`}>
-                            {opt.label}
-                          </span>
-                        </button>
-                      )
-                    })}
-                  </div>
-                )}
 
                 {/* Age selection */}
                 {stepType === 'age' && (
@@ -445,7 +412,7 @@ export default function SmartGuide() {
                 <span className="text-xs text-gray-400">{selectedPersona?.nameEn}</span>
               </div>
               <p className="text-xs text-gray-500 mt-0.5">
-                {GENDER_OPTIONS.find(g => g.value === profile.gender)?.label} · {profile.age} · {profile.companion === 'solo' ? '独自' : profile.companion === 'partner' ? '情侣' : profile.companion === 'family' ? '家庭' : profile.companion === 'friends' ? '朋友' : '商务'} · {profile.priority} · {profile.budgetStyle}
+                {profile.age} · {profile.companion === 'solo' ? '独自' : profile.companion === 'partner' ? '情侣' : profile.companion === 'family' ? '家庭' : profile.companion === 'friends' ? '朋友' : '商务'} · {profile.priority} · {profile.budgetStyle}
               </p>
             </div>
           </div>
