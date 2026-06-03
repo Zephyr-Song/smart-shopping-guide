@@ -166,89 +166,147 @@ export const BFC_SEGMENTS: BFCSegment[] = [
 ]
 
 // ============================================================
-// BFC 店铺数据 - 基于官方楼层规划
+// BFC 店铺数据 - 基于官方楼层规划（2026最新）
 // ============================================================
 export const STORES: Store[] = [
-  // === 南区 South Retail ===
-  // L4 - Fine Dining 精致餐饮
-  { id: 's001', name: '新荣记', category: '精致餐饮', floor: 'S-L4', x: 25, y: 30, description: '米其林星级高端中餐，东海海鲜与台州风味', tags: ['米其林', '海鲜', '高端宴请'], rating: 4.8, avgPrice: 1200, visitorCount: 380, conversionRate: 0.85, heatmap: 0.65 },
-  { id: 's002', name: 'Jean Georges', category: '精致餐饮', floor: 'S-L4', x: 55, y: 35, description: '国际知名法餐，外滩江景fine dining', tags: ['法餐', '江景', '约会'], rating: 4.7, avgPrice: 1500, visitorCount: 320, conversionRate: 0.80, heatmap: 0.62 },
-  { id: 's003', name: '8 1/2 Otto', category: '精致餐饮', floor: 'S-L4', x: 80, y: 25, description: '米其林意餐，传统意大利风味', tags: ['意餐', '米其林', '红酒'], rating: 4.6, avgPrice: 980, visitorCount: 260, conversionRate: 0.78, heatmap: 0.58 },
+  // ==================== 南区 South Retail ====================
+  // 4F - 品质中餐聚集区（7家）
+  { id: 's001', name: '老吉堂', category: '精致餐饮', floor: 'S-L4', x: 8, y: 16, description: '本帮菜传承名店', tags: ['本帮菜', '老字号'], rating: 4.5, avgPrice: 500, visitorCount: 320, conversionRate: 0.78, heatmap: 0.60 },
+  { id: 's002', name: '满愿家', category: '精致餐饮', floor: 'S-L4', x: 24, y: 16, description: '高端中式私宴', tags: ['私宴', '中式'], rating: 4.6, avgPrice: 680, visitorCount: 260, conversionRate: 0.82, heatmap: 0.55 },
+  { id: 's003', name: '青鹤荟', category: '精致餐饮', floor: 'S-L4', x: 40, y: 16, description: '新派东方料理', tags: ['新派', '东方'], rating: 4.4, avgPrice: 550, visitorCount: 240, conversionRate: 0.75, heatmap: 0.52 },
+  { id: 's004', name: '泰珍荟', category: '精致餐饮', floor: 'S-L4', x: 56, y: 16, description: '泰式精致料理', tags: ['泰餐', '精致'], rating: 4.5, avgPrice: 480, visitorCount: 300, conversionRate: 0.72, heatmap: 0.58 },
+  { id: 's005', name: '高桌', category: '精致餐饮', floor: 'S-L4', x: 72, y: 16, description: '高端西餐牛排馆', tags: ['牛排', '西餐'], rating: 4.6, avgPrice: 880, visitorCount: 200, conversionRate: 0.85, heatmap: 0.48 },
+  { id: 's006', name: '晴空', category: '精致餐饮', floor: 'S-L4', x: 88, y: 16, description: '日式料理名店', tags: ['日料', '精致'], rating: 4.6, avgPrice: 700, visitorCount: 220, conversionRate: 0.76, heatmap: 0.50 },
+  { id: 's007', name: 'Moon N Back', category: '精致餐饮', floor: 'S-L4', x: 48, y: 24, description: '融合创意料理酒吧', tags: ['创意', '酒吧'], rating: 4.4, avgPrice: 450, visitorCount: 350, conversionRate: 0.65, heatmap: 0.55 },
+  // 3F - 时尚餐饮 + 生活方式（5家）
+  { id: 's008', name: 'DIM SUM MARVEL', category: '品质中餐', floor: 'S-L3', x: 12, y: 34, description: '新派点心专门店', tags: ['点心', '新派'], rating: 4.3, avgPrice: 120, visitorCount: 800, conversionRate: 0.62, heatmap: 0.72 },
+  { id: 's009', name: 'MEET THE BUND', category: '品质中餐', floor: 'S-L3', x: 32, y: 34, description: '外滩江景中餐', tags: ['江景', '中餐'], rating: 4.4, avgPrice: 350, visitorCount: 550, conversionRate: 0.70, heatmap: 0.65 },
+  { id: 's010', name: '炙焰炉子炉馆', category: '品质中餐', floor: 'S-L3', x: 54, y: 34, description: '明火烤炉料理', tags: ['烤炉', '创意'], rating: 4.3, avgPrice: 200, visitorCount: 600, conversionRate: 0.68, heatmap: 0.62 },
+  { id: 's011', name: 'A&M CROWNED SALON', category: '美容美发', floor: 'S-L3', x: 74, y: 34, description: '高端美发沙龙', tags: ['美发', '高端'], rating: 4.5, avgPrice: 500, visitorCount: 280, conversionRate: 0.55, heatmap: 0.45 },
+  { id: 's012', name: 'MOMODA', category: '网红餐饮', floor: 'S-L3', x: 90, y: 34, description: '网红创意轻食', tags: ['网红', '轻食'], rating: 4.2, avgPrice: 80, visitorCount: 1100, conversionRate: 0.60, heatmap: 0.75 },
+  // 2F - 潮流买手 + 运动（6家）
+  { id: 's013', name: "Sir Rudy's Pro Shop", category: '运动健身', floor: 'S-L2', x: 8, y: 46, description: '高尔夫专业装备', tags: ['高尔夫', '运动'], rating: 4.4, avgPrice: 2800, visitorCount: 150, conversionRate: 0.25, heatmap: 0.35 },
+  { id: 's014', name: 'OUTCICS', category: '潮流买手', floor: 'S-L2', x: 26, y: 46, description: '小众设计师集合', tags: ['小众', '设计师'], rating: 4.3, avgPrice: 1800, visitorCount: 400, conversionRate: 0.18, heatmap: 0.48 },
+  { id: 's015', name: 'ON/OFF', category: '潮流买手', floor: 'S-L2', x: 42, y: 46, description: '先锋买手店', tags: ['先锋', '买手'], rating: 4.4, avgPrice: 2200, visitorCount: 480, conversionRate: 0.15, heatmap: 0.52 },
+  { id: 's016', name: 'J.Lindeberg', category: '运动时尚', floor: 'S-L2', x: 56, y: 46, description: '瑞典运动时尚品牌', tags: ['运动', '时尚'], rating: 4.3, avgPrice: 1500, visitorCount: 600, conversionRate: 0.22, heatmap: 0.58 },
+  { id: 's017', name: 'PIU', category: '潮流买手', floor: 'S-L2', x: 72, y: 46, description: '韩系潮流集合店', tags: ['韩系', '潮流'], rating: 4.2, avgPrice: 800, visitorCount: 750, conversionRate: 0.28, heatmap: 0.65 },
+  { id: 's018', name: 'gudgood', category: '潮流买手', floor: 'S-L2', x: 88, y: 46, description: '生活方式买手店', tags: ['生活', '买手'], rating: 4.3, avgPrice: 600, visitorCount: 650, conversionRate: 0.30, heatmap: 0.60 },
+  // 1F - 国际精品 + 奢侈品 + 咖啡（最密集区，约19家分两行）
+  { id: 's019', name: 'Alexander Wang', category: '国际精品', floor: 'S-L1', x: 5, y: 56, description: '纽约先锋设计师品牌', tags: ['设计师', '先锋'], rating: 4.5, avgPrice: 4500, visitorCount: 850, conversionRate: 0.14, heatmap: 0.68 },
+  { id: 's020', name: 'I.T', category: '潮流买手', floor: 'S-L1', x: 17, y: 56, description: '香港潮流集合店', tags: ['潮流', '集合'], rating: 4.4, avgPrice: 2500, visitorCount: 1200, conversionRate: 0.20, heatmap: 0.72 },
+  { id: 's021', name: 'NEITH', category: '潮流买手', floor: 'S-L1', x: 27, y: 56, description: '独立设计师品牌', tags: ['独立', '设计师'], rating: 4.3, avgPrice: 1800, visitorCount: 500, conversionRate: 0.16, heatmap: 0.55 },
+  { id: 's022', name: 'Paul Smith', category: '国际精品', floor: 'S-L1', x: 37, y: 56, description: '英国设计师品牌', tags: ['英伦', '设计师'], rating: 4.5, avgPrice: 3200, visitorCount: 700, conversionRate: 0.18, heatmap: 0.62 },
+  { id: 's023', name: '华为', category: '科技数码', floor: 'S-L1', x: 49, y: 56, description: '华为旗舰体验店', tags: ['科技', '旗舰'], rating: 4.6, avgPrice: 5000, visitorCount: 2500, conversionRate: 0.22, heatmap: 0.85 },
+  { id: 's024', name: 'BALLY', category: '国际精品', floor: 'S-L1', x: 58, y: 56, description: '瑞士奢侈皮具品牌', tags: ['皮具', '奢侈'], rating: 4.5, avgPrice: 5000, visitorCount: 600, conversionRate: 0.15, heatmap: 0.58 },
+  { id: 's025', name: 'Jimmy Choo', category: '国际精品', floor: 'S-L1', x: 67, y: 56, description: '奢华鞋履与配饰', tags: ['鞋履', '奢华'], rating: 4.6, avgPrice: 5500, visitorCount: 750, conversionRate: 0.16, heatmap: 0.62 },
+  { id: 's026', name: 'Versace', category: '国际精品', floor: 'S-L1', x: 79, y: 56, description: '意大利奢侈品牌', tags: ['奢侈', '意式'], rating: 4.5, avgPrice: 6000, visitorCount: 800, conversionRate: 0.13, heatmap: 0.65 },
+  { id: 's027', name: 'Lanvin', category: '国际精品', floor: 'S-L1', x: 91, y: 56, description: '法国高级时装品牌', tags: ['高定', '法式'], rating: 4.6, avgPrice: 7000, visitorCount: 500, conversionRate: 0.12, heatmap: 0.55 },
+  // 1F 第二排（珠宝/汽车/咖啡）
+  { id: 's028', name: 'Luminox', category: '珠宝配饰', floor: 'S-L1', x: 5, y: 64, description: '瑞士军表品牌', tags: ['腕表', '军表'], rating: 4.3, avgPrice: 3500, visitorCount: 380, conversionRate: 0.14, heatmap: 0.42 },
+  { id: 's029', name: 'THE ATELIER', category: '珠宝配饰', floor: 'S-L1', x: 17, y: 64, description: '高端婚纱礼服定制', tags: ['婚纱', '定制'], rating: 4.7, avgPrice: 20000, visitorCount: 120, conversionRate: 0.08, heatmap: 0.38 },
+  { id: 's030', name: '尊界 MAEXTRO', category: '汽车体验', floor: 'S-L1', x: 30, y: 64, description: '华为尊界豪华汽车体验中心', tags: ['汽车', '豪华'], rating: 4.6, avgPrice: 500000, visitorCount: 600, conversionRate: 0.05, heatmap: 0.55 },
+  { id: 's031', name: 'Wolford', category: '国际精品', floor: 'S-L1', x: 43, y: 64, description: '奥地利奢华丝袜内衣', tags: ['内衣', '奢华'], rating: 4.4, avgPrice: 800, visitorCount: 400, conversionRate: 0.22, heatmap: 0.48 },
+  { id: 's032', name: 'Knatify', category: '潮流买手', floor: 'S-L1', x: 53, y: 64, description: '新锐设计师品牌集合', tags: ['新锐', '设计师'], rating: 4.2, avgPrice: 1200, visitorCount: 350, conversionRate: 0.18, heatmap: 0.45 },
+  { id: 's033', name: 'DJULA', category: '珠宝配饰', floor: 'S-L1', x: 63, y: 64, description: '巴黎先锋珠宝品牌', tags: ['珠宝', '先锋'], rating: 4.5, avgPrice: 8000, visitorCount: 280, conversionRate: 0.12, heatmap: 0.42 },
+  { id: 's034', name: 'Maison Kitsune', category: '国际精品', floor: 'S-L1', x: 73, y: 64, description: '法日融合生活方式品牌', tags: ['法日', '生活方式'], rating: 4.4, avgPrice: 2500, visitorCount: 550, conversionRate: 0.20, heatmap: 0.55 },
+  { id: 's035', name: 'Starbucks', category: '咖啡茶饮', floor: 'S-L1', x: 85, y: 64, description: '星巴克臻选门店', tags: ['咖啡', '臻选'], rating: 4.3, avgPrice: 40, visitorCount: 3500, conversionRate: 0.82, heatmap: 0.90 },
+  { id: 's036', name: 'b3 Coffee', category: '咖啡茶饮', floor: 'S-L1', x: 94, y: 64, description: '精品手冲咖啡', tags: ['手冲', '精品'], rating: 4.5, avgPrice: 38, visitorCount: 1200, conversionRate: 0.75, heatmap: 0.68 },
+  { id: 's037', name: '永璞', category: '咖啡茶饮', floor: 'S-L1', x: 90, y: 70, description: '上海本土精品咖啡', tags: ['精品', '本土'], rating: 4.4, avgPrice: 32, visitorCount: 1500, conversionRate: 0.72, heatmap: 0.65 },
+  // B1 - 快餐/美容/珠宝/健身（约14家分两行）
+  { id: 's038', name: 'Tuna Maki', category: '快餐轻食', floor: 'S-B1', x: 6, y: 76, description: '日式手卷寿司', tags: ['日料', '快餐'], rating: 4.2, avgPrice: 55, visitorCount: 1800, conversionRate: 0.70, heatmap: 0.78 },
+  { id: 's039', name: '麦当劳', category: '快餐轻食', floor: 'S-B1', x: 20, y: 76, description: '全球快餐连锁', tags: ['快餐', '人气'], rating: 4.1, avgPrice: 35, visitorCount: 4500, conversionRate: 0.75, heatmap: 0.92 },
+  { id: 's040', name: 'SUBWAY', category: '快餐轻食', floor: 'S-B1', x: 32, y: 76, description: '三明治快餐', tags: ['三明治', '健康'], rating: 4.0, avgPrice: 30, visitorCount: 2200, conversionRate: 0.72, heatmap: 0.75 },
+  { id: 's041', name: '么蛮', category: '快餐轻食', floor: 'S-B1', x: 44, y: 76, description: '创意中式简餐', tags: ['中式', '创意'], rating: 4.3, avgPrice: 45, visitorCount: 1200, conversionRate: 0.68, heatmap: 0.62 },
+  { id: 's042', name: '混果汁', category: '咖啡茶饮', floor: 'S-B1', x: 56, y: 76, description: '鲜榨果汁品牌', tags: ['果汁', '健康'], rating: 4.2, avgPrice: 25, visitorCount: 2000, conversionRate: 0.78, heatmap: 0.80 },
+  { id: 's043', name: '超级猩猩', category: '运动健身', floor: 'S-B1', x: 68, y: 76, description: '团课健身品牌', tags: ['健身', '团课'], rating: 4.4, avgPrice: 129, visitorCount: 800, conversionRate: 0.55, heatmap: 0.60 },
+  { id: 's044', name: 'charfon bijun', category: '美容美发', floor: 'S-B1', x: 82, y: 76, description: '日式美甲美睫', tags: ['美甲', '美睫'], rating: 4.3, avgPrice: 280, visitorCount: 350, conversionRate: 0.52, heatmap: 0.48 },
+  { id: 's045', name: '丽拉瓦迪泰式SPA', category: '美容美发', floor: 'S-B1', x: 6, y: 84, description: '正宗泰式按摩SPA', tags: ['SPA', '泰式'], rating: 4.5, avgPrice: 500, visitorCount: 180, conversionRate: 0.55, heatmap: 0.40 },
+  { id: 's046', name: 'BRANEW', category: '美容美发', floor: 'S-B1', x: 20, y: 84, description: '韩式皮肤管理', tags: ['护肤', '韩式'], rating: 4.4, avgPrice: 400, visitorCount: 250, conversionRate: 0.48, heatmap: 0.42 },
+  { id: 's047', name: '丝域养发', category: '美容美发', floor: 'S-B1', x: 34, y: 84, description: '头皮头发护理', tags: ['养发', '护理'], rating: 4.3, avgPrice: 300, visitorCount: 200, conversionRate: 0.50, heatmap: 0.38 },
+  { id: 's048', name: "B'S Brows", category: '美容美发', floor: 'S-B1', x: 46, y: 84, description: '专业眉形设计', tags: ['眉形', '设计'], rating: 4.3, avgPrice: 180, visitorCount: 220, conversionRate: 0.55, heatmap: 0.40 },
+  { id: 's049', name: '美妆灵感空间', category: '美容美发', floor: 'S-B1', x: 58, y: 84, description: '美妆体验空间', tags: ['美妆', '体验'], rating: 4.2, avgPrice: 200, visitorCount: 400, conversionRate: 0.42, heatmap: 0.48 },
+  { id: 's050', name: '周大福', category: '珠宝配饰', floor: 'S-B1', x: 72, y: 84, description: '中华老字号珠宝品牌', tags: ['珠宝', '黄金'], rating: 4.5, avgPrice: 3800, visitorCount: 1100, conversionRate: 0.28, heatmap: 0.62 },
+  { id: 's051', name: 'FIVE DOCTORS', category: '美容美发', floor: 'S-B1', x: 86, y: 84, description: '高端医美诊所', tags: ['医美', '高端'], rating: 4.3, avgPrice: 3000, visitorCount: 100, conversionRate: 0.20, heatmap: 0.30 },
+  // B2 - 餐饮/数码/宠物（10家）
+  { id: 's052', name: '阿不就台湾食堂', category: '快餐轻食', floor: 'S-B2', x: 6, y: 90, description: '台湾风味小吃', tags: ['台湾', '小吃'], rating: 4.3, avgPrice: 45, visitorCount: 900, conversionRate: 0.68, heatmap: 0.55 },
+  { id: 's053', name: '莆田', category: '品质中餐', floor: 'S-B2', x: 20, y: 90, description: '福建莆田米其林餐厅', tags: ['福建菜', '米其林'], rating: 4.4, avgPrice: 180, visitorCount: 650, conversionRate: 0.72, heatmap: 0.58 },
+  { id: 's054', name: '喜茶', category: '咖啡茶饮', floor: 'S-B2', x: 32, y: 90, description: '新式茶饮开创者', tags: ['茶饮', '网红'], rating: 4.3, avgPrice: 25, visitorCount: 3500, conversionRate: 0.80, heatmap: 0.88 },
+  { id: 's055', name: '小爱同学', category: '科技数码', floor: 'S-B2', x: 44, y: 90, description: '小米AIoT体验店', tags: ['智能', '体验'], rating: 4.3, avgPrice: 500, visitorCount: 1800, conversionRate: 0.25, heatmap: 0.70 },
+  { id: 's056', name: '小米', category: '科技数码', floor: 'S-B2', x: 58, y: 90, description: '小米之家旗舰店', tags: ['数码', '旗舰'], rating: 4.4, avgPrice: 1500, visitorCount: 2500, conversionRate: 0.32, heatmap: 0.78 },
+  { id: 's057', name: '哈曼卡顿', category: '科技数码', floor: 'S-B2', x: 72, y: 90, description: '高端音响体验店', tags: ['音响', '高端'], rating: 4.5, avgPrice: 3000, visitorCount: 600, conversionRate: 0.15, heatmap: 0.42 },
+  { id: 's058', name: 'PET WISH', category: '宠物服务', floor: 'S-B2', x: 86, y: 90, description: '宠物愿望清单商店', tags: ['宠物', '用品'], rating: 4.2, avgPrice: 150, visitorCount: 500, conversionRate: 0.55, heatmap: 0.40 },
+  { id: 's059', name: '全家', category: '便利生活', floor: 'S-B2', x: 20, y: 96, description: '24小时便利店', tags: ['便利店', '24h'], rating: 4.1, avgPrice: 15, visitorCount: 5000, conversionRate: 0.85, heatmap: 0.92 },
+  { id: 's060', name: 'PonyStar', category: '宠物服务', floor: 'S-B2', x: 42, y: 96, description: '萌宠互动体验馆', tags: ['萌宠', '互动'], rating: 4.3, avgPrice: 80, visitorCount: 800, conversionRate: 0.60, heatmap: 0.52 },
+  // B3 + S1-S5 - 汽车/健身
+  { id: 's061', name: 'GALAXY AUTO STUDIO', category: '汽车体验', floor: 'S-B3', x: 40, y: 99, description: '车皇汽车体验中心', tags: ['汽车', '体验'], rating: 4.6, avgPrice: 300000, visitorCount: 300, conversionRate: 0.04, heatmap: 0.42 },
+  { id: 's062', name: 'BFC健身会馆', category: '运动健身', floor: 'S-S1', x: 75, y: 99, description: '高端健身会馆，泳池/私教/团课', tags: ['健身', '高端'], rating: 4.5, avgPrice: 800, visitorCount: 380, conversionRate: 0.35, heatmap: 0.48 },
 
-  // L3 - 国内设计师精品 / 咖啡 / 艺术空间
-  { id: 's004', name: 'BFC ART', category: '艺术空间', floor: 'S-L3', x: 20, y: 30, description: '当代艺术展厅，定期举办国内外艺术家个展', tags: ['艺术', '展览', '文化'], rating: 4.5, avgPrice: 0, visitorCount: 1200, conversionRate: 0.15, heatmap: 0.60 },
-  { id: 's005', name: 'RE而意', category: '生活方式', floor: 'S-L3', x: 50, y: 25, description: '独立设计师买手店，咖啡与骑行文化', tags: ['设计师', '咖啡', '骑行'], rating: 4.4, avgPrice: 450, visitorCount: 1500, conversionRate: 0.28, heatmap: 0.68 },
-  { id: 's006', name: '% Arabica', category: '精品咖啡', floor: 'S-L3', x: 75, y: 40, description: '日本精品咖啡品牌，极简风格', tags: ['咖啡', '极简', '打卡'], rating: 4.5, avgPrice: 42, visitorCount: 2800, conversionRate: 0.75, heatmap: 0.88 },
-
-  // L2 - 运动时尚 + 设计师品牌 + 珠宝（设计师珠宝孵化平台）
-  { id: 's007', name: 'DUSTON BILLEKAMP', category: '设计师珠宝', floor: 'S-L2', x: 15, y: 35, description: '国际设计师珠宝品牌，东西方美学融合', tags: ['珠宝', '设计师', '东方美学'], rating: 4.6, avgPrice: 3500, visitorCount: 420, conversionRate: 0.22, heatmap: 0.48 },
-  { id: 's008', name: 'FOREVERMARK', category: '设计师珠宝', floor: 'S-L2', x: 40, y: 30, description: '戴比尔斯旗下钻石品牌，永恒印记', tags: ['钻石', '高端', '婚戒'], rating: 4.7, avgPrice: 8800, visitorCount: 350, conversionRate: 0.18, heatmap: 0.45 },
-  { id: 's009', name: 'CIRCLE', category: '设计师珠宝', floor: 'S-L2', x: 65, y: 25, description: '日本轻奢珠宝，精致日常佩戴设计', tags: ['轻奢', '珠宝', '日系'], rating: 4.5, avgPrice: 1800, visitorCount: 680, conversionRate: 0.30, heatmap: 0.55 },
-  { id: 's010', name: 'lululemon', category: '运动时尚', floor: 'S-L2', x: 30, y: 55, description: '加拿大运动生活方式品牌', tags: ['运动', '瑜伽', '生活方式'], rating: 4.4, avgPrice: 680, visitorCount: 1800, conversionRate: 0.32, heatmap: 0.72 },
-  { id: 's011', name: 'Maison Margiela', category: '设计师品牌', floor: 'S-L2', x: 55, y: 50, description: '法国先锋设计师品牌，解构主义美学', tags: ['高街', '设计师', '先锋'], rating: 4.6, avgPrice: 4200, visitorCount: 520, conversionRate: 0.15, heatmap: 0.52 },
-
-  // L1 - 国际潮流时装精品 / 生活方式
-  { id: 's012', name: 'LOEWE', category: '国际精品', floor: 'S-L1', x: 25, y: 30, description: '西班牙奢侈品牌，手工艺与当代设计', tags: ['奢侈品', '手袋', '艺术'], rating: 4.7, avgPrice: 6500, visitorCount: 890, conversionRate: 0.12, heatmap: 0.68 },
-  { id: 's013', name: 'Acne Studios', category: '国际精品', floor: 'S-L1', x: 55, y: 25, description: '瑞典设计师品牌，极简北欧风格', tags: ['设计师', '北欧', '极简'], rating: 4.5, avgPrice: 2800, visitorCount: 1200, conversionRate: 0.20, heatmap: 0.70 },
-  { id: 's014', name: 'BYREDO', category: '生活方式', floor: 'S-L1', x: 80, y: 35, description: '瑞典香氛与生活方式品牌', tags: ['香氛', '小众', '精致'], rating: 4.6, avgPrice: 1200, visitorCount: 1400, conversionRate: 0.35, heatmap: 0.75 },
-
-  // B1 - 休闲餐饮 + 品质数码 + 东方非遗珠宝区
-  { id: 's015', name: '周大福', category: '东方非遗珠宝', floor: 'S-B1', x: 20, y: 30, description: '中华老字号珠宝，传承东方非遗工艺', tags: ['非遗', '黄金', '老字号'], rating: 4.5, avgPrice: 3800, visitorCount: 1100, conversionRate: 0.28, heatmap: 0.62 },
-  { id: 's016', name: '老庙黄金', category: '东方非遗珠宝', floor: 'S-B1', x: 50, y: 25, description: '上海百年金饰品牌，非遗花丝工艺', tags: ['非遗', '黄金', '传统工艺'], rating: 4.4, avgPrice: 3200, visitorCount: 950, conversionRate: 0.25, heatmap: 0.58 },
-  { id: 's017', name: '中国黄金', category: '东方非遗珠宝', floor: 'S-B1', x: 75, y: 35, description: '央企品牌，投资金条与古法金饰', tags: ['投资', '黄金', '央企'], rating: 4.3, avgPrice: 2800, visitorCount: 880, conversionRate: 0.22, heatmap: 0.55 },
-  { id: 's018', name: 'Shake Shack', category: '休闲餐饮', floor: 'S-B1', x: 30, y: 60, description: '纽约人气汉堡，美式休闲快餐', tags: ['汉堡', '美式', '网红'], rating: 4.3, avgPrice: 85, visitorCount: 3200, conversionRate: 0.72, heatmap: 0.92 },
-  { id: 's019', name: 'Apple Store', category: '数码电子', floor: 'S-B1', x: 60, y: 55, description: '苹果官方零售店，全线产品及体验服务', tags: ['科技', '数码', '苹果'], rating: 4.7, avgPrice: 5000, visitorCount: 4200, conversionRate: 0.15, heatmap: 0.85 },
-
-  // B2 - 东方美学文化区
-  { id: 's020', name: '朵云轩', category: '文化空间', floor: 'S-B2', x: 25, y: 35, description: '百年文化老字号，书画文房与非遗体验', tags: ['非遗', '书画', '文化'], rating: 4.6, avgPrice: 280, visitorCount: 800, conversionRate: 0.25, heatmap: 0.48 },
-  { id: 's021', name: '上图书店', category: '文化空间', floor: 'S-B2', x: 55, y: 30, description: '上海图书馆旗下精品书店', tags: ['书店', '阅读', '文化'], rating: 4.5, avgPrice: 65, visitorCount: 1100, conversionRate: 0.38, heatmap: 0.52 },
-  { id: 's022', name: '非遗工坊', category: '文化体验', floor: 'S-B2', x: 80, y: 25, description: '非遗手工体验工坊，花丝/剪纸/泥塑', tags: ['体验', '非遗', '手作'], rating: 4.4, avgPrice: 150, visitorCount: 650, conversionRate: 0.55, heatmap: 0.42 },
-
-  // === 北区 North Retail ===
-  // L3 - 米其林星级餐厅
-  { id: 'n001', name: '泰安门', category: '米其林餐厅', floor: 'N-L3', x: 30, y: 35, description: '米其林三星，现代欧洲料理', tags: ['米其林三星', '西餐', '高端'], rating: 4.9, avgPrice: 2200, visitorCount: 180, conversionRate: 0.90, heatmap: 0.50 },
-  { id: 'n002', name: 'Ultraviolet', category: '米其林餐厅', floor: 'N-L3', x: 60, y: 30, description: '多感官沉浸式 dining experience', tags: ['沉浸式', '创意', '预约制'], rating: 4.8, avgPrice: 3800, visitorCount: 120, conversionRate: 0.95, heatmap: 0.45 },
-  { id: 'n003', name: '甬府', category: '米其林餐厅', floor: 'N-L3', x: 85, y: 40, description: '米其林一星宁波菜，东海海鲜', tags: ['米其林一星', '海鲜', '宁波菜'], rating: 4.7, avgPrice: 800, visitorCount: 280, conversionRate: 0.82, heatmap: 0.55 },
-
-  // L2 - High Tea 高茶
-  { id: 'n004', name: 'TWG Tea', category: '高茶', floor: 'N-L2', x: 35, y: 30, description: '新加坡奢华茶品牌，下午茶体验', tags: ['下午茶', '茶', '社交'], rating: 4.5, avgPrice: 180, visitorCount: 1500, conversionRate: 0.68, heatmap: 0.72 },
-  { id: 'n005', name: 'Laduree', category: '高茶', floor: 'N-L2', x: 65, y: 25, description: '法国马卡龙与精致甜点', tags: ['甜点', '马卡龙', '法式'], rating: 4.4, avgPrice: 120, visitorCount: 1800, conversionRate: 0.65, heatmap: 0.75 },
-
-  // L1 - Flagship Store Boutique 旗舰店精品店
-  { id: 'n006', name: 'BFC 旗舰店', category: '旗舰精品', floor: 'N-L1', x: 25, y: 30, description: 'BFC 自营旗舰集合空间，限量单品', tags: ['限量', '旗舰', '集合'], rating: 4.5, avgPrice: 1800, visitorCount: 1100, conversionRate: 0.22, heatmap: 0.60 },
-  { id: 'n007', name: '大豫园文创', category: '文创精品', floor: 'N-L1', x: 55, y: 25, description: '豫园传统文创与非遗衍生品', tags: ['文创', '非遗', '豫园'], rating: 4.4, avgPrice: 180, visitorCount: 1400, conversionRate: 0.35, heatmap: 0.65 },
-  { id: 'n008', name: '上海滩 SHANGHAI TANG', category: '旗舰精品', floor: 'N-L1', x: 80, y: 35, description: '中国奢侈品牌，东方现代美学', tags: ['国奢', '旗袍', '中式'], rating: 4.6, avgPrice: 3200, visitorCount: 680, conversionRate: 0.18, heatmap: 0.52 },
-
-  // B1 - 宠物区 + 博纳影城
-  { id: 'n009', name: 'BONA Palace', category: '影院', floor: 'N-B1', x: 30, y: 30, description: '博纳高端影城，IMAX与VIP厅', tags: ['电影', 'IMAX', '娱乐'], rating: 4.5, avgPrice: 120, visitorCount: 3500, conversionRate: 0.85, heatmap: 0.80 },
-  { id: 'n010', name: 'PetArea 宠物友好区', category: '宠物服务', floor: 'N-B1', x: 65, y: 25, description: '宠物社交空间，宠物用品与美容', tags: ['宠物', '社交', '萌宠'], rating: 4.3, avgPrice: 200, visitorCount: 1600, conversionRate: 0.60, heatmap: 0.55 },
-
-  // B2 - 文艺空间 + 美食街
-  { id: 'n011', name: '美食街', category: '美食街', floor: 'N-B2', x: 25, y: 35, description: '各国街头美食聚集地，人气小吃', tags: ['小吃', '人气', '平价'], rating: 4.2, avgPrice: 45, visitorCount: 4500, conversionRate: 0.78, heatmap: 0.95 },
-  { id: 'n012', name: '艺文空间', category: '文艺空间', floor: 'N-B2', x: 55, y: 30, description: '文学与艺术主题活动空间', tags: ['文学', '艺术', '沙龙'], rating: 4.4, avgPrice: 0, visitorCount: 900, conversionRate: 0.20, heatmap: 0.40 },
-  { id: 'n013', name: 'TZ House', category: '演艺空间', floor: 'N-B2', x: 80, y: 25, description: 'Livehouse 演艺空间，音乐现场', tags: ['音乐', 'Live', '演出'], rating: 4.5, avgPrice: 200, visitorCount: 1200, conversionRate: 0.70, heatmap: 0.72 },
+  // ==================== 北区 North Retail ====================
+  // N3 - 精致餐饮集群
+  { id: 'n001', name: '上海滩餐厅', category: '精致餐饮', floor: 'N-L3-5F', x: 40, y: 16, description: '上海滩品牌旗舰餐厅', tags: ['上海菜', '地标'], rating: 4.5, avgPrice: 700, visitorCount: 220, conversionRate: 0.72, heatmap: 0.52 },
+  { id: 'n002', name: '新荣记', category: '精致餐饮', floor: 'N-L3-3F', x: 18, y: 24, description: '米其林台州菜标杆', tags: ['米其林', '台州菜'], rating: 4.8, avgPrice: 1200, visitorCount: 280, conversionRate: 0.85, heatmap: 0.60 },
+  { id: 'n003', name: 'DA Vittorio Shanghai', category: '精致餐饮', floor: 'N-L3-3F', x: 62, y: 24, description: '米其林三星意大利餐厅', tags: ['米其林三星', '意餐'], rating: 4.8, avgPrice: 2000, visitorCount: 160, conversionRate: 0.90, heatmap: 0.48 },
+  { id: 'n004', name: '柴门荟', category: '精致餐饮', floor: 'N-L3-2F', x: 40, y: 32, description: '川菜高端品牌', tags: ['川菜', '高端'], rating: 4.4, avgPrice: 500, visitorCount: 300, conversionRate: 0.78, heatmap: 0.55 },
+  { id: 'n005', name: '莱珀妮 La Prairie', category: '国际精品', floor: 'N-L3-1F', x: 18, y: 40, description: '瑞士奢华护肤品牌', tags: ['护肤', '奢华'], rating: 4.7, avgPrice: 5000, visitorCount: 350, conversionRate: 0.15, heatmap: 0.48 },
+  { id: 'n006', name: '陆家居', category: '生活方式', floor: 'N-L3-1F', x: 48, y: 40, description: '高端家居品牌集合', tags: ['家居', '高端'], rating: 4.3, avgPrice: 3000, visitorCount: 200, conversionRate: 0.12, heatmap: 0.38 },
+  { id: 'n007', name: '梅赛德斯-迈巴赫', category: '汽车体验', floor: 'N-L3-1F', x: 78, y: 40, description: '迈巴赫城市品牌中心', tags: ['汽车', '迈巴赫'], rating: 4.7, avgPrice: 2000000, visitorCount: 400, conversionRate: 0.02, heatmap: 0.48 },
+  // N2 - 茶馆SPA + 网红餐饮（不再叫高茶）
+  { id: 'n008', name: '隐溪茶馆 SPA', category: '茶馆SPA', floor: 'N-L2-2F', x: 40, y: 50, description: '精品茶馆与SPA养生空间', tags: ['茶馆', 'SPA', '养生'], rating: 4.6, avgPrice: 300, visitorCount: 500, conversionRate: 0.58, heatmap: 0.55 },
+  { id: 'n009', name: '白茸', category: '网红餐饮', floor: 'N-L2-1F', x: 10, y: 58, description: '新派创意料理', tags: ['创意', '新派'], rating: 4.3, avgPrice: 180, visitorCount: 900, conversionRate: 0.62, heatmap: 0.65 },
+  { id: 'n010', name: '复兴面王深夜食堂', category: '网红餐饮', floor: 'N-L2-1F', x: 28, y: 58, description: '深夜人气面馆', tags: ['面馆', '深夜'], rating: 4.4, avgPrice: 45, visitorCount: 2200, conversionRate: 0.75, heatmap: 0.82 },
+  { id: 'n011', name: 'PHANTACI', category: '潮流买手', floor: 'N-L2-1F', x: 48, y: 58, description: '周杰伦潮流品牌店', tags: ['周杰伦', '潮牌'], rating: 4.3, avgPrice: 1200, visitorCount: 1500, conversionRate: 0.20, heatmap: 0.72 },
+  { id: 'n012', name: '橘炭胡同·乌喜', category: '网红餐饮', floor: 'N-L2-1F', x: 66, y: 58, description: '日式烧鸟居酒屋', tags: ['烧鸟', '居酒屋'], rating: 4.4, avgPrice: 200, visitorCount: 600, conversionRate: 0.68, heatmap: 0.58 },
+  { id: 'n013', name: '哥哥的深夜食堂', category: '网红餐饮', floor: 'N-L2-1F', x: 86, y: 58, description: '深夜日式食堂', tags: ['日式', '深夜'], rating: 4.2, avgPrice: 100, visitorCount: 800, conversionRate: 0.65, heatmap: 0.60 },
+  // N1
+  { id: 'n014', name: 'PEANUT BUTTER', category: '网红餐饮', floor: 'N-L1-1F', x: 28, y: 68, description: '美式创意汉堡', tags: ['汉堡', '美式'], rating: 4.2, avgPrice: 75, visitorCount: 1100, conversionRate: 0.70, heatmap: 0.68 },
+  { id: 'n015', name: 'NUMATA·SOU 沼田双', category: '潮流买手', floor: 'N-L1-1F', x: 68, y: 68, description: '日系买手集合店', tags: ['日系', '买手'], rating: 4.3, avgPrice: 1500, visitorCount: 450, conversionRate: 0.18, heatmap: 0.48 },
+  // B1 - 餐饮/宠物/便利
+  { id: 'n016', name: '不入川豆花馆', category: '快餐轻食', floor: 'N-B1', x: 6, y: 76, description: '地道川味豆花', tags: ['川味', '豆花'], rating: 4.3, avgPrice: 30, visitorCount: 1200, conversionRate: 0.68, heatmap: 0.62 },
+  { id: 'n017', name: '米崎', category: '快餐轻食', floor: 'N-B1', x: 20, y: 76, description: '日式便当', tags: ['日式', '便当'], rating: 4.2, avgPrice: 40, visitorCount: 900, conversionRate: 0.65, heatmap: 0.55 },
+  { id: 'n018', name: '沄南云海肴', category: '品质中餐', floor: 'N-B1', x: 32, y: 76, description: '云南菜名店', tags: ['云南菜', '特色'], rating: 4.4, avgPrice: 120, visitorCount: 750, conversionRate: 0.72, heatmap: 0.58 },
+  { id: 'n019', name: 'MANNER', category: '咖啡茶饮', floor: 'N-B1', x: 46, y: 76, description: '上海精品咖啡标杆', tags: ['精品', '咖啡'], rating: 4.5, avgPrice: 20, visitorCount: 2800, conversionRate: 0.78, heatmap: 0.85 },
+  { id: 'n020', name: '林里柠檬茶', category: '咖啡茶饮', floor: 'N-B1', x: 58, y: 76, description: '手打柠檬茶', tags: ['柠檬茶', '手打'], rating: 4.3, avgPrice: 18, visitorCount: 2000, conversionRate: 0.75, heatmap: 0.75 },
+  { id: 'n021', name: '陈香贵', category: '快餐轻食', floor: 'N-B1', x: 72, y: 76, description: '兰州牛肉面', tags: ['面食', '兰州'], rating: 4.3, avgPrice: 35, visitorCount: 1800, conversionRate: 0.72, heatmap: 0.70 },
+  { id: 'n022', name: '小吃堂', category: '快餐轻食', floor: 'N-B1', x: 86, y: 76, description: '各地小吃集合', tags: ['小吃', '集合'], rating: 4.1, avgPrice: 25, visitorCount: 2200, conversionRate: 0.70, heatmap: 0.72 },
+  { id: 'n023', name: '全家', category: '便利生活', floor: 'N-B1', x: 6, y: 84, description: '24小时便利店', tags: ['便利店', '24h'], rating: 4.1, avgPrice: 15, visitorCount: 3500, conversionRate: 0.82, heatmap: 0.85 },
+  { id: 'n024', name: '火星宠物超市', category: '宠物服务', floor: 'N-B1', x: 22, y: 84, description: '大型宠物用品超市', tags: ['宠物', '超市'], rating: 4.2, avgPrice: 120, visitorCount: 600, conversionRate: 0.55, heatmap: 0.50 },
+  { id: 'n025', name: 'AirPark', category: '宠物服务', floor: 'N-B1', x: 40, y: 84, description: '宠物友好时尚街区', tags: ['宠物', '时尚'], rating: 4.3, avgPrice: 50, visitorCount: 700, conversionRate: 0.50, heatmap: 0.55 },
+  { id: 'n026', name: 'PET MART', category: '宠物服务', floor: 'N-B1', x: 56, y: 84, description: '宠物精品集合店', tags: ['宠物', '精品'], rating: 4.2, avgPrice: 180, visitorCount: 450, conversionRate: 0.48, heatmap: 0.45 },
+  // B2 - 餐饮/文创（11家）
+  { id: 'n027', name: '大丰和风食堂', category: '快餐轻食', floor: 'N-B2', x: 4, y: 90, description: '日式定食食堂', tags: ['日式', '定食'], rating: 4.2, avgPrice: 50, visitorCount: 800, conversionRate: 0.68, heatmap: 0.52 },
+  { id: 'n028', name: '茶姬', category: '咖啡茶饮', floor: 'N-B2', x: 16, y: 90, description: '新式茶饮', tags: ['茶饮', '新式'], rating: 4.3, avgPrice: 22, visitorCount: 1600, conversionRate: 0.72, heatmap: 0.65 },
+  { id: 'n029', name: '湖南饭店', category: '品质中餐', floor: 'N-B2', x: 26, y: 90, description: '地道湘菜', tags: ['湘菜', '地道'], rating: 4.3, avgPrice: 80, visitorCount: 700, conversionRate: 0.70, heatmap: 0.55 },
+  { id: 'n030', name: '东发道茶冰厅', category: '快餐轻食', floor: 'N-B2', x: 38, y: 90, description: '港式茶餐厅', tags: ['港式', '茶餐厅'], rating: 4.3, avgPrice: 60, visitorCount: 1200, conversionRate: 0.72, heatmap: 0.65 },
+  { id: 'n031', name: '丘大叔米粉', category: '快餐轻食', floor: 'N-B2', x: 52, y: 90, description: '手工米粉', tags: ['米粉', '手工'], rating: 4.1, avgPrice: 30, visitorCount: 900, conversionRate: 0.65, heatmap: 0.52 },
+  { id: 'n032', name: 'MANNER', category: '咖啡茶饮', floor: 'N-B2', x: 64, y: 90, description: '精品咖啡', tags: ['精品', '咖啡'], rating: 4.5, avgPrice: 20, visitorCount: 2000, conversionRate: 0.78, heatmap: 0.78 },
+  { id: 'n033', name: '一点点', category: '咖啡茶饮', floor: 'N-B2', x: 76, y: 90, description: '台式手摇茶', tags: ['台式', '奶茶'], rating: 4.2, avgPrice: 15, visitorCount: 2500, conversionRate: 0.75, heatmap: 0.80 },
+  { id: 'n034', name: '陈香贵', category: '快餐轻食', floor: 'N-B2', x: 88, y: 90, description: '兰州牛肉面', tags: ['面食', '兰州'], rating: 4.3, avgPrice: 35, visitorCount: 1400, conversionRate: 0.72, heatmap: 0.62 },
+  { id: 'n035', name: '九木杂物社', category: '文创杂货', floor: 'N-B2', x: 6, y: 96, description: '文创杂货集合店', tags: ['文创', '杂货'], rating: 4.3, avgPrice: 50, visitorCount: 900, conversionRate: 0.55, heatmap: 0.55 },
+  { id: 'n036', name: '多抓鱼', category: '文创杂货', floor: 'N-B2', x: 24, y: 96, description: '二手循环商店', tags: ['二手', '循环'], rating: 4.4, avgPrice: 40, visitorCount: 1100, conversionRate: 0.62, heatmap: 0.60 },
+  { id: 'n037', name: 'READ&SOCIAL', category: '文创杂货', floor: 'N-B2', x: 40, y: 96, description: '阅读社交空间', tags: ['阅读', '社交'], rating: 4.3, avgPrice: 35, visitorCount: 600, conversionRate: 0.45, heatmap: 0.42 },
+  { id: 'n038', name: 'CLAWGALLERY', category: '文创杂货', floor: 'N-B2', x: 62, y: 96, description: '潮流艺术画廊', tags: ['艺术', '潮流'], rating: 4.4, avgPrice: 200, visitorCount: 400, conversionRate: 0.32, heatmap: 0.40 },
 ]
+
 
 export const CATEGORIES = [
   { id: 'fine-dining', name: '精致餐饮', icon: '🍽️', color: '#c9a96e' },
-  { id: 'michelin', name: '米其林餐厅', icon: '⭐', color: '#d4a373' },
-  { id: 'high-tea', name: '高茶', icon: '🫖', color: '#e9c46a' },
-  { id: 'flagship', name: '旗舰精品', icon: '👑', color: '#8b5cf6' },
-  { id: 'intl-fashion', name: '国际精品', icon: '👜', color: '#ec4899' },
-  { id: 'designer-brand', name: '设计师品牌', icon: '✂️', color: '#6366f1' },
-  { id: 'designer-jewelry', name: '设计师珠宝', icon: '💎', color: '#3b82f6' },
-  { id: 'heritage-jewelry', name: '东方非遗珠宝', icon: '🏮', color: '#f59e0b' },
-  { id: 'sports', name: '运动时尚', icon: '🏃', color: '#10b981' },
-  { id: 'lifestyle', name: '生活方式', icon: '🏠', color: '#14b8a6' },
-  { id: 'coffee', name: '精品咖啡', icon: '☕', color: '#8b5cf6' },
-  { id: 'culture', name: '文化空间', icon: '📚', color: '#6366f1' },
-  { id: 'heritage', name: '文化体验', icon: '🎭', color: '#a855f7' },
-  { id: 'food-street', name: '美食街', icon: '🍜', color: '#f97316' },
-  { id: 'art-space', name: '文艺空间', icon: '🎨', color: '#a855f7' },
-  { id: 'cinema', name: '影院', icon: '🎬', color: '#6366f1' },
+  { id: 'luxury', name: '国际精品', icon: '👜', color: '#ec4899' },
+  { id: 'curated-fashion', name: '潮流买手', icon: '🎯', color: '#6366f1' },
+  { id: 'sports-fashion', name: '运动时尚', icon: '🏃', color: '#10b981' },
+  { id: 'chinese-cuisine', name: '品质中餐', icon: '🥢', color: '#d97706' },
+  { id: 'trendy-dining', name: '网红餐饮', icon: '🔥', color: '#f97316' },
+  { id: 'fast-food', name: '快餐轻食', icon: '🍔', color: '#f59e0b' },
+  { id: 'cafe-tea', name: '咖啡茶饮', icon: '☕', color: '#8b5cf6' },
+  { id: 'tea-spa', name: '茶馆SPA', icon: '🍵', color: '#14b8a6' },
+  { id: 'auto', name: '汽车体验', icon: '🚗', color: '#3b82f6' },
+  { id: 'jewelry', name: '珠宝配饰', icon: '💎', color: '#eab308' },
+  { id: 'beauty', name: '美容美发', icon: '💄', color: '#ec4899' },
+  { id: 'fitness', name: '运动健身', icon: '🏋️', color: '#22c55e' },
   { id: 'pet', name: '宠物服务', icon: '🐾', color: '#f59e0b' },
-  { id: 'tech', name: '数码电子', icon: '📱', color: '#3b82f6' },
-  { id: 'casual-food', name: '休闲餐饮', icon: '🍔', color: '#f97316' },
+  { id: 'lifestyle-culture', name: '文创杂货', icon: '📚', color: '#a855f7' },
+  { id: 'tech', name: '科技数码', icon: '📱', color: '#3b82f6' },
+  { id: 'lifestyle', name: '生活方式', icon: '🏠', color: '#14b8a6' },
+  { id: 'convenience', name: '便利生活', icon: '🏪', color: '#6b7280' },
 ]
 
 // ============================================================
@@ -429,7 +487,7 @@ export const AB_TESTS: ABTestConfig[] = [
   {
     id: 'ab2',
     name: '客群定向推荐策略',
-    description: '基于BFC四大客群画像的定向推荐 vs 通用推荐的效果对比',
+    description: '基于BFC六大客群画像的定向推荐 vs 通用推荐的效果对比',
     variantA: '通用推荐（不分客群）',
     variantB: 'BFC客群定向推荐（高净值/家庭/潮人/HNI）',
     status: 'running',
@@ -453,19 +511,19 @@ export const AB_TESTS: ABTestConfig[] = [
 // ============================================================
 export function generateRecommendations(profile: UserProfile): Recommendation[] {
   const personaBoost: Record<string, string[]> = {
-    '白领': ['精致餐饮', '米其林餐厅', '国际精品', '高茶', '旗舰精品', '精品咖啡'],
-    '艺术家/设计师': ['艺术空间', '设计师品牌', '生活方式', '文化空间', '文创精品', '文化体验'],
-    '高收入家庭': ['休闲餐饮', '文化空间', '文化体验', '高茶', '生活方式', '宠物服务'],
-    '本国外国游客': ['东方非遗珠宝', '文创精品', '文化空间', '文化体验', '旗舰精品', '休闲餐饮'],
-    '年轻潮人': ['设计师品牌', '运动时尚', '精品咖啡', '生活方式', '休闲餐饮', '文创精品'],
-    'Z世代/网红': ['精品咖啡', '生活方式', '设计师品牌', '运动时尚', '休闲餐饮', '文创精品'],
+    '白领': ['精致餐饮', '国际精品', '咖啡茶饮', '生活方式', '科技数码', '茶馆SPA'],
+    '艺术家/设计师': ['潮流买手', '文创杂货', '国际精品', '生活方式', '珠宝配饰', '咖啡茶饮'],
+    '高收入家庭': ['精致餐饮', '品质中餐', '宠物服务', '运动健身', '生活方式', '汽车体验'],
+    '本国外国游客': ['文创杂货', '珠宝配饰', '品质中餐', '咖啡茶饮', '精致餐饮', '潮流买手'],
+    '年轻潮人': ['潮流买手', '网红餐饮', '运动时尚', '咖啡茶饮', '科技数码', '文创杂货'],
+    'Z世代/网红': ['网红餐饮', '运动时尚', '咖啡茶饮', '潮流买手', '文创杂货', '生活方式'],
   }
 
   const priorityBoost: Record<string, string[]> = {
-    '美食体验': ['精致餐饮', '米其林餐厅', '高茶', '美食街', '休闲餐饮'],
-    '购物血拼': ['国际精品', '设计师品牌', '设计师珠宝', '东方非遗珠宝', '旗舰精品'],
-    '文化休闲': ['文化空间', '文化体验', '文艺空间', '影院', '艺术空间'],
-    '社交打卡': ['精品咖啡', '高茶', '文艺空间', '生活方式', '宠物服务'],
+    '美食体验': ['精致餐饮', '品质中餐', '网红餐饮', '快餐轻食', '咖啡茶饮', '茶馆SPA'],
+    '购物血拼': ['国际精品', '潮流买手', '珠宝配饰', '运动时尚', '文创杂货', '科技数码'],
+    '文化休闲': ['文创杂货', '生活方式', '茶馆SPA', '运动健身', '美容美发', '汽车体验'],
+    '社交打卡': ['网红餐饮', '咖啡茶饮', '潮流买手', '文创杂货', '宠物服务', '生活方式'],
   }
 
   const budgetMap: Record<string, number[]> = {

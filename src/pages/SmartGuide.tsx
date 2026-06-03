@@ -42,10 +42,10 @@ const COMPANION_OPTIONS = [
 ]
 
 const PRIORITY_OPTIONS = [
-  { value: '美食体验', label: '美食体验', desc: '探索BFC米其林与精致餐饮', icon: '🍽️' },
-  { value: '购物血拼', label: '购物血拼', desc: '设计师品牌与非遗珠宝', icon: '🛍️' },
-  { value: '文化休闲', label: '文化休闲', desc: '非遗体验与艺术展览', icon: '🎭' },
-  { value: '社交打卡', label: '社交打卡', desc: '网红点拍照与下午茶', icon: '📸' },
+  { value: '美食体验', label: '美食体验', desc: '精致餐饮与网红美食', icon: '🍽️' },
+  { value: '购物血拼', label: '购物血拼', desc: '国际精品与潮流买手', icon: '🛍️' },
+  { value: '文化休闲', label: '文化休闲', desc: '文创空间与SPA养生', icon: '🎭' },
+  { value: '社交打卡', label: '社交打卡', desc: '网红打卡与潮牌体验', icon: '📸' },
 ]
 
 const BUDGET_OPTIONS = [
@@ -56,18 +56,14 @@ const BUDGET_OPTIONS = [
 ]
 
 const INTEREST_OPTIONS = [
-  { name: '米其林餐饮', icon: '⭐', keywords: ['米其林', '精致', '高端'] },
-  { name: '设计师品牌', icon: '✂️', keywords: ['设计师', '先锋', '高街'] },
-  { name: '珠宝饰品', icon: '💎', keywords: ['珠宝', '钻石', '非遗'] },
-  { name: '非遗文化', icon: '🏮', keywords: ['非遗', '传统', '手作'] },
+  { name: '精致餐饮', icon: '⭐', keywords: ['精致', '米其林', '高端'] },
+  { name: '国际精品', icon: '👜', keywords: ['奢侈', '设计师', '高定'] },
+  { name: '潮流买手', icon: '🎯', keywords: ['买手', '先锋', '潮牌'] },
+  { name: '珠宝配饰', icon: '💎', keywords: ['珠宝', '腕表', '钻石'] },
   { name: '运动时尚', icon: '🏃', keywords: ['运动', '瑜伽', '潮流'] },
-  { name: '精致咖啡', icon: '☕', keywords: ['咖啡', '精品', '极简'] },
-  { name: '艺术展览', icon: '🎨', keywords: ['艺术', '展览', '文化'] },
-  { name: '宠物友好', icon: '🐾', keywords: ['宠物', '萌宠', '社交'] },
-  { name: '音乐现场', icon: '🎵', keywords: ['音乐', 'Live', '演出'] },
-  { name: '电影娱乐', icon: '🎬', keywords: ['电影', 'IMAX', '娱乐'] },
-  { name: '高茶下午茶', icon: '🫖', keywords: ['茶', '甜点', '社交'] },
-  { name: '国潮文创', icon: '🏯', keywords: ['国潮', '文创', '豫园'] },
+  { name: '咖啡茶饮', icon: '☕', keywords: ['咖啡', '茶饮', '精品'] },
+  { name: '网红餐饮', icon: '🔥', keywords: ['网红', '打卡', '人气'] },
+  { name: '宠物友好', icon: '🐾', keywords: ['宠物', '萌宠', '互动'] },
 ]
 
 const PROFILE_QUESTIONS = [

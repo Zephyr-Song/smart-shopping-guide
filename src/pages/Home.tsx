@@ -16,7 +16,7 @@ const FEATURES = [
   {
     icon: ShoppingBag,
     title: '智能导购',
-    desc: '基于BFC四大客群画像的AI个性化推荐，提升购物体验与决策效率',
+    desc: '基于BFC六大客群画像的AI个性化推荐，提升购物体验与决策效率',
     path: '/guide',
     color: 'bg-primary-500',
     lightColor: 'bg-primary-50',
@@ -43,7 +43,7 @@ const FEATURES = [
   {
     icon: BarChart3,
     title: '商圈分析',
-    desc: 'BFC四大客群客流趋势、转化漏斗、客群画像、营销ROI全景数据',
+    desc: 'BFC六大客群客流趋势、转化漏斗、客群画像、营销ROI全景数据',
     path: '/analytics',
     color: 'bg-violet-500',
     lightColor: 'bg-violet-50',
@@ -249,12 +249,12 @@ export default function Home() {
           </h3>
           <p className="text-sm text-gray-500 mb-3">建筑面积 60,000m²</p>
           <div className="space-y-2 text-xs text-gray-600">
-            <div className="flex justify-between py-1 border-b border-gray-50"><span>L4</span><span className="text-gray-400">精致餐饮 Fine Dining</span></div>
-            <div className="flex justify-between py-1 border-b border-gray-50"><span>L3</span><span className="text-gray-400">设计师精品·艺术空间</span></div>
-            <div className="flex justify-between py-1 border-b border-gray-50"><span>L2</span><span className="text-gray-400">运动时尚·设计师珠宝孵化平台</span></div>
-            <div className="flex justify-between py-1 border-b border-gray-50"><span>L1</span><span className="text-gray-400">国际潮流·生活方式</span></div>
-            <div className="flex justify-between py-1 border-b border-gray-50"><span>B1</span><span className="text-gray-400">休闲餐饮·东方非遗珠宝区</span></div>
-            <div className="flex justify-between py-1"><span>B2</span><span className="text-gray-400">东方美学文化区</span></div>
+            <div className="flex justify-between py-1 border-b border-gray-50"><span>4F</span><span className="text-gray-400">品质中餐聚集区（7家）</span></div>
+            <div className="flex justify-between py-1 border-b border-gray-50"><span>3F</span><span className="text-gray-400">时尚餐饮·生活方式</span></div>
+            <div className="flex justify-between py-1 border-b border-gray-50"><span>2F</span><span className="text-gray-400">潮流买手·运动时尚</span></div>
+            <div className="flex justify-between py-1 border-b border-gray-50"><span>1F</span><span className="text-gray-400">国际精品最密集（19家）</span></div>
+            <div className="flex justify-between py-1 border-b border-gray-50"><span>B1</span><span className="text-gray-400">快餐·美容·珠宝·健身</span></div>
+            <div className="flex justify-between py-1"><span>B2/B3/S1</span><span className="text-gray-400">数码·宠物·汽车·健身</span></div>
           </div>
         </div>
         <div className="bg-white rounded-xl border border-gray-100 p-6">
@@ -264,11 +264,11 @@ export default function Home() {
           </h3>
           <p className="text-sm text-gray-500 mb-3">建筑面积 36,000m² · 车位 1,524</p>
           <div className="space-y-2 text-xs text-gray-600">
-            <div className="flex justify-between py-1 border-b border-gray-50"><span>L3</span><span className="text-gray-400">米其林星级餐厅</span></div>
-            <div className="flex justify-between py-1 border-b border-gray-50"><span>L2</span><span className="text-gray-400">高茶下午茶</span></div>
-            <div className="flex justify-between py-1 border-b border-gray-50"><span>L1</span><span className="text-gray-400">旗舰店精品店</span></div>
-            <div className="flex justify-between py-1 border-b border-gray-50"><span>B1</span><span className="text-gray-400">博纳影城·宠物友好</span></div>
-            <div className="flex justify-between py-1"><span>B2</span><span className="text-gray-400">文艺空间·美食街·Livehouse</span></div>
+            <div className="flex justify-between py-1 border-b border-gray-50"><span>N3</span><span className="text-gray-400">精致餐饮集群</span></div>
+            <div className="flex justify-between py-1 border-b border-gray-50"><span>N2</span><span className="text-gray-400">茶馆SPA·网红餐饮</span></div>
+            <div className="flex justify-between py-1 border-b border-gray-50"><span>N1</span><span className="text-gray-400">潮流·买手</span></div>
+            <div className="flex justify-between py-1 border-b border-gray-50"><span>B1</span><span className="text-gray-400">餐饮·宠物·便利</span></div>
+            <div className="flex justify-between py-1"><span>B2</span><span className="text-gray-400">餐饮·文创</span></div>
           </div>
         </div>
       </div>

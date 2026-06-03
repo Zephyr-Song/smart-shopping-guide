@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { MapPin, Navigation, Info, Layers, Building2, Diamond, Crown, Clapperboard } from 'lucide-react'
+import { MapPin, Navigation, Info, Layers, Building2, Crown, Flame, Sparkles } from 'lucide-react'
 import { STORES } from '../data/mockData'
 
 interface FloorInfo {
@@ -10,57 +10,60 @@ interface FloorInfo {
 }
 
 const SOUTH_FLOORS: FloorInfo[] = [
-  { id: 'S-L4', label: 'L4', desc: '精致餐饮', icon: <Crown className="w-3 h-3" /> },
-  { id: 'S-L3', label: 'L3', desc: '设计师精品·艺术空间', icon: <Building2 className="w-3 h-3" /> },
-  { id: 'S-L2', label: 'L2', desc: '运动时尚·设计师珠宝', icon: <Diamond className="w-3 h-3" /> },
-  { id: 'S-L1', label: 'L1', desc: '国际潮流·生活方式', icon: <Diamond className="w-3 h-3" /> },
-  { id: 'S-B1', label: 'B1', desc: '休闲餐饮·非遗珠宝·数码', icon: <MapPin className="w-3 h-3" /> },
-  { id: 'S-B2', label: 'B2', desc: '东方美学文化区', icon: <Building2 className="w-3 h-3" /> },
+  { id: 'S-L4', label: '4F', desc: '品质中餐聚集区', icon: <Crown className="w-3 h-3" /> },
+  { id: 'S-L3', label: '3F', desc: '时尚餐饮·生活方式', icon: <Flame className="w-3 h-3" /> },
+  { id: 'S-L2', label: '2F', desc: '潮流买手·运动时尚', icon: <Sparkles className="w-3 h-3" /> },
+  { id: 'S-L1', label: '1F', desc: '国际精品·奢侈品', icon: <Crown className="w-3 h-3" /> },
+  { id: 'S-B1', label: 'B1', desc: '快餐·美容·珠宝·健身', icon: <MapPin className="w-3 h-3" /> },
+  { id: 'S-B2', label: 'B2', desc: '数码·宠物·快餐', icon: <MapPin className="w-3 h-3" /> },
+  { id: 'S-B3', label: 'B3', desc: '汽车体验', icon: <Building2 className="w-3 h-3" /> },
+  { id: 'S-S1', label: 'S1-S5', desc: '健身会馆', icon: <Building2 className="w-3 h-3" /> },
 ]
 
 const NORTH_FLOORS: FloorInfo[] = [
-  { id: 'N-L4', label: 'L4', desc: '商务配套', icon: <Building2 className="w-3 h-3" /> },
-  { id: 'N-L3', label: 'L3', desc: '米其林星级餐厅', icon: <Crown className="w-3 h-3" /> },
-  { id: 'N-L2', label: 'L2', desc: '高茶·下午茶', icon: <Diamond className="w-3 h-3" /> },
-  { id: 'N-L1', label: 'L1', desc: '旗舰精品店', icon: <Crown className="w-3 h-3" /> },
-  { id: 'N-B1', label: 'B1', desc: '博纳影城·宠物友好', icon: <Clapperboard className="w-3 h-3" /> },
-  { id: 'N-B2', label: 'B2', desc: '文艺空间·美食街', icon: <MapPin className="w-3 h-3" /> },
+  { id: 'N-L3-5F', label: 'N3-5F', desc: '上海滩餐厅', icon: <Crown className="w-3 h-3" /> },
+  { id: 'N-L3-3F', label: 'N3-3F', desc: '新荣记·DA Vittorio', icon: <Crown className="w-3 h-3" /> },
+  { id: 'N-L3-2F', label: 'N3-2F', desc: '柴门荟', icon: <Flame className="w-3 h-3" /> },
+  { id: 'N-L3-1F', label: 'N3-1F', desc: '精品·迈巴赫', icon: <Sparkles className="w-3 h-3" /> },
+  { id: 'N-L2-2F', label: 'N2-2F', desc: '茶馆SPA养生', icon: <Sparkles className="w-3 h-3" /> },
+  { id: 'N-L2-1F', label: 'N2-1F', desc: '网红餐饮', icon: <Flame className="w-3 h-3" /> },
+  { id: 'N-L1-1F', label: 'N1-1F', desc: '潮流·买手', icon: <Sparkles className="w-3 h-3" /> },
+  { id: 'N-B1', label: 'B1', desc: '餐饮·宠物·便利', icon: <MapPin className="w-3 h-3" /> },
+  { id: 'N-B2', label: 'B2', desc: '餐饮·文创', icon: <MapPin className="w-3 h-3" /> },
 ]
 
-const ZONE_COLORS = {
+const ZONE_COLORS: Record<string, string> = {
   '精致餐饮': '#c9a96e',
-  '米其林餐厅': '#d4a373',
-  '高茶': '#e9c46a',
-  '旗舰精品': '#8b5cf6',
   '国际精品': '#ec4899',
-  '设计师品牌': '#6366f1',
-  '设计师珠宝': '#3b82f6',
-  '东方非遗珠宝': '#f59e0b',
+  '潮流买手': '#6366f1',
   '运动时尚': '#10b981',
-  '生活方式': '#14b8a6',
-  '精品咖啡': '#8b5cf6',
-  '文化空间': '#6366f1',
-  '文化体验': '#a855f7',
-  '美食街': '#f97316',
-  '文艺空间': '#a855f7',
-  '影院': '#6366f1',
+  '品质中餐': '#d97706',
+  '网红餐饮': '#f97316',
+  '快餐轻食': '#f59e0b',
+  '咖啡茶饮': '#8b5cf6',
+  '茶馆SPA': '#14b8a6',
+  '汽车体验': '#3b82f6',
+  '珠宝配饰': '#eab308',
+  '美容美发': '#ec4899',
+  '运动健身': '#22c55e',
   '宠物服务': '#f59e0b',
-  '数码电子': '#3b82f6',
-  '休闲餐饮': '#f97316',
+  '文创杂货': '#a855f7',
+  '科技数码': '#3b82f6',
+  '生活方式': '#14b8a6',
+  '便利生活': '#6b7280',
 }
 
 export default function MallMap() {
   const [zone, setZone] = useState<'south' | 'north'>('south')
-  const [selectedFloor, setSelectedFloor] = useState('S-L2')
+  const [selectedFloor, setSelectedFloor] = useState('S-L1')
   const [hoveredStore, setHoveredStore] = useState<string | null>(null)
   const [selectedStore, setSelectedStore] = useState<string | null>(null)
 
   const floors = zone === 'south' ? SOUTH_FLOORS : NORTH_FLOORS
 
-  // Auto-switch floor when zone changes
   const currentFloorId = selectedFloor.startsWith(zone === 'south' ? 'S-' : 'N-')
     ? selectedFloor
-    : floors[2].id
+    : zone === 'south' ? 'S-L1' : 'N-L3-3F'
 
   const floorStores = useMemo(() => {
     const fid = currentFloorId
@@ -107,7 +110,7 @@ export default function MallMap() {
         <button
           onClick={() => {
             setZone('south')
-            setSelectedFloor('S-L2')
+            setSelectedFloor('S-L1')
           }}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border transition-all cursor-pointer ${
             zone === 'south'
@@ -122,7 +125,7 @@ export default function MallMap() {
         <button
           onClick={() => {
             setZone('north')
-            setSelectedFloor('N-L3')
+            setSelectedFloor('N-L3-3F')
           }}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border transition-all cursor-pointer ${
             zone === 'north'
@@ -255,18 +258,23 @@ export default function MallMap() {
 
           {/* Floor description */}
           <div className="mt-3 text-xs text-gray-500 text-center">
-            {zone === 'south' && currentFloorId === 'S-L4' && 'L4 精致餐饮 · Fine Dining · 米其林星级餐饮体验'}
-            {zone === 'south' && currentFloorId === 'S-L3' && 'L3 国内设计师精品 / 咖啡 / 艺术空间 / 活动空间'}
-            {zone === 'south' && currentFloorId === 'S-L2' && 'L2 运动时尚 & 设计师品牌 & 珠宝 · 国内外设计师珠宝孵化平台'}
-            {zone === 'south' && currentFloorId === 'S-L1' && 'L1 国际潮流时装精品 / 生活方式'}
-            {zone === 'south' && currentFloorId === 'S-B1' && 'B1 休闲餐饮 / 品质数码 / 东方非遗珠宝区'}
-            {zone === 'south' && currentFloorId === 'S-B2' && 'B2 东方美学文化区 · 非遗体验 · 传统文化空间'}
-            {zone === 'north' && currentFloorId === 'N-L4' && 'L4 商务配套层'}
-            {zone === 'north' && currentFloorId === 'N-L3' && 'L3 米其林星级餐厅 · 高端餐饮体验'}
-            {zone === 'north' && currentFloorId === 'N-L2' && 'L2 High Tea · 高茶下午茶体验'}
-            {zone === 'north' && currentFloorId === 'N-L1' && 'L1 旗舰店精品店 · 限量单品 · 国奢品牌'}
-            {zone === 'north' && currentFloorId === 'N-B1' && 'B1 博纳影城 · 宠物友好区 · IMAX与VIP厅'}
-            {zone === 'north' && currentFloorId === 'N-B2' && 'B2 文艺空间 · 美食街 · 音乐现场'}
+            {zone === 'south' && currentFloorId === 'S-L4' && '4F 品质中餐聚集区 · 老吉堂、满愿家、青鹤荟、泰珍荟、高桌、晴空'}
+            {zone === 'south' && currentFloorId === 'S-L3' && '3F 时尚餐饮 / 生活方式 · DIM SUM MARVEL、MEET THE BUND、A&M SALON'}
+            {zone === 'south' && currentFloorId === 'S-L2' && '2F 潮流买手 / 运动时尚 · ON/OFF、J.Lindeberg、OUTCICS、PIU'}
+            {zone === 'south' && currentFloorId === 'S-L1' && '1F 国际精品 / 奢侈品最密集区 · Alexander Wang、Versace、Jimmy Choo 等19家品牌'}
+            {zone === 'south' && currentFloorId === 'S-B1' && 'B1 快餐 / 美容 / 珠宝 / 健身 · 麦当劳、超级猩猩、周大福'}
+            {zone === 'south' && currentFloorId === 'S-B2' && 'B2 数码 / 餐饮 / 宠物 · 小米、哈曼卡顿、喜茶、PET WISH'}
+            {zone === 'south' && currentFloorId === 'S-B3' && 'B3 GALAXY AUTO STUDIO 车皇汽车体验中心'}
+            {zone === 'south' && currentFloorId === 'S-S1' && 'S1-S5 BFC健身会馆 · 泳池/私教/团课'}
+            {zone === 'north' && currentFloorId === 'N-L3-5F' && 'N3-5F 上海滩餐厅 · 外滩地标餐饮旗舰'}
+            {zone === 'north' && currentFloorId === 'N-L3-3F' && 'N3-3F 新荣记 · DA Vittorio Shanghai · 米其林星级'}
+            {zone === 'north' && currentFloorId === 'N-L3-2F' && 'N3-2F 柴门荟 · 高端川菜'}
+            {zone === 'north' && currentFloorId === 'N-L3-1F' && 'N3-1F 莱珀妮 · 陆家居 · 梅赛德斯-迈巴赫城市品牌中心'}
+            {zone === 'north' && currentFloorId === 'N-L2-2F' && 'N2-2F 隐溪茶馆 SPA · 精品茶馆与养生空间'}
+            {zone === 'north' && currentFloorId === 'N-L2-1F' && 'N2-1F 网红餐饮 · 白茸、复兴面王、PHANTACI、橘炭胡同、哥哥的深夜食堂'}
+            {zone === 'north' && currentFloorId === 'N-L1-1F' && 'N1-1F PEANUT BUTTER · NUMATA·SOU 沼田双'}
+            {zone === 'north' && currentFloorId === 'N-B1' && 'B1 餐饮/宠物/便利 · MANNER、火星宠物超市、AirPark、PET MART、全家'}
+            {zone === 'north' && currentFloorId === 'N-B2' && 'B2 餐饮/文创 · 茶姬、东发道、九木杂物社、多抓鱼、READ&SOCIAL'}
           </div>
         </div>
 
@@ -349,22 +357,27 @@ export default function MallMap() {
             <div className="text-xs text-gray-500 space-y-1.5">
               {zone === 'south' && (
                 <>
-                  {currentFloorId === 'S-L4' && <p>南区顶层，汇聚米其林星级及高端精致餐饮，外滩江景fine dining体验</p>}
-                  {currentFloorId === 'S-L3' && <p>国内设计师精品买手店、精品咖啡、当代艺术展厅与活动空间</p>}
-                  {currentFloorId === 'S-L2' && <p>运动时尚品牌、先锋设计师品牌，以及国内外「设计师珠宝孵化平台」</p>}
-                  {currentFloorId === 'S-L1' && <p>国际潮流时装精品与生活方式品牌，汇集全球顶级奢侈与设计师品牌</p>}
-                  {currentFloorId === 'S-B1' && <p>休闲餐饮、品质数码、个人护理，以及「东方非遗珠宝区」（周大福、老庙黄金、中国黄金）</p>}
-                  {currentFloorId === 'S-B2' && <p>东方美学文化区，朵云轩、上图书店、非遗手工体验工坊</p>}
+                  {currentFloorId === 'S-L4' && <p>南区4F，品质中餐聚集区，老吉堂、满愿家、青鹤荟、泰珍荟、高桌、晴空、Moon N Back等7家精致餐饮</p>}
+                  {currentFloorId === 'S-L3' && <p>南区3F，时尚餐饮与生活方式，DIM SUM MARVEL点心、MEET THE BUND江景中餐、A&M高端美发沙龙</p>}
+                  {currentFloorId === 'S-L2' && <p>南区2F，潮流买手与运动时尚，ON/OFF先锋买手店、J.Lindeberg北欧运动、OUTCICS小众设计师集合</p>}
+                  {currentFloorId === 'S-L1' && <p>南区1F，奢侈品与国际精品最密集区，Alexander Wang、Versace、Jimmy Choo、BALLY、Lanvin等19个品牌，另有星巴克/b3 Coffee/永璞咖啡矩阵</p>}
+                  {currentFloorId === 'S-B1' && <p>南区B1，快餐（麦当劳/SUBWAY/么蛮）+美容（丽拉瓦迪SPA/丝域养发/美妆灵感空间）+珠宝（周大福）+健身（超级猩猩）</p>}
+                  {currentFloorId === 'S-B2' && <p>南区B2，数码体验（小米/华为小爱同学/哈曼卡顿）+ 宠物（PET WISH/PonyStar）+ 快餐（喜茶/莆田/台湾食堂）</p>}
+                  {currentFloorId === 'S-B3' && <p>南区B3，GALAXY AUTO STUDIO 车皇汽车体验中心</p>}
+                  {currentFloorId === 'S-S1' && <p>南区S1-S5，BFC高端健身会馆，配备游泳池、私教区、团课教室</p>}
                 </>
               )}
               {zone === 'north' && (
                 <>
-                  {currentFloorId === 'N-L4' && <p>北区顶层，商务配套与活动空间</p>}
-                  {currentFloorId === 'N-L3' && <p>米其林星级餐厅汇聚地，泰安门（三星）、Ultraviolet、甬府（一星）</p>}
-                  {currentFloorId === 'N-L2' && <p>高茶下午茶体验层，TWG Tea、Laduree等精致下午茶品牌</p>}
-                  {currentFloorId === 'N-L1' && <p>旗舰精品店，限量单品、国奢品牌上海滩SHANGHAI TANG、大豫园文创</p>}
-                  {currentFloorId === 'N-B1' && <p>博纳高端影城（IMAX+VIP厅）、宠物友好社交空间</p>}
-                  {currentFloorId === 'N-B2' && <p>文艺空间、美食街、TZ House Livehouse演艺空间</p>}
+                  {currentFloorId === 'N-L3-5F' && <p>北区N3顶层，上海滩品牌旗舰餐厅，外滩全景地标餐饮</p>}
+                  {currentFloorId === 'N-L3-3F' && <p>北区N3-3F，新荣记（米其林台州菜）+ DA Vittorio Shanghai（米其林三星意餐）</p>}
+                  {currentFloorId === 'N-L3-2F' && <p>北区N3-2F，柴门荟，高端川菜品牌</p>}
+                  {currentFloorId === 'N-L3-1F' && <p>北区N3-1F，莱珀妮奢华护肤、陆家居高端家居、梅赛德斯-迈巴赫城市品牌中心</p>}
+                  {currentFloorId === 'N-L2-2F' && <p>北区N2-2F，隐溪茶馆 SPA，精品茶馆与养生空间（非高茶）</p>}
+                  {currentFloorId === 'N-L2-1F' && <p>北区N2-1F，网红餐饮集群：白茸、复兴面王深夜食堂、PHANTACI（周杰伦潮牌）、橘炭胡同·乌喜、哥哥的深夜食堂</p>}
+                  {currentFloorId === 'N-L1-1F' && <p>北区N1-1F，PEANUT BUTTER美式汉堡 + NUMATA·SOU 沼田双日系买手</p>}
+                  {currentFloorId === 'N-B1' && <p>北区B1，餐饮（不入川豆花/云海肴/MANNER等多品牌）+ 宠物（火星宠物超市/AirPark/PET MART）+ 全家便利店</p>}
+                  {currentFloorId === 'N-B2' && <p>北区B2，餐饮（茶姬/湖南饭店/东发道等）+ 文创（九木杂物社/多抓鱼/READ&SOCIAL/CLAWGALLERY）</p>}
                 </>
               )}
             </div>
