@@ -17,21 +17,39 @@ import {
   Globe,
   Flame,
   Smartphone,
+  HelpCircle,
 } from 'lucide-react'
 import type { UserProfile, Recommendation } from '../data/mockData'
 import { STORES, CATEGORIES, BFC_SEGMENTS, generateRecommendations } from '../data/mockData'
 
-const PERSONA_OPTIONS = BFC_SEGMENTS.map(s => ({
-  value: s.name,
-  label: s.name,
-  nameEn: s.nameEn,
-  description: s.description,
-  icon: s.id === 'white-collar' ? Briefcase : s.id === 'artist-designer' ? Palette : s.id === 'high-income-family' ? Baby : s.id === 'tourists' ? Globe : s.id === 'young-hipster' ? Flame : Smartphone,
-  traits: s.traits,
-  color: s.color,
-}))
+const GENDER_OPTIONS = [
+  { value: 'male', label: '男', emoji: '👨' },
+  { value: 'female', label: '女', emoji: '👩' },
+  { value: 'other', label: '其他', emoji: '🧑' },
+]
 
-const AGE_OPTIONS = ['18-24', '25-30', '31-38', '39-45', '46+']
+const AGE_OPTIONS = ['18-24', '24-30', '30-38', '38+']
+
+const PERSONA_OPTIONS = [
+  ...BFC_SEGMENTS.map(s => ({
+    value: s.name,
+    label: s.name,
+    nameEn: s.nameEn,
+    description: s.description,
+    icon: s.id === 'white-collar' ? Briefcase : s.id === 'artist-designer' ? Palette : s.id === 'high-income-family' ? Baby : s.id === 'tourists' ? Globe : s.id === 'young-hipster' ? Flame : Smartphone,
+    traits: s.traits,
+    color: s.color,
+  })),
+  {
+    value: '其他',
+    label: '其他',
+    nameEn: 'Other',
+    description: '不属于以上类别，我有自己的消费风格',
+    icon: HelpCircle,
+    traits: ['自由消费', '多元兴趣', '不设限'],
+    color: '#8b8fa3',
+  },
+]
 
 const COMPANION_OPTIONS = [
   { value: 'solo', label: '独自出行', desc: '一个人来逛' },
@@ -41,11 +59,13 @@ const COMPANION_OPTIONS = [
   { value: 'colleague', label: '商务/同事', desc: '工作社交' },
 ]
 
+// 优先级 = 今日体验目的（体验维度，不与品类重叠）
 const PRIORITY_OPTIONS = [
-  { value: '美食体验', label: '美食体验', desc: '精致餐饮与网红美食', icon: '🍽️' },
-  { value: '购物血拼', label: '购物血拼', desc: '国际精品与潮流买手', icon: '🛍️' },
-  { value: '文化休闲', label: '文化休闲', desc: '文创空间与SPA养生', icon: '🎭' },
-  { value: '社交打卡', label: '社交打卡', desc: '网红打卡与潮牌体验', icon: '📸' },
+  { value: '品质美食', label: '品质美食', desc: '探索BFC精选餐饮', icon: '🍽️' },
+  { value: '潮流购物', label: '潮流购物', desc: '国际精品与买手店', icon: '🛍️' },
+  { value: '休闲放松', label: '休闲放松', desc: 'SPA养生与慢生活', icon: '🧘' },
+  { value: '社交打卡', label: '社交打卡', desc: '网红拍照与体验分享', icon: '📸' },
+  { value: '运动健康', label: '运动健康', desc: '健身运动与汽车体验', icon: '🏃' },
 ]
 
 const BUDGET_OPTIONS = [
@@ -55,21 +75,23 @@ const BUDGET_OPTIONS = [
   { value: '不设上限', label: '不设上限', desc: '高端体验，>5000元' },
 ]
 
+// 兴趣标签 = 品类偏好（具体的品类，与优先级是不同维度）
 const INTEREST_OPTIONS = [
   { name: '精致餐饮', icon: '⭐', keywords: ['精致', '米其林', '高端'] },
+  { name: '快餐轻食', icon: '🥗', keywords: ['轻食', '快餐', '简餐'] },
+  { name: '咖啡茶饮', icon: '☕', keywords: ['咖啡', '茶饮', '精品'] },
   { name: '国际精品', icon: '👜', keywords: ['奢侈', '设计师', '高定'] },
   { name: '潮流买手', icon: '🎯', keywords: ['买手', '先锋', '潮牌'] },
-  { name: '珠宝配饰', icon: '💎', keywords: ['珠宝', '腕表', '钻石'] },
-  { name: '运动时尚', icon: '🏃', keywords: ['运动', '瑜伽', '潮流'] },
-  { name: '咖啡茶饮', icon: '☕', keywords: ['咖啡', '茶饮', '精品'] },
-  { name: '网红餐饮', icon: '🔥', keywords: ['网红', '打卡', '人气'] },
-  { name: '宠物友好', icon: '🐾', keywords: ['宠物', '萌宠', '互动'] },
+  { name: '运动健身', icon: '🏋️', keywords: ['运动', '健身', '瑜伽'] },
+  { name: '茶馆SPA', icon: '🧖', keywords: ['SPA', '养生', '茶馆'] },
+  { name: '宠物服务', icon: '🐾', keywords: ['宠物', '萌宠', '互动'] },
 ]
 
 const PROFILE_QUESTIONS = [
-  { key: 'persona' as const, label: '你是哪类BFC消费者？', icon: User, stepType: 'persona' },
+  { key: 'gender' as const, label: '你的性别', icon: User, stepType: 'gender' },
   { key: 'age' as const, label: '年龄段', icon: Users, stepType: 'age' },
-  { key: 'companion' as const, label: '和谁一起来？', icon: Heart, stepType: 'companion' },
+  { key: 'persona' as const, label: '你是哪类BFC消费者？', icon: Heart, stepType: 'persona' },
+  { key: 'companion' as const, label: '和谁一起来？', icon: Users, stepType: 'companion' },
   { key: 'priority' as const, label: '今天最想体验什么？', icon: Target, stepType: 'priority' },
   { key: 'budgetStyle' as const, label: '消费预算风格', icon: Wallet, stepType: 'budget' },
 ]
@@ -102,11 +124,12 @@ export default function SmartGuide() {
 
   const generateResults = () => {
     const fullProfile: UserProfile = {
-      persona: profile.persona || '年轻潮人',
-      age: profile.age || '25-30',
+      gender: profile.gender || 'other',
+      age: profile.age || '24-30',
+      persona: profile.persona || '其他',
       companion: profile.companion || 'friends',
       priority: profile.priority || '社交打卡',
-      interests: profile.interests?.length ? profile.interests : ['精致咖啡', '社交打卡'],
+      interests: profile.interests?.length ? profile.interests : ['精致餐饮', '咖啡茶饮'],
       budgetStyle: profile.budgetStyle || '适中消费',
     }
     const recs = generateRecommendations(fullProfile)
@@ -135,7 +158,7 @@ export default function SmartGuide() {
           AI 智能导购
         </h1>
         <p className="text-gray-500 mt-1 text-sm">
-          基于BFC四大客群画像，获取个性化店铺推荐
+          基于BFC六大客群画像，获取个性化店铺推荐
         </p>
       </div>
 
@@ -154,28 +177,43 @@ export default function SmartGuide() {
         </div>
       )}
 
-      {/* BFC Segment Preview (when persona selected) */}
-      {profile.persona && !isResultsStep && step > 0 && (
+      {/* Selected context preview */}
+      {(profile.gender || profile.age || profile.persona) && !isResultsStep && step > 0 && (
         <div className="bg-white rounded-xl border border-gray-100 p-4 flex items-center gap-4">
-          <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg flex-shrink-0"
-            style={{ background: selectedPersona?.color }}
-          >
-            {selectedPersona?.label.charAt(0)}
-          </div>
+          {selectedPersona && (
+            <div
+              className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg flex-shrink-0"
+              style={{ background: selectedPersona.color }}
+            >
+              {selectedPersona.label.charAt(0)}
+            </div>
+          )}
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-gray-900">{selectedPersona?.label}</span>
-              <span className="text-xs text-gray-400">{selectedPersona?.nameEn}</span>
-            </div>
-            <p className="text-xs text-gray-500 mt-0.5">{selectedPersona?.description}</p>
-            <div className="flex flex-wrap gap-1 mt-1.5">
-              {selectedPersona?.traits.map(t => (
-                <span key={t} className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 text-gray-500">
-                  {t}
+            {selectedPersona && (
+              <>
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-gray-900">{selectedPersona.label}</span>
+                  <span className="text-xs text-gray-400">{selectedPersona.nameEn}</span>
+                </div>
+                <p className="text-xs text-gray-500 mt-0.5">{selectedPersona.description}</p>
+                <div className="flex flex-wrap gap-1 mt-1.5">
+                  {selectedPersona.traits.map(t => (
+                    <span key={t} className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 text-gray-500">
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </>
+            )}
+            {!selectedPersona && profile.gender && (
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-gray-900">
+                  {GENDER_OPTIONS.find(g => g.value === profile.gender)?.emoji}{' '}
+                  {GENDER_OPTIONS.find(g => g.value === profile.gender)?.label}
                 </span>
-              ))}
-            </div>
+                {profile.age && <span className="text-xs text-gray-400">{profile.age}岁</span>}
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -185,11 +223,11 @@ export default function SmartGuide() {
         <div className="bg-white rounded-xl border border-gray-100 p-6 space-y-5">
           <div className="text-center">
             <h2 className="text-lg font-semibold text-gray-900">
-              你对哪些体验感兴趣？
+              你对哪些品类感兴趣？
             </h2>
-            <p className="text-sm text-gray-500 mt-1">可多选，匹配BFC店铺标签</p>
+            <p className="text-sm text-gray-500 mt-1">可多选，匹配BFC店铺品类标签</p>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {INTEREST_OPTIONS.map(interest => {
               const selected = profile.interests?.includes(interest.name)
               return (
@@ -237,6 +275,53 @@ export default function SmartGuide() {
                   <h2 className="text-lg font-semibold text-gray-900">{q.label}</h2>
                 </div>
 
+                {/* Gender selection */}
+                {stepType === 'gender' && (
+                  <div className="grid grid-cols-3 gap-3">
+                    {GENDER_OPTIONS.map(opt => {
+                      const selected = profile.gender === opt.value
+                      return (
+                        <button
+                          key={opt.value}
+                          onClick={() => handleSelect(q.key, opt.value)}
+                          className={`flex flex-col items-center gap-2 px-4 py-5 rounded-xl border text-center transition-all cursor-pointer ${
+                            selected
+                              ? 'bg-primary-50 border-primary-300'
+                              : 'bg-white border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          <span className="text-3xl">{opt.emoji}</span>
+                          <span className={`text-sm font-medium ${selected ? 'text-primary-700' : 'text-gray-700'}`}>
+                            {opt.label}
+                          </span>
+                        </button>
+                      )
+                    })}
+                  </div>
+                )}
+
+                {/* Age selection */}
+                {stepType === 'age' && (
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {AGE_OPTIONS.map(opt => {
+                      const selected = profile.age === opt
+                      return (
+                        <button
+                          key={opt}
+                          onClick={() => handleSelect(q.key, opt)}
+                          className={`flex items-center justify-center px-4 py-3 rounded-xl text-sm font-medium border transition-all cursor-pointer ${
+                            selected
+                              ? 'bg-primary-50 border-primary-300 text-primary-700'
+                              : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300'
+                          }`}
+                        >
+                          {opt}
+                        </button>
+                      )
+                    })}
+                  </div>
+                )}
+
                 {/* Persona selection */}
                 {stepType === 'persona' && (
                   <div className="grid gap-3">
@@ -276,28 +361,6 @@ export default function SmartGuide() {
                             </div>
                           </div>
                           <ChevronRight className={`w-4 h-4 flex-shrink-0 mt-2 ${selected ? 'text-primary-500' : 'text-gray-300'}`} />
-                        </button>
-                      )
-                    })}
-                  </div>
-                )}
-
-                {/* Age selection */}
-                {stepType === 'age' && (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                    {AGE_OPTIONS.map(opt => {
-                      const selected = profile.age === opt
-                      return (
-                        <button
-                          key={opt}
-                          onClick={() => handleSelect(q.key, opt)}
-                          className={`flex items-center justify-center px-4 py-3 rounded-xl text-sm font-medium border transition-all cursor-pointer ${
-                            selected
-                              ? 'bg-primary-50 border-primary-300 text-primary-700'
-                              : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300'
-                          }`}
-                        >
-                          {opt}
                         </button>
                       )
                     })}
@@ -407,23 +470,25 @@ export default function SmartGuide() {
           </div>
 
           {/* Profile summary */}
-          {selectedPersona && (
-            <div className="bg-white rounded-xl border border-gray-100 p-4 flex items-center gap-4">
+          <div className="bg-white rounded-xl border border-gray-100 p-4 flex items-center gap-4">
+            {selectedPersona && (
               <div
                 className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg flex-shrink-0"
                 style={{ background: selectedPersona.color }}
               >
                 {selectedPersona.label.charAt(0)}
               </div>
-              <div>
-                <span className="font-semibold text-gray-900">{selectedPersona.label}</span>
-                <span className="text-xs text-gray-400 ml-2">{selectedPersona.nameEn}</span>
-                <p className="text-xs text-gray-500 mt-0.5">
-                  {profile.age} · {profile.companion === 'solo' ? '独自' : profile.companion === 'partner' ? '情侣' : profile.companion === 'family' ? '家庭' : profile.companion === 'friends' ? '朋友' : '商务'} · {profile.priority} · {profile.budgetStyle}
-                </p>
+            )}
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-gray-900">{selectedPersona?.label}</span>
+                <span className="text-xs text-gray-400">{selectedPersona?.nameEn}</span>
               </div>
+              <p className="text-xs text-gray-500 mt-0.5">
+                {GENDER_OPTIONS.find(g => g.value === profile.gender)?.label} · {profile.age} · {profile.companion === 'solo' ? '独自' : profile.companion === 'partner' ? '情侣' : profile.companion === 'family' ? '家庭' : profile.companion === 'friends' ? '朋友' : '商务'} · {profile.priority} · {profile.budgetStyle}
+              </p>
             </div>
-          )}
+          </div>
 
           <div className="space-y-3">
             {recommendations.map((rec, idx) => {
