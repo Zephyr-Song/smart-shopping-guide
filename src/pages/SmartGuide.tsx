@@ -73,7 +73,7 @@ const INTEREST_OPTIONS = [
   { name: '快餐轻食', icon: '🥗', keywords: ['轻食', '快餐', '简餐'] },
   { name: '咖啡茶饮', icon: '☕', keywords: ['咖啡', '茶饮', '精品'] },
   { name: '国际精品', icon: '👜', keywords: ['奢侈', '设计师', '高定'] },
-  { name: '设计师品牌', icon: '🎯', keywords: ['设计师', '潮牌', '小众'] },
+  { name: '潮流品牌', icon: '🎯', keywords: ['潮流', '潮牌', '小众'] },
   { name: '运动健身', icon: '🏋️', keywords: ['运动', '健身', '瑜伽'] },
   { name: '茶馆SPA', icon: '🧖', keywords: ['SPA', '养生', '茶馆'] },
   { name: '宠物服务', icon: '🐾', keywords: ['宠物', '萌宠', '互动'] },

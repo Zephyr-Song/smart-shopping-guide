@@ -12,7 +12,7 @@ interface FloorInfo {
 const SOUTH_FLOORS: FloorInfo[] = [
   { id: 'S-L4', label: '4F', desc: '品质中餐聚集区', icon: <Crown className="w-3 h-3" /> },
   { id: 'S-L3', label: '3F', desc: '时尚餐饮·生活方式', icon: <Flame className="w-3 h-3" /> },
-  { id: 'S-L2', label: '2F', desc: '设计师品牌·运动时尚', icon: <Sparkles className="w-3 h-3" /> },
+  { id: 'S-L2', label: '2F', desc: '潮流品牌·运动时尚', icon: <Sparkles className="w-3 h-3" /> },
   { id: 'S-L1', label: '1F', desc: '国际精品·奢侈品', icon: <Crown className="w-3 h-3" /> },
   { id: 'S-B1', label: 'B1', desc: '快餐·美容·珠宝·健身', icon: <MapPin className="w-3 h-3" /> },
   { id: 'S-B2', label: 'B2', desc: '数码·宠物·快餐', icon: <MapPin className="w-3 h-3" /> },
@@ -35,7 +35,7 @@ const NORTH_FLOORS: FloorInfo[] = [
 const ZONE_COLORS: Record<string, string> = {
   '精致餐饮': '#c9a96e',
   '国际精品': '#ec4899',
-  '设计师品牌': '#6366f1',
+  '潮流品牌': '#6366f1',
   '运动时尚': '#10b981',
   '品质中餐': '#d97706',
   '网红餐饮': '#f97316',
@@ -260,7 +260,7 @@ export default function MallMap() {
           <div className="mt-3 text-xs text-gray-500 text-center">
             {zone === 'south' && currentFloorId === 'S-L4' && '4F 品质中餐聚集区 · 老吉堂、满愿家、青鹤荟、泰珍荟、高桌、晴空'}
             {zone === 'south' && currentFloorId === 'S-L3' && '3F 时尚餐饮 / 生活方式 · DIM SUM MARVEL、MEET THE BUND、A&M SALON'}
-            {zone === 'south' && currentFloorId === 'S-L2' && '2F 设计师品牌 / 运动时尚 · ON/OFF、J.Lindeberg、OUTCICS、PIU'}
+            {zone === 'south' && currentFloorId === 'S-L2' && '2F 潮流品牌 / 运动时尚 · ON/OFF、J.Lindeberg、OUTCICS、PIU'}
             {zone === 'south' && currentFloorId === 'S-L1' && '1F 国际精品 / 奢侈品最密集区 · Alexander Wang、Versace、Jimmy Choo 等19家品牌'}
             {zone === 'south' && currentFloorId === 'S-B1' && 'B1 快餐 / 美容 / 珠宝 / 健身 · 麦当劳、超级猩猩、周大福'}
             {zone === 'south' && currentFloorId === 'S-B2' && 'B2 数码 / 餐饮 / 宠物 · 小米、哈曼卡顿、喜茶、PET WISH'}
@@ -359,7 +359,7 @@ export default function MallMap() {
                 <>
                   {currentFloorId === 'S-L4' && <p>南区4F，品质中餐聚集区，老吉堂、满愿家、青鹤荟、泰珍荟、高桌、晴空、Moon N Back等7家精致餐饮</p>}
                   {currentFloorId === 'S-L3' && <p>南区3F，时尚餐饮与生活方式，DIM SUM MARVEL点心、MEET THE BUND江景中餐、A&M高端美发沙龙</p>}
-                  {currentFloorId === 'S-L2' && <p>南区2F，设计师品牌与运动时尚，ON/OFF先锋买手店、J.Lindeberg北欧运动、OUTCICS小众设计师集合</p>}
+                  {currentFloorId === 'S-L2' && <p>南区2F，潮流品牌与运动时尚，ON/OFF先锋买手店、J.Lindeberg北欧运动、OUTCICS小众设计师集合</p>}
                   {currentFloorId === 'S-L1' && <p>南区1F，奢侈品与国际精品最密集区，Alexander Wang、Versace、Jimmy Choo、BALLY、Lanvin等19个品牌，另有星巴克/b3 Coffee/永璞咖啡矩阵</p>}
                   {currentFloorId === 'S-B1' && <p>南区B1，快餐（麦当劳/SUBWAY/么蛮）+美容（丽拉瓦迪SPA/丝域养发/美妆灵感空间）+珠宝（周大福）+健身（超级猩猩）</p>}
                   {currentFloorId === 'S-B2' && <p>南区B2，数码体验（小米/华为小爱同学/哈曼卡顿）+ 宠物（PET WISH/PonyStar）+ 快餐（喜茶/莆田/台湾食堂）</p>}
