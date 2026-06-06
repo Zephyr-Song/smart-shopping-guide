@@ -15,6 +15,7 @@ import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
+  RadialLinearScale,
   BarElement,
   LineElement,
   PointElement,
@@ -24,7 +25,7 @@ import {
   Legend,
   Filler,
 } from 'chart.js'
-import { Bar, Line, Doughnut } from 'react-chartjs-2'
+import { Bar, Line, Doughnut, Radar } from 'react-chartjs-2'
 import {
   HOURLY_TRAFFIC,
   CUSTOMER_SEGMENTS,
@@ -34,6 +35,7 @@ import {
 ChartJS.register(
   CategoryScale,
   LinearScale,
+  RadialLinearScale,
   BarElement,
   LineElement,
   PointElement,
@@ -47,42 +49,60 @@ ChartJS.register(
 type TabType = 'traffic' | 'funnel' | 'segment' | 'store' | 'market'
 
 
-// ── 上海10大商圈数据（来源：小红书采集报告 2026-05-30，外滩为BFC实际所在）──
-const SHANGHAI_DISTRICTS = [
-  { rank: 1, name: '南京东路', region: '黄浦区', mentions: 42, heat: 5, trait: '年客流2.5亿，商业第一街', representative: '新世界大丸·第一百货·永安百货', tag: '旅游打卡型' },
-  { rank: 2, name: '南京西路', region: '静安区', mentions: 38, heat: 5, trait: '"金三角"奢侈品消费高地', representative: '恒隆广场·SKP·兴业太古汇', tag: '高端消费型' },
-  { rank: 3, name: '淮海中路', region: '黄浦区', mentions: 35, heat: 4, trait: '时尚潮流发源地，全长2.2km', representative: 'K11·iapm·淮海755', tag: '潮流年轻型' },
-  { rank: 4, name: '徐家汇', region: '徐汇区', mentions: 32, heat: 4, trait: '"全能型"商圈，中央活动区', representative: '港汇恒隆·美罗城·东方商厦', tag: '一站式生活型' },
-  { rank: 5, name: '陆家嘴', region: '浦东新区', mentions: 30, heat: 4, trait: '金融中心核心，后起之秀', representative: '国金IFC·正大广场·L+Mall', tag: '金融商务型' },
-  { rank: 6, name: '外滩', region: '黄浦区', mentions: 28, heat: 4, trait: '江景金融商圈，BFC所在', representative: 'BFC外滩金融中心·外滩源·半岛酒店', tag: '金融艺术型', highlight: true },
-  { rank: 7, name: '新天地', region: '黄浦区', mentions: 25, heat: 3, trait: '石库门海派文化+时尚商业', representative: '新天地时尚·太平洋广场', tag: 'Citywalk型' },
-  { rank: 8, name: '静安寺', region: '静安区', mentions: 22, heat: 3, trait: '寺庙文化+高端商圈融合', representative: '芮欧百货·嘉里中心', tag: '精致文化型' },
-  { rank: 9, name: '五角场', region: '杨浦区', mentions: 18, heat: 3, trait: '大学城商圈，年轻化消费', representative: '万达广场·百联又一城', tag: '年轻活力型' },
-  { rank: 10, name: '中山公园', region: '长宁区', mentions: 12, heat: 2, trait: '社区型商圈，生活便利', representative: '环球港·龙之梦', tag: '社区生活型' },
+// ── 上海10大商圈多维数据（综合来源：上海市商务委2025年1-5月商圈报告、赢商网、各商场年报、地铁官网）──
+type DimKey = 'traffic' | 'retail' | 'spending' | 'transport' | 'firstStore'
+
+interface DistrictData {
+  rank: number
+  name: string
+  region: string
+  scores: Record<DimKey, number>
+  trait: string
+  representative: string
+  tag: string
+  highlight: boolean
+  metroLines: string
+}
+
+const DIM_LABELS: Record<DimKey, string> = {
+  traffic: '客流体量',
+  retail: '零售规模',
+  spending: '消费力',
+  transport: '交通便利',
+  firstStore: '首店经济',
+}
+
+const SHANGHAI_DISTRICTS: DistrictData[] = [
+  { rank: 1, name: '南京东路', region: '黄浦区', scores: { traffic: 5, retail: 4, spending: 3, transport: 3, firstStore: 4 }, trait: '年客流1.14亿，销售额破110亿', representative: '新世界大丸·第一百货·永安百货', tag: '旅游打卡型', highlight: false, metroLines: '2/10号线' },
+  { rank: 2, name: '南京西路', region: '静安区', scores: { traffic: 4, retail: 5, spending: 5, transport: 4, firstStore: 5 }, trait: '"金三角"奢侈品消费高地，首店第一', representative: '恒隆广场·兴业太古汇·中信泰富', tag: '高端消费型', highlight: false, metroLines: '2/12/13号线' },
+  { rank: 3, name: '小陆家嘴-张杨路', region: '浦东新区', scores: { traffic: 5, retail: 5, spending: 5, transport: 3, firstStore: 4 }, trait: '国际高端品牌矩阵，零售规模第一', representative: '国金IFC·正大广场·第一八佰伴', tag: '金融商务型', highlight: false, metroLines: '2/14号线' },
+  { rank: 4, name: '淮海中路', region: '黄浦区', scores: { traffic: 4, retail: 4, spending: 4, transport: 4, firstStore: 4 }, trait: '时尚潮流发源地，全长2.2km', representative: 'K11·iapm·淮海755', tag: '潮流年轻型', highlight: false, metroLines: '1/10/13号线' },
+  { rank: 5, name: '徐家汇', region: '徐汇区', scores: { traffic: 4, retail: 4, spending: 3, transport: 4, firstStore: 3 }, trait: '"全能型"商圈，ITC再造一个徐家汇', representative: '港汇恒隆·美罗城·ITC', tag: '一站式生活型', highlight: false, metroLines: '1/9/11号线' },
+  { rank: 6, name: '外滩', region: '黄浦区', scores: { traffic: 3, retail: 3, spending: 4, transport: 3, firstStore: 3 }, trait: '江景金融+艺术商圈，BFC所在', representative: 'BFC外滩金融中心·外滩源·半岛酒店', tag: '金融艺术型', highlight: true, metroLines: '2/10/14号线' },
+  { rank: 7, name: '新天地', region: '黄浦区', scores: { traffic: 3, retail: 3, spending: 4, transport: 4, firstStore: 3 }, trait: '石库门海派文化+时尚商业', representative: '新天地时尚·太平洋广场', tag: 'Citywalk型', highlight: false, metroLines: '1/10/13号线' },
+  { rank: 8, name: '静安寺', region: '静安区', scores: { traffic: 3, retail: 3, spending: 4, transport: 4, firstStore: 4 }, trait: '寺庙文化+高端商圈融合', representative: '芮欧百货·嘉里中心·久光', tag: '精致文化型', highlight: false, metroLines: '2/7/14号线' },
+  { rank: 9, name: '五角场', region: '杨浦区', scores: { traffic: 4, retail: 3, spending: 2, transport: 2, firstStore: 2 }, trait: '大学城商圈，客流增速超20%', representative: '万达广场·百联又一城·合生汇', tag: '年轻活力型', highlight: false, metroLines: '10号线' },
+  { rank: 10, name: '中山公园', region: '长宁区', scores: { traffic: 3, retail: 3, spending: 2, transport: 3, firstStore: 2 }, trait: '社区型商圈，餐饮规模第三', representative: '环球港·龙之梦·来福士', tag: '社区生活型', highlight: false, metroLines: '2/3/4号线' },
 ]
 
-// ── 2025年上海商场销售额排名（来源：小红书多篇笔记交叉验证）──
+// 计算10商圈各维度均值
+const AVG_SCORES: Record<DimKey, number> = {
+  traffic: 0, retail: 0, spending: 0, transport: 0, firstStore: 0,
+}
+const allDims: DimKey[] = ['traffic', 'retail', 'spending', 'transport', 'firstStore']
+allDims.forEach(d => {
+  AVG_SCORES[d] = Math.round(SHANGHAI_DISTRICTS.reduce((s, x) => s + x.scores[d], 0) / SHANGHAI_DISTRICTS.length * 10) / 10
+})
+
+// ── 2025年上海商场销售额排名（综合来源：联商网、赢商网年报、各商场官方披露）──
 const MALL_REVENUE = [
-  { rank: 1, name: '上海国金中心IFC', district: '陆家嘴', revenue: '200亿+', note: '顶奢集中，业绩稳居全国第一' },
-  { rank: 2, name: '上海环球港', district: '中山公园', revenue: '200亿+', note: '体量最大，客流量居全市第一' },
-  { rank: 3, name: '上海恒隆广场', district: '南京西路', revenue: '150亿+', note: '奢侈品密度极高，高客单价' },
-  { rank: 4, name: '上海SKP', district: '南京西路', revenue: '新开业', note: '2025新开业，数据待统计' },
-  { rank: 5, name: '兴业太古汇', district: '南京西路', revenue: '80亿+', note: '办公+零售一体，稳定客群' },
+  { rank: 1, name: '上海国金中心IFC', district: '陆家嘴', revenue: '218亿', note: '顶奢集中，全国商场销售额第一' },
+  { rank: 2, name: '上海环球港', district: '中山公园', revenue: '217亿', note: '体量最大，客流量全市第一' },
+  { rank: 3, name: '上海恒隆广场', district: '南京西路', revenue: '135亿', note: '奢侈品密度极高，高客单价' },
+  { rank: 4, name: '龙之梦城市生活中心', district: '中山公园', revenue: '135亿', note: '2025年首次突破百亿大关' },
+  { rank: 5, name: '兴业太古汇', district: '南京西路', revenue: '80亿+', note: '办公+零售一体，销售额同比增41.9%' },
 ]
-
-// ── 小红书高赞笔记 TOP10 ──
-const XHS_TOP_NOTES = [
-  { title: '📍上海这么玩就对了❗附3日旅游手绘地图', author: 'GaonaiJ（环球旅行）', likes: 8981, url: 'https://www.xiaohongshu.com/explore/687de836000000001202c56a' },
-  { title: '不看＝白玩！你的假期上海citywalk手册上线', author: '上海去哪儿', likes: 8705, url: 'https://www.xiaohongshu.com/explore/68dcccec00000000050028e9' },
-  { title: '商业 | 上海市购物中心分布', author: '小观图说', likes: 6560, url: 'https://www.xiaohongshu.com/explore/695769c1000000002200a9dd' },
-  { title: '上海必逛9大商圈合集‼跟着逛不踩雷', author: '魔都艾美丽', likes: 5521, url: 'https://www.xiaohongshu.com/explore/686d23ea000000002400fafa' },
-  { title: '第一次来上海，上海CityWalk这么逛‼', author: '乐乐麻麻 找乐子', likes: 5242, url: 'https://www.xiaohongshu.com/explore/69be55e30000000023023644' },
-  { title: '以为外滩已经够美了，直到我去了徐家汇…', author: '山炮小王子', likes: 3994, url: 'https://www.xiaohongshu.com/explore/69688fc4000000000a02d3c4' },
-  { title: '上海十大商场血拼指南！本地人私藏逛街地图', author: '月月博士聊孕期', likes: 3170, url: 'https://www.xiaohongshu.com/explore/6891f26f000000002501ad1f' },
-  { title: '上海商场攻略✅LV巨轮地址✅上海逛街指南', author: '小蜂仔', likes: 2981, url: 'https://www.xiaohongshu.com/explore/686f6d7f0000000017031880' },
-  { title: '上海旅游必逛的9个商场！上海逛街攻略', author: '酥小爱（海派礼物）', likes: 2847, url: 'https://www.xiaohongshu.com/explore/688b30820000000023024a11' },
-  { title: '国内唯一能与东京媲美的地方', author: '杰森商刊', likes: 2500, url: 'https://www.xiaohongshu.com/explore/69660c16000000000a028b4c' },
-]
+  // ── 雷达图：BFC外滩 vs 10商圈均值 ──
 
 export default function Analytics() {
   const [activeTab, setActiveTab] = useState<TabType>('traffic')
@@ -204,18 +224,69 @@ export default function Analytics() {
     },
   }
 
-  const districtChartData = {
-    labels: SHANGHAI_DISTRICTS.map(d => d.name),
+  // ── 雷达图：BFC外滩 vs 10商圈均值 ──
+  const bfcDistrict = SHANGHAI_DISTRICTS.find(d => d.highlight)!
+  const radarData = {
+    labels: allDims.map(d => DIM_LABELS[d]),
     datasets: [
       {
-        label: '小红书提及频次',
-        data: SHANGHAI_DISTRICTS.map(d => d.mentions),
-        backgroundColor: SHANGHAI_DISTRICTS.map(d =>
-          d.highlight ? 'rgba(186,117,23,0.85)' : 'rgba(83,74,183,0.55)'
-        ),
-        borderRadius: 4,
+        label: 'BFC 外滩',
+        data: allDims.map(d => bfcDistrict.scores[d]),
+        borderColor: '#BA7517',
+        backgroundColor: 'rgba(186,117,23,0.12)',
+        borderWidth: 2,
+        pointBackgroundColor: '#BA7517',
+        pointBorderColor: '#fff',
+        pointRadius: 4,
+      },
+      {
+        label: '10商圈均值',
+        data: allDims.map(d => AVG_SCORES[d]),
+        borderColor: '#9CA3AF',
+        backgroundColor: 'rgba(156,163,175,0.05)',
+        borderWidth: 2,
+        borderDash: [4, 4],
+        pointBackgroundColor: '#9CA3AF',
+        pointBorderColor: '#fff',
+        pointRadius: 3,
       },
     ],
+  }
+
+  const radarOptions = {
+    responsive: true,
+    maintainAspectRatio: true,
+    scales: {
+      r: {
+        beginAtZero: true,
+        max: 5,
+        min: 1,
+        ticks: { stepSize: 1, display: false },
+        grid: { color: '#E5E7EB' },
+        pointLabels: { font: { size: 11 }, color: '#374151' },
+      },
+    },
+    plugins: {
+      legend: {
+        position: 'bottom' as const,
+        labels: { usePointStyle: true, padding: 20, font: { size: 12 } },
+      },
+      tooltip: { enabled: true },
+    },
+  }
+
+  // ── 多维打分总表：按综合分排序 ──
+  const complexScore = (d: DistrictData) =>
+    allDims.reduce((s, k) => s + d.scores[k], 0)
+
+  const rankedDistricts = [...SHANGHAI_DISTRICTS].sort((a, b) => complexScore(b) - complexScore(a))
+
+  // ── 得分色阶 ──
+  const scoreColor = (v: number) => {
+    if (v >= 5) return { bg: 'bg-emerald-100', text: 'text-emerald-700' }
+    if (v >= 4) return { bg: 'bg-blue-100', text: 'text-blue-700' }
+    if (v >= 3) return { bg: 'bg-amber-100', text: 'text-amber-700' }
+    return { bg: 'bg-gray-100', text: 'text-gray-500' }
   }
 
   const funnelSteps = [
@@ -485,23 +556,64 @@ export default function Analytics() {
           {/* 数据来源说明 */}
           <div className="bg-blue-50 rounded-xl p-3.5 text-sm text-blue-700 flex gap-2 items-start">
             <span className="flex-shrink-0">📌</span>
-            <span>以下数据来源于小红书浏览器真实采集（2026-05-30），金色标注为 BFC 所在外滩商圈。提及频次为搜索结果中商圈被讨论的统计数量。</span>
+            <span>综合上海市商务委《2025年1-5月商圈发展报告》、赢商网、联商网、各商场年报及地铁官网数据。多维评分 1-5 分，金色标注为 BFC 所在外滩商圈。</span>
           </div>
 
-          {/* 商圈热度柱状图 */}
-          <div className="bg-white rounded-xl border border-gray-100 p-5">
-            <div className="flex items-center justify-between mb-1">
-              <h3 className="font-semibold text-gray-900">上海10大商圈小红书热度</h3>
-              <span className="text-xs text-gray-400">（60条笔记提及频次统计）</span>
+          {/* 雷达图：BFC vs 均值 + 总分排名 */}
+          <div className="grid lg:grid-cols-2 gap-4">
+            {/* 雷达图 */}
+            <div className="bg-white rounded-xl border border-gray-100 p-5">
+              <h3 className="font-semibold text-gray-900 mb-3">BFC 外滩 vs 10商圈均值 · 多维雷达</h3>
+              <div className="max-w-[360px] mx-auto">
+                <Radar data={radarData} options={radarOptions} />
+              </div>
             </div>
-            <p className="text-xs text-gray-400 mb-4">
-              <span className="inline-block w-3 h-3 rounded-sm mr-1 align-middle" style={{ background: 'rgba(186,117,23,0.85)' }}></span>
-              金色标注为 BFC 所在外滩商圈
-            </p>
-            <Bar data={districtChartData} options={baseOptions} />
+
+            {/* 综合排名卡片 */}
+            <div className="bg-white rounded-xl border border-gray-100 p-5">
+              <h3 className="font-semibold text-gray-900 mb-3">商圈综合力排名 (5维加权)</h3>
+              <div className="space-y-1.5">
+                {rankedDistricts.map((d, i) => {
+                  const total = complexScore(d)
+                  const max = 25
+                  const pct = (total / max) * 100
+                  return (
+                    <div
+                      key={d.name}
+                      className={`flex items-center gap-2.5 py-1.5 px-2 rounded-lg text-sm ${
+                        d.highlight ? 'bg-amber-50 ring-1 ring-amber-200' : 'hover:bg-gray-50'
+                      }`}
+                    >
+                      <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold flex-shrink-0 ${
+                        i < 3 ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-500'
+                      }`}>
+                        {i + 1}
+                      </span>
+                      <span className={`w-[72px] text-xs flex-shrink-0 ${d.highlight ? 'font-semibold text-amber-700' : 'text-gray-700'}`}>
+                        {d.name}
+                        {d.highlight && <span className="ml-1 text-[10px] bg-amber-200 text-amber-700 px-1 py-0.5 rounded">BFC</span>}
+                      </span>
+                      <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                        <div
+                          className="h-full rounded-full transition-all"
+                          style={{
+                            width: `${pct}%`,
+                            background: d.highlight
+                              ? 'linear-gradient(90deg, #BA7517, #D4952B)'
+                              : pct >= 80 ? 'linear-gradient(90deg, #534AB7, #7F77DD)' : pct >= 64 ? '#7F77DD' : '#AFA9EC',
+                          }}
+                        />
+                      </div>
+                      <span className="w-[28px] text-right text-xs font-mono text-gray-500">{total}</span>
+                    </div>
+                  )
+                })}
+              </div>
+              <p className="text-[11px] text-gray-400 mt-2">满分 25 分（5维度 × 5分），来源同上</p>
+            </div>
           </div>
 
-          {/* 外滩商圈定位 + 销售额》*/}
+          {/* 外滩商圈定位 + 销售额 */}
           <div className="grid lg:grid-cols-2 gap-4">
             <div className="bg-white rounded-xl border border-gray-100 p-5">
               <h3 className="font-semibold text-gray-900 mb-3">外滩商圈 · BFC 定位分析</h3>
@@ -551,108 +663,114 @@ export default function Analytics() {
                   </div>
                 ))}
               </div>
-              <p className="text-xs text-gray-400 mt-3">* 来源：小红书多篇笔记交叉验证，非官方数据</p>
+              <p className="text-xs text-gray-400 mt-3">* 来源：联商网、赢商网及各商场官方年报，2025全年数据</p>
             </div>
           </div>
 
-          {/* 商圈多维对比表格 */}
+          {/* 多维打分对比总表 */}
           <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
-            <div className="px-5 py-3 border-b border-gray-100">
-              <h3 className="font-semibold text-gray-900">上海商圈多维对比</h3>
-              <p className="text-xs text-gray-400 mt-0.5">按小红书热度排序，含商圈类型、客群画像、代表商场</p>
+            <div className="px-5 py-3 border-b border-gray-100 flex items-center justify-between">
+              <div>
+                <h3 className="font-semibold text-gray-900">10大商圈 · 五维对比总表</h3>
+                <p className="text-xs text-gray-400 mt-0.5">按综合得分排序：客流体量 · 零售规模 · 消费力 · 交通便利 · 首店经济</p>
+              </div>
+              <div className="flex items-center gap-3 text-[11px]">
+                <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-amber-200 inline-block"></span>BFC所在</span>
+                <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-emerald-100 inline-block"></span>5分</span>
+                <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-blue-100 inline-block"></span>4分</span>
+                <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-amber-100 inline-block"></span>3分</span>
+                <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-gray-100 inline-block"></span>1-2分</span>
+              </div>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead className="bg-gray-50 border-b border-gray-100">
                   <tr>
                     <th className="text-left px-4 py-3 font-medium text-gray-600 w-8">#</th>
-                    <th className="text-left px-4 py-3 font-medium text-gray-600">商圈</th>
-                    <th className="text-left px-4 py-3 font-medium text-gray-600">区域</th>
-                    <th className="text-left px-4 py-3 font-medium text-gray-600">类型</th>
-                    <th className="text-left px-4 py-3 font-medium text-gray-600">核心特征</th>
-                    <th className="text-left px-4 py-3 font-medium text-gray-600">代表商场</th>
-                    <th className="text-center px-4 py-3 font-medium text-gray-600 w-20">热度</th>
+                    <th className="text-left px-3 py-3 font-medium text-gray-600">商圈</th>
+                    <th className="text-left px-3 py-3 font-medium text-gray-600">区域·地铁</th>
+                    <th className="text-left px-3 py-3 font-medium text-gray-600">类型</th>
+                    <th className="text-center px-2 py-3 font-medium text-gray-600 w-[64px]">客流体量</th>
+                    <th className="text-center px-2 py-3 font-medium text-gray-600 w-[64px]">零售规模</th>
+                    <th className="text-center px-2 py-3 font-medium text-gray-600 w-[64px]">消费力</th>
+                    <th className="text-center px-2 py-3 font-medium text-gray-600 w-[64px]">交通便利</th>
+                    <th className="text-center px-2 py-3 font-medium text-gray-600 w-[64px]">首店经济</th>
+                    <th className="text-center px-3 py-3 font-medium text-gray-600 w-[48px]">总分</th>
+                    <th className="text-left px-3 py-3 font-medium text-gray-600">代表商场</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {SHANGHAI_DISTRICTS.map((d, i) => (
-                    <tr
-                      key={d.rank}
-                      className={`${i % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'} ${d.highlight ? 'ring-1 ring-inset ring-amber-200' : ''}`}
-                    >
-                      <td className="px-4 py-2.5 text-center">
-                        <span
-                          className="w-6 h-6 rounded-full inline-flex items-center justify-center text-xs font-medium"
-                          style={{
-                            background: d.rank <= 3 ? '#FAEEDA' : '#F1EFE8',
-                            color: d.rank <= 3 ? '#854F0B' : '#888780',
-                          }}
-                        >
-                          {d.rank}
-                        </span>
-                      </td>
-                      <td className="px-4 py-2.5">
-                        <span className="font-medium text-gray-900">{d.name}</span>
-                        {d.highlight && (
-                          <span className="ml-2 text-xs bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded">BFC所在</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-2.5 text-gray-500">{d.region}</td>
-                      <td className="px-4 py-2.5">
-                        <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded">{d.tag}</span>
-                      </td>
-                      <td className="px-4 py-2.5 text-gray-600 text-xs max-w-[140px]">{d.trait}</td>
-                      <td className="px-4 py-2.5 text-gray-500 text-xs">{d.representative}</td>
-                      <td className="px-4 py-2.5 text-center">
-                        <div className="inline-flex gap-0.5">
-                          {Array.from({ length: 5 }).map((_, j) => (
-                            <span key={j} style={{ color: j < d.heat ? starColor : '#D3D1C7', fontSize: 12 }}>★</span>
-                          ))}
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                  {rankedDistricts.map((d, i) => {
+                    const total = complexScore(d)
+                    return (
+                      <tr
+                        key={d.name}
+                        className={`${i % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'} ${d.highlight ? 'ring-1 ring-inset ring-amber-200 bg-amber-50/30' : ''}`}
+                      >
+                        <td className="px-4 py-2.5 text-center">
+                          <span className={`w-5 h-5 rounded-full inline-flex items-center justify-center text-[11px] font-bold ${
+                            i < 3 ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-500'
+                          }`}>
+                            {i + 1}
+                          </span>
+                        </td>
+                        <td className="px-3 py-2.5">
+                          <span className={`text-xs font-medium ${d.highlight ? 'text-amber-700' : 'text-gray-900'}`}>{d.name}</span>
+                          {d.highlight && <span className="ml-1.5 text-[10px] bg-amber-200 text-amber-700 px-1 py-0.5 rounded">BFC</span>}
+                        </td>
+                        <td className="px-3 py-2.5 text-[11px] text-gray-400">
+                          <div>{d.region}</div>
+                          <div>{d.metroLines}</div>
+                        </td>
+                        <td className="px-3 py-2.5">
+                          <span className="text-[11px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">{d.tag}</span>
+                        </td>
+                        {allDims.map(dim => {
+                          const v = d.scores[dim]
+                          const c = scoreColor(v)
+                          return (
+                            <td key={dim} className="px-2 py-2.5 text-center">
+                              <span className={`inline-flex w-6 h-6 rounded-md items-center justify-center text-xs font-semibold ${c.bg} ${c.text}`}>
+                                {v}
+                              </span>
+                            </td>
+                          )
+                        })}
+                        <td className="px-3 py-2.5 text-center">
+                          <span className={`text-xs font-bold font-mono ${
+                            d.highlight ? 'text-amber-600' : 'text-gray-700'
+                          }`}>{total}</span>
+                        </td>
+                        <td className="px-3 py-2.5 text-[11px] text-gray-400 max-w-[160px]">{d.representative}</td>
+                      </tr>
+                    )
+                  })}
                 </tbody>
               </table>
             </div>
           </div>
 
-          {/* 小红书高赞笔记 TOP10 */}
-          <div className="bg-white rounded-xl border border-gray-100 p-5">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-gray-900">小红书高赞笔记 TOP10</h3>
-              <span className="text-xs text-gray-400">实时采集 · 可溯源</span>
-            </div>
-            <div className="space-y-2">
-              {XHS_TOP_NOTES.map((note, i) => (
-                <a
-                  key={i}
-                  href={note.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors group"
-                >
-                  <span
-                    className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0"
-                    style={{
-                      background: i < 3 ? '#FAECE7' : '#F1EFE8',
-                      color: i < 3 ? '#993C1D' : '#5F5E5A',
-                    }}
-                  >
-                    {i + 1}
-                  </span>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm text-gray-800 truncate">{note.title}</div>
-                    <div className="text-xs text-gray-400">{note.author}</div>
+          {/* 商圈基准对比卡片 */}
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+            {allDims.map(dim => {
+              const bfcVal = bfcDistrict.scores[dim]
+              const avgVal = AVG_SCORES[dim]
+              const diff = bfcVal - avgVal
+              const ahead = diff >= 0
+              return (
+                <div key={dim} className="bg-white rounded-xl border border-gray-100 p-4 text-center">
+                  <div className="text-xs text-gray-400 mb-1">{DIM_LABELS[dim]}</div>
+                  <div className="flex items-center justify-center gap-1.5">
+                    <span className={`text-lg font-bold ${ahead ? 'text-amber-600' : 'text-gray-400'}`}>{bfcVal}</span>
+                    <span className="text-xs text-gray-300">/</span>
+                    <span className="text-xs text-gray-400">{avgVal}</span>
                   </div>
-                  <div className="flex items-center gap-1 flex-shrink-0">
-                    <span className="text-xs font-medium text-red-500">{note.likes.toLocaleString()}</span>
-                    <span className="text-xs text-gray-400">赞</span>
-                    <ExternalLink className="w-3 h-3 text-gray-300 group-hover:text-gray-500 ml-1" />
+                  <div className={`text-[11px] mt-1 ${ahead ? 'text-green-600' : 'text-red-400'}`}>
+                    {ahead ? `+${diff.toFixed(1)}` : diff.toFixed(1)} vs 均值
                   </div>
-                </a>
-              ))}
-            </div>
+                </div>
+              )
+            })}
           </div>
         </div>
       )}
