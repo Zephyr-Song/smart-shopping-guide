@@ -7,9 +7,7 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   Search,
-  ExternalLink,
   Star,
-  MapPin,
 } from 'lucide-react'
 import {
   Chart as ChartJS,
@@ -44,43 +42,8 @@ ChartJS.register(
   Filler
 )
 
-type TabType = 'traffic' | 'funnel' | 'segment' | 'store' | 'market'
+type TabType = 'traffic' | 'funnel' | 'segment' | 'store'
 
-// ── 上海9大商圈真实数据（来源：小红书采集报告 2026-05-30）──
-const SHANGHAI_DISTRICTS = [
-  { rank: 1, name: '南京东路', region: '黄浦区', mentions: 42, heat: 5, trait: '年客流2.5亿，商业第一街', representative: '新世界大丸·第一百货·永安百货', tag: '旅游打卡型' },
-  { rank: 2, name: '南京西路', region: '静安区', mentions: 38, heat: 5, trait: '"金三角"奢侈品消费高地', representative: '恒隆广场·SKP·兴业太古汇', tag: '高端消费型' },
-  { rank: 3, name: '淮海中路', region: '黄浦区', mentions: 35, heat: 4, trait: '时尚潮流发源地，全长2.2km', representative: 'K11·iapm·淮海755', tag: '潮流年轻型' },
-  { rank: 4, name: '徐家汇', region: '徐汇区', mentions: 32, heat: 4, trait: '"全能型"商圈，中央活动区', representative: '港汇恒隆·美罗城·东方商厦', tag: '一站式生活型' },
-  { rank: 5, name: '陆家嘴', region: '浦东新区', mentions: 30, heat: 4, trait: '金融中心核心，后起之秀', representative: '国金IFC·正大广场·L+Mall', tag: '金融商务型', highlight: true },
-  { rank: 6, name: '新天地', region: '黄浦区', mentions: 25, heat: 3, trait: '石库门海派文化+时尚商业', representative: '新天地时尚·太平洋广场', tag: 'Citywalk型' },
-  { rank: 7, name: '静安寺', region: '静安区', mentions: 22, heat: 3, trait: '寺庙文化+高端商圈融合', representative: '芮欧百货·嘉里中心', tag: '精致文化型' },
-  { rank: 8, name: '五角场', region: '杨浦区', mentions: 18, heat: 3, trait: '大学城商圈，年轻化消费', representative: '万达广场·百联又一城', tag: '年轻活力型' },
-  { rank: 9, name: '中山公园', region: '长宁区', mentions: 12, heat: 2, trait: '社区型商圈，生活便利', representative: '环球港·龙之梦', tag: '社区生活型' },
-]
-
-// ── 2025年上海商场销售额排名（来源：小红书多篇笔记交叉验证）──
-const MALL_REVENUE = [
-  { rank: 1, name: '上海国金中心IFC', district: '陆家嘴', revenue: '200亿+', note: '顶奢集中，业绩稳居全国第一' },
-  { rank: 2, name: '上海环球港', district: '中山公园', revenue: '200亿+', note: '体量最大，客流量居全市第一' },
-  { rank: 3, name: '上海恒隆广场', district: '南京西路', revenue: '150亿+', note: '奢侈品密度极高，高客单价' },
-  { rank: 4, name: '上海SKP', district: '南京西路', revenue: '新开业', note: '2025新开业，数据待统计' },
-  { rank: 5, name: '兴业太古汇', district: '南京西路', revenue: '80亿+', note: '办公+零售一体，稳定客群' },
-]
-
-// ── 小红书高赞笔记 TOP10 ──
-const XHS_TOP_NOTES = [
-  { title: '📍上海这么玩就对了❗附3日旅游手绘地图', author: 'GaonaiJ（环球旅行）', likes: 8981, url: 'https://www.xiaohongshu.com/explore/687de836000000001202c56a' },
-  { title: '不看＝白玩！你的假期上海citywalk手册上线', author: '上海去哪儿', likes: 8705, url: 'https://www.xiaohongshu.com/explore/68dcccec00000000050028e9' },
-  { title: '商业 | 上海市购物中心分布', author: '小观图说', likes: 6560, url: 'https://www.xiaohongshu.com/explore/695769c1000000002200a9dd' },
-  { title: '上海必逛9大商圈合集‼跟着逛不踩雷', author: '魔都艾美丽', likes: 5521, url: 'https://www.xiaohongshu.com/explore/686d23ea000000002400fafa' },
-  { title: '第一次来上海，上海CityWalk这么逛‼', author: '乐乐麻麻 找乐子', likes: 5242, url: 'https://www.xiaohongshu.com/explore/69be55e30000000023023644' },
-  { title: '以为外滩已经够美了，直到我去了徐家汇…', author: '山炮小王子', likes: 3994, url: 'https://www.xiaohongshu.com/explore/69688fc4000000000a02d3c4' },
-  { title: '上海十大商场血拼指南！本地人私藏逛街地图', author: '月月博士聊孕期', likes: 3170, url: 'https://www.xiaohongshu.com/explore/6891f26f000000002501ad1f' },
-  { title: '上海商场攻略✅LV巨轮地址✅上海逛街指南', author: '小蜂仔', likes: 2981, url: 'https://www.xiaohongshu.com/explore/686f6d7f0000000017031880' },
-  { title: '上海旅游必逛的9个商场！上海逛街攻略', author: '酥小爱（海派礼物）', likes: 2847, url: 'https://www.xiaohongshu.com/explore/688b30820000000023024a11' },
-  { title: '国内唯一能与东京媲美的地方', author: '杰森商刊', likes: 2500, url: 'https://www.xiaohongshu.com/explore/69660c16000000000a028b4c' },
-]
 
 export default function Analytics() {
   const [activeTab, setActiveTab] = useState<TabType>('traffic')
@@ -92,7 +55,6 @@ export default function Analytics() {
     { key: 'funnel', label: '购物路径', icon: BarChart3 },
     { key: 'segment', label: '客群画像', icon: Users },
     { key: 'store', label: '门店热度', icon: DollarSign },
-    { key: 'market', label: '商圈竞争', icon: MapPin },
   ]
 
   // ── 品类汇总客流 ──
@@ -177,20 +139,6 @@ export default function Analytics() {
         label: '品类日客流',
         data: categoryTraffic.map(d => d.count),
         backgroundColor: 'rgba(83,74,183,0.65)',
-        borderRadius: 4,
-      },
-    ],
-  }
-
-  const districtChartData = {
-    labels: SHANGHAI_DISTRICTS.map(d => d.name),
-    datasets: [
-      {
-        label: '小红书提及频次',
-        data: SHANGHAI_DISTRICTS.map(d => d.mentions),
-        backgroundColor: SHANGHAI_DISTRICTS.map(d =>
-          d.highlight ? 'rgba(186,117,23,0.85)' : 'rgba(83,74,183,0.55)'
-        ),
         borderRadius: 4,
       },
     ],
@@ -478,178 +426,6 @@ export default function Analytics() {
         </div>
       )}
 
-      {/* ── Tab 5: 商圈竞争 ── */}
-      {activeTab === 'market' && (
-        <div className="space-y-4">
-          {/* 数据来源说明 */}
-          <div className="bg-blue-50 rounded-xl p-4 text-sm text-blue-700 flex gap-2">
-            <span className="flex-shrink-0">📌</span>
-            <span>以下数据来源于小红书浏览器真实采集（2026-05-30），含9大商圈被提及频次、2025年商场销售额、高赞笔记TOP10，数据可溯源。</span>
-          </div>
-
-          {/* 商圈热度柱状图 */}
-          <div className="bg-white rounded-xl border border-gray-100 p-5">
-            <div className="flex items-center justify-between mb-1">
-              <h3 className="font-semibold text-gray-900">上海9大商圈小红书热度</h3>
-              <span className="text-xs text-gray-400">（60条笔记提及频次统计）</span>
-            </div>
-            <p className="text-xs text-gray-400 mb-4">
-              <span className="inline-block w-3 h-3 rounded-sm mr-1 align-middle" style={{ background: 'rgba(186,117,23,0.85)' }}></span>
-              金色标注为 BFC 所在陆家嘴商圈
-            </p>
-            <Bar data={districtChartData} options={baseOptions} />
-          </div>
-
-          {/* 陆家嘴竞争定位 */}
-          <div className="grid lg:grid-cols-2 gap-4">
-            <div className="bg-white rounded-xl border border-gray-100 p-5">
-              <h3 className="font-semibold text-gray-900 mb-3">陆家嘴商圈定位</h3>
-              <div className="space-y-3 text-sm">
-                <div className="flex gap-2">
-                  <span className="w-16 text-xs text-gray-400 flex-shrink-0 pt-0.5">区域</span>
-                  <span className="text-gray-700">浦东新区，金融核心地带</span>
-                </div>
-                <div className="flex gap-2">
-                  <span className="w-16 text-xs text-gray-400 flex-shrink-0 pt-0.5">定位</span>
-                  <span className="text-gray-700">后起之秀"顶流商圈"，金融中心核心配套</span>
-                </div>
-                <div className="flex gap-2">
-                  <span className="w-16 text-xs text-gray-400 flex-shrink-0 pt-0.5">核心场所</span>
-                  <span className="text-gray-700">国金IFC · 正大广场 · L+Mall · BFC外滩金融中心</span>
-                </div>
-                <div className="flex gap-2">
-                  <span className="w-16 text-xs text-gray-400 flex-shrink-0 pt-0.5">主要客群</span>
-                  <span className="text-gray-700">商务消费、江景打卡、高端购物</span>
-                </div>
-                <div className="flex gap-2">
-                  <span className="w-16 text-xs text-gray-400 flex-shrink-0 pt-0.5">差异化</span>
-                  <span className="text-gray-700">BFC 紧邻外滩，金融+艺术+餐饮差异化定位，与IFC错位竞争</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl border border-gray-100 p-5">
-              <h3 className="font-semibold text-gray-900 mb-3">2025上海商场销售额 TOP5</h3>
-              <div className="space-y-2">
-                {MALL_REVENUE.map(mall => (
-                  <div key={mall.rank} className="flex items-center gap-3 py-2 border-b border-gray-50 last:border-0">
-                    <span
-                      className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0"
-                      style={{
-                        background: mall.rank <= 3 ? '#FAEEDA' : '#F1EFE8',
-                        color: mall.rank <= 3 ? '#854F0B' : '#5F5E5A',
-                      }}
-                    >
-                      {mall.rank}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium text-gray-900">{mall.name}</div>
-                      <div className="text-xs text-gray-400">{mall.district} · {mall.note}</div>
-                    </div>
-                    <span className="text-sm font-semibold text-amber-600 flex-shrink-0">{mall.revenue}</span>
-                  </div>
-                ))}
-              </div>
-              <p className="text-xs text-gray-400 mt-3">* 来源：小红书多篇笔记交叉验证，非官方数据</p>
-            </div>
-          </div>
-
-          {/* 商圈详细表格 */}
-          <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
-            <div className="px-5 py-3 border-b border-gray-100">
-              <h3 className="font-semibold text-gray-900">9大商圈详细信息</h3>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="bg-gray-50 border-b border-gray-100">
-                  <tr>
-                    <th className="text-left px-4 py-3 font-medium text-gray-600 w-8">排名</th>
-                    <th className="text-left px-4 py-3 font-medium text-gray-600">商圈</th>
-                    <th className="text-left px-4 py-3 font-medium text-gray-600">区域</th>
-                    <th className="text-left px-4 py-3 font-medium text-gray-600">核心特征</th>
-                    <th className="text-left px-4 py-3 font-medium text-gray-600">代表商场</th>
-                    <th className="text-right px-4 py-3 font-medium text-gray-600">热度</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {SHANGHAI_DISTRICTS.map((d, i) => (
-                    <tr
-                      key={d.rank}
-                      className={`${i % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'} ${d.highlight ? 'ring-1 ring-inset ring-amber-200' : ''}`}
-                    >
-                      <td className="px-4 py-2.5 text-center">
-                        <span
-                          className="w-6 h-6 rounded-full inline-flex items-center justify-center text-xs font-medium"
-                          style={{
-                            background: d.rank <= 3 ? '#FAEEDA' : '#F1EFE8',
-                            color: d.rank <= 3 ? '#854F0B' : '#888780',
-                          }}
-                        >
-                          {d.rank}
-                        </span>
-                      </td>
-                      <td className="px-4 py-2.5">
-                        <span className="font-medium text-gray-900">{d.name}</span>
-                        {d.highlight && (
-                          <span className="ml-2 text-xs bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded">BFC所在</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-2.5 text-gray-500">{d.region}</td>
-                      <td className="px-4 py-2.5 text-gray-600 text-xs max-w-[160px]">{d.trait}</td>
-                      <td className="px-4 py-2.5 text-gray-500 text-xs">{d.representative}</td>
-                      <td className="px-4 py-2.5 text-right">
-                        <div className="flex items-center justify-end gap-0.5">
-                          {Array.from({ length: 5 }).map((_, j) => (
-                            <span key={j} style={{ color: j < d.heat ? starColor : '#D3D1C7', fontSize: 12 }}>★</span>
-                          ))}
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* 小红书高赞笔记 */}
-          <div className="bg-white rounded-xl border border-gray-100 p-5">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-gray-900">小红书高赞笔记 TOP10</h3>
-              <span className="text-xs text-gray-400">实时采集 · 可溯源</span>
-            </div>
-            <div className="space-y-2">
-              {XHS_TOP_NOTES.map((note, i) => (
-                <a
-                  key={i}
-                  href={note.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors group"
-                >
-                  <span
-                    className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0"
-                    style={{
-                      background: i < 3 ? '#FAECE7' : '#F1EFE8',
-                      color: i < 3 ? '#993C1D' : '#5F5E5A',
-                    }}
-                  >
-                    {i + 1}
-                  </span>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm text-gray-800 truncate">{note.title}</div>
-                    <div className="text-xs text-gray-400">{note.author}</div>
-                  </div>
-                  <div className="flex items-center gap-1 flex-shrink-0">
-                    <span className="text-xs font-medium text-red-500">{note.likes.toLocaleString()}</span>
-                    <span className="text-xs text-gray-400">赞</span>
-                    <ExternalLink className="w-3 h-3 text-gray-300 group-hover:text-gray-500 ml-1" />
-                  </div>
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
