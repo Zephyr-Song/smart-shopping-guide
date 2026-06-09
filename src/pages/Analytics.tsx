@@ -7,7 +7,6 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   Search,
-  ExternalLink,
   Star,
   MapPin,
   Lightbulb,
