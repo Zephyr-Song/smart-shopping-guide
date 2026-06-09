@@ -10,6 +10,11 @@ import {
   ExternalLink,
   Star,
   MapPin,
+  Lightbulb,
+  ChevronRight,
+  CheckCircle2,
+  XCircle,
+  AlertCircle,
 } from 'lucide-react'
 import {
   Chart as ChartJS,
@@ -46,7 +51,174 @@ ChartJS.register(
   Filler
 )
 
-type TabType = 'traffic' | 'funnel' | 'segment' | 'store' | 'market'
+type TabType = 'traffic' | 'funnel' | 'segment' | 'store' | 'market' | 'advisor'
+
+// ── 选址顾问：品类适配度数据 ──
+interface CategoryFit {
+  id: string
+  name: string
+  emoji: string
+  scores: {
+    customerMatch: number   // 客群匹配
+    competition: number     // 竞争密度（低=好）
+    spendingPotential: number // 消费潜力
+    districtSynergy: number  // 商圈协同
+  }
+  recommendation: 'strong' | 'good' | 'caution' | 'not-fit'
+  reason: string
+  bestFloor: string
+  competitorCount: number
+  avgRentIndex: number  // 租金指数(外滩均值=100)
+}
+
+const CATEGORY_FIT_DATA: CategoryFit[] = [
+  {
+    id: 'fine-dining',
+    name: '精致餐饮',
+    emoji: '🍽️',
+    scores: { customerMatch: 92, competition: 62, spendingPotential: 94, districtSynergy: 88 },
+    recommendation: 'strong',
+    reason: '外滩江景溢价显著，金融客群消费力强，与复星艺术中心形成文化+餐饮联动，客单价可较商圈均值高出30-40%',
+    bestFloor: 'N-3F / N-4F（江景）、S-3F',
+    competitorCount: 3,
+    avgRentIndex: 118,
+  },
+  {
+    id: 'luxury',
+    name: '奢侈品牌',
+    emoji: '💎',
+    scores: { customerMatch: 84, competition: 75, spendingPotential: 96, districtSynergy: 80 },
+    recommendation: 'good',
+    reason: '高净值客群密集，但奢侈品核心阵地在南京西路/陆家嘴，外滩需差异化定位，建议以江景旗舰+艺术联名切入',
+    bestFloor: 'S-1F / N-1F（主入口）',
+    competitorCount: 5,
+    avgRentIndex: 142,
+  },
+  {
+    id: 'trendy',
+    name: '潮流品牌',
+    emoji: '👟',
+    scores: { customerMatch: 76, competition: 70, spendingPotential: 72, districtSynergy: 78 },
+    recommendation: 'good',
+    reason: '25-35岁新兴消费群体契合，BFC已有潮流品牌集群，借助艺术IP联名可提升溢价感，建议主打设计师/限定系列',
+    bestFloor: 'S-2F / N-2F',
+    competitorCount: 8,
+    avgRentIndex: 95,
+  },
+  {
+    id: 'light-luxury',
+    name: '轻奢腕表珠宝',
+    emoji: '⌚',
+    scores: { customerMatch: 90, competition: 55, spendingPotential: 91, districtSynergy: 85 },
+    recommendation: 'strong',
+    reason: '外滩金融客群对腕表/珠宝需求强烈，目前竞争密度低于陆家嘴，先发优势明显，单坪产值潜力极高',
+    bestFloor: 'S-1F（主力展示位）',
+    competitorCount: 2,
+    avgRentIndex: 135,
+  },
+  {
+    id: 'coffee-tea',
+    name: '精品咖啡/茶饮',
+    emoji: '☕',
+    scores: { customerMatch: 78, competition: 45, spendingPotential: 65, districtSynergy: 82 },
+    recommendation: 'caution',
+    reason: 'BFC已有5家咖啡/茶饮品牌，江景位优势已被头部品牌占据，新入局需强差异化（如特调/文化IP），租金回收压力较大',
+    bestFloor: 'N-1F 户外区域、S-B1',
+    competitorCount: 5,
+    avgRentIndex: 88,
+  },
+  {
+    id: 'fast-fashion',
+    name: '快时尚',
+    emoji: '👕',
+    scores: { customerMatch: 42, competition: 30, spendingPotential: 48, districtSynergy: 38 },
+    recommendation: 'not-fit',
+    reason: '外滩商圈定位高端/精致，快时尚与整体调性不符，客群消费力远超快时尚客单价区间，建议选择五角场/中山公园等商圈',
+    bestFloor: '不建议',
+    competitorCount: 0,
+    avgRentIndex: 72,
+  },
+  {
+    id: 'sports',
+    name: '运动品牌',
+    emoji: '🏃',
+    scores: { customerMatch: 58, competition: 65, spendingPotential: 60, districtSynergy: 52 },
+    recommendation: 'caution',
+    reason: '大众运动品牌与商圈定位有一定落差，但高端运动（Lululemon/On等）契合度高，需走精品路线，建议搭配健身/SPA类业态组合',
+    bestFloor: 'S1-5F（健身同楼层协同）',
+    competitorCount: 4,
+    avgRentIndex: 78,
+  },
+  {
+    id: 'kids',
+    name: '亲子体验',
+    emoji: '🧸',
+    scores: { customerMatch: 68, competition: 88, spendingPotential: 74, districtSynergy: 70 },
+    recommendation: 'good',
+    reason: '外滩亲子品牌极少（仅1家），但BFC客群以25-38岁精英为主，亲子消费力强，蓝海机会突出，建议定位高端亲子美育/创意体验',
+    bestFloor: 'N-4F / S-4F（家庭区）',
+    competitorCount: 1,
+    avgRentIndex: 82,
+  },
+  {
+    id: 'bookstore',
+    name: '精品书店/文创',
+    emoji: '📚',
+    scores: { customerMatch: 72, competition: 90, spendingPotential: 60, districtSynergy: 92 },
+    recommendation: 'good',
+    reason: '与复星艺术中心文化IP高度协同，外滩目前无标杆文创书店，可作为商圈文化锚点，建议引入茑屋/Page One级别品牌',
+    bestFloor: 'N-2F / N-3F（艺术动线沿线）',
+    competitorCount: 0,
+    avgRentIndex: 75,
+  },
+  {
+    id: 'spa-wellness',
+    name: '美容/SPA/健康',
+    emoji: '🧖',
+    scores: { customerMatch: 85, competition: 72, spendingPotential: 86, districtSynergy: 78 },
+    recommendation: 'strong',
+    reason: '高净值女性客群占比高，工作压力大的金融白领对高端SPA需求旺盛，BFC已有BFC FITNESS，形成健康生活方式集群',
+    bestFloor: 'S1-5F（配合健身）、N-4F',
+    competitorCount: 2,
+    avgRentIndex: 108,
+  },
+]
+
+// ── 楼层业态推荐矩阵 ──
+interface FloorRecommendation {
+  floor: string
+  zone: 'S' | 'N'
+  bestCategories: string[]
+  reason: string
+  currentHighlight: string
+  capacityHint: string
+}
+
+const FLOOR_RECS: FloorRecommendation[] = [
+  { floor: 'S-B2/B3', zone: 'S', bestCategories: ['餐饮配套', '超市精品', '汽车体验'], reason: '底层客流导入，适合目的型消费，停车楼层联动', currentHighlight: 'BFC汽车生活体验区', capacityHint: '较充裕' },
+  { floor: 'S-B1', zone: 'S', bestCategories: ['精品超市', '快餐/咖啡', '美妆零售'], reason: '地铁直达，工作日高频消费，客流稳定', currentHighlight: '地下通道连接', capacityHint: '一般' },
+  { floor: 'S-1F', zone: 'S', bestCategories: ['轻奢腕表', '珠宝首饰', '旗舰零售'], reason: '南区主入口，曝光最大，适合高客单价品牌', currentHighlight: '精品零售集群', capacityHint: '紧张' },
+  { floor: 'S-2F', zone: 'S', bestCategories: ['潮流品牌', '设计师集合', '生活方式'], reason: '25-35岁核心客群聚集楼层，社交打卡属性强', currentHighlight: '潮流品牌区', capacityHint: '一般' },
+  { floor: 'S-3F', zone: 'S', bestCategories: ['精致餐饮', '品质日料', '海鲜烤肉'], reason: '餐饮黄金楼层，客流目的性强，翻台效率高', currentHighlight: '餐饮主力楼层', capacityHint: '紧张' },
+  { floor: 'S1-5F', zone: 'S', bestCategories: ['高端健身', 'SPA/美容', '运动轻奢'], reason: 'BFC FITNESS已锚定健康生活方式，同业态协同效应强', currentHighlight: 'BFC FITNESS健身会馆', capacityHint: '有机会' },
+  { floor: 'N-1F', zone: 'N', bestCategories: ['精品快餐', '网红茶饮', '精致餐饮'], reason: '北区入口+外摆区，江景视野，打卡属性突出', currentHighlight: '满堂 by Bar Choice等', capacityHint: '一般' },
+  { floor: 'N-2F', zone: 'N', bestCategories: ['精品书店', '文创零售', '生活美学'], reason: '连接艺术动线，文化IP协同强，适合有格调的零售', currentHighlight: '生活方式品牌', capacityHint: '较充裕' },
+  { floor: 'N-3F', zone: 'N', bestCategories: ['江景餐厅', '高端日料', '精品西餐'], reason: '黄浦江视野最佳，江景溢价30-40%，租金回报高', currentHighlight: '江景餐饮集群', capacityHint: '紧张' },
+  { floor: 'N-4F', zone: 'N', bestCategories: ['亲子体验', '美容SPA', '高端日料'], reason: '家庭+休闲目的层，停留时长最长，适合体验型业态', currentHighlight: '休闲体验区', capacityHint: '有机会' },
+]
+
+// ── 竞品空白图 ──
+const CATEGORY_GAP_DATA = [
+  { name: '精品书店/文创', bfc: 0, district: 1, gap: '蓝海', color: '#0F6E56' },
+  { name: '亲子美育体验', bfc: 1, district: 2, gap: '机会', color: '#185FA5' },
+  { name: '高端SPA/养生', bfc: 2, district: 4, gap: '机会', color: '#185FA5' },
+  { name: '轻奢腕表珠宝', bfc: 2, district: 6, gap: '机会', color: '#185FA5' },
+  { name: '精致西餐/法餐', bfc: 3, district: 8, gap: '均衡', color: '#EF9F27' },
+  { name: '咖啡/茶饮', bfc: 5, district: 12, gap: '均衡', color: '#EF9F27' },
+  { name: '潮流/设计师品牌', bfc: 8, district: 15, gap: '均衡', color: '#EF9F27' },
+  { name: '日式料理', bfc: 6, district: 8, gap: '饱和', color: '#A32D2D' },
+  { name: '快时尚', bfc: 0, district: 0, gap: '不适合', color: '#B4B2A9' },
+]
 
 
 // ── 上海10大商圈多维数据（综合来源：上海市商务委2025年1-5月商圈报告、赢商网、各商场年报、地铁官网）──
@@ -108,6 +280,9 @@ export default function Analytics() {
   const [activeTab, setActiveTab] = useState<TabType>('traffic')
   const [storeSearch, setStoreSearch] = useState('')
   const [storeCategoryFilter, setStoreCategoryFilter] = useState('全部')
+  const [selectedCategory, setSelectedCategory] = useState<CategoryFit>(CATEGORY_FIT_DATA[0])
+  const [advisorSubTab, setAdvisorSubTab] = useState<'fit' | 'floor' | 'gap'>('fit')
+  const [floorZoneFilter, setFloorZoneFilter] = useState<'all' | 'S' | 'N'>('all')
 
   const tabs: { key: TabType; label: string; icon: typeof BarChart3 }[] = [
     { key: 'traffic', label: '客流趋势', icon: TrendingUp },
@@ -115,6 +290,7 @@ export default function Analytics() {
     { key: 'segment', label: '客群画像', icon: Users },
     { key: 'store', label: '门店热度', icon: DollarSign },
     { key: 'market', label: '商圈对比', icon: MapPin },
+    { key: 'advisor', label: '选址顾问', icon: Lightbulb },
   ]
 
   // ── 品类汇总客流 ──
@@ -772,6 +948,372 @@ export default function Analytics() {
               )
             })}
           </div>
+        </div>
+      )}
+
+      {activeTab === 'advisor' && (
+        <div className="space-y-4">
+          {/* 说明栏 */}
+          <div className="bg-amber-50 rounded-xl p-3.5 text-sm text-amber-800 flex gap-2 items-start border border-amber-100">
+            <Lightbulb className="w-4 h-4 flex-shrink-0 mt-0.5 text-amber-500" />
+            <span>基于 BFC 外滩商圈客群画像、现有业态分布、外滩商圈竞争格局，为品牌入驻提供参考建议。数据综合自商务委报告、赢商网及BFC招商资料。</span>
+          </div>
+
+          {/* 子Tab */}
+          <div className="flex gap-2">
+            {([
+              { key: 'fit', label: '品类适配度' },
+              { key: 'floor', label: '楼层业态推荐' },
+              { key: 'gap', label: '竞品空白分析' },
+            ] as { key: 'fit' | 'floor' | 'gap'; label: string }[]).map(t => (
+              <button
+                key={t.key}
+                onClick={() => setAdvisorSubTab(t.key)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer border ${
+                  advisorSubTab === t.key
+                    ? 'bg-amber-500 text-white border-amber-500'
+                    : 'bg-white text-gray-600 border-gray-200 hover:border-amber-300'
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+
+          {/* ── 品类适配度 ── */}
+          {advisorSubTab === 'fit' && (
+            <div className="grid lg:grid-cols-3 gap-4">
+              {/* 左：品类列表 */}
+              <div className="lg:col-span-1 bg-white rounded-xl border border-gray-100 overflow-hidden">
+                <div className="px-4 py-3 bg-gray-50 border-b border-gray-100 text-xs font-medium text-gray-500">选择品类查看分析</div>
+                <div className="divide-y divide-gray-50">
+                  {CATEGORY_FIT_DATA.map(cat => {
+                    const recColor = {
+                      strong: 'text-emerald-600 bg-emerald-50',
+                      good: 'text-blue-600 bg-blue-50',
+                      caution: 'text-amber-600 bg-amber-50',
+                      'not-fit': 'text-gray-400 bg-gray-50',
+                    }[cat.recommendation]
+                    const recLabel = {
+                      strong: '强推',
+                      good: '推荐',
+                      caution: '谨慎',
+                      'not-fit': '不适合',
+                    }[cat.recommendation]
+                    return (
+                      <button
+                        key={cat.id}
+                        onClick={() => setSelectedCategory(cat)}
+                        className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors cursor-pointer border-none ${
+                          selectedCategory.id === cat.id ? 'bg-amber-50' : 'bg-white hover:bg-gray-50'
+                        }`}
+                      >
+                        <span className="text-lg flex-shrink-0">{cat.emoji}</span>
+                        <span className="flex-1 text-sm text-gray-800">{cat.name}</span>
+                        <span className={`text-[11px] px-1.5 py-0.5 rounded font-medium flex-shrink-0 ${recColor}`}>{recLabel}</span>
+                        {selectedCategory.id === cat.id && <ChevronRight className="w-3 h-3 text-amber-500 flex-shrink-0" />}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+
+              {/* 右：详细分析 */}
+              <div className="lg:col-span-2 space-y-3">
+                {/* 头部 */}
+                <div className={`rounded-xl p-5 border ${
+                  selectedCategory.recommendation === 'strong' ? 'bg-emerald-50 border-emerald-100' :
+                  selectedCategory.recommendation === 'good' ? 'bg-blue-50 border-blue-100' :
+                  selectedCategory.recommendation === 'caution' ? 'bg-amber-50 border-amber-100' :
+                  'bg-gray-50 border-gray-100'
+                }`}>
+                  <div className="flex items-start gap-3">
+                    <span className="text-3xl">{selectedCategory.emoji}</span>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="text-base font-semibold text-gray-900">{selectedCategory.name}</h3>
+                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                          selectedCategory.recommendation === 'strong' ? 'bg-emerald-100 text-emerald-700' :
+                          selectedCategory.recommendation === 'good' ? 'bg-blue-100 text-blue-700' :
+                          selectedCategory.recommendation === 'caution' ? 'bg-amber-100 text-amber-700' :
+                          'bg-gray-100 text-gray-500'
+                        }`}>
+                          {{
+                            strong: '✓ 强烈推荐',
+                            good: '✓ 推荐进驻',
+                            caution: '⚠ 谨慎评估',
+                            'not-fit': '✗ 不适合',
+                          }[selectedCategory.recommendation]}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-700 leading-relaxed">{selectedCategory.reason}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4维评分 */}
+                <div className="bg-white rounded-xl border border-gray-100 p-5">
+                  <h4 className="text-sm font-medium text-gray-700 mb-4">四维适配评分</h4>
+                  <div className="space-y-3">
+                    {[
+                      { key: 'customerMatch', label: '客群匹配度', color: '#185FA5' },
+                      { key: 'competition', label: '蓝海空间（低竞争=高分）', color: '#0F6E56' },
+                      { key: 'spendingPotential', label: '消费潜力', color: '#854F0B' },
+                      { key: 'districtSynergy', label: '商圈协同效应', color: '#534AB7' },
+                    ].map(dim => {
+                      const val = selectedCategory.scores[dim.key as keyof typeof selectedCategory.scores]
+                      return (
+                        <div key={dim.key} className="flex items-center gap-3">
+                          <span className="w-[140px] text-xs text-gray-500 flex-shrink-0">{dim.label}</span>
+                          <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                            <div
+                              className="h-full rounded-full transition-all duration-500"
+                              style={{ width: `${val}%`, background: dim.color }}
+                            />
+                          </div>
+                          <span className="w-8 text-right text-xs font-mono font-medium" style={{ color: dim.color }}>{val}</span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                {/* 指标卡片行 */}
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="bg-white rounded-xl border border-gray-100 p-4 text-center">
+                    <div className="text-xs text-gray-400 mb-1">推荐楼层</div>
+                    <div className="text-sm font-medium text-gray-800">{selectedCategory.bestFloor}</div>
+                  </div>
+                  <div className="bg-white rounded-xl border border-gray-100 p-4 text-center">
+                    <div className="text-xs text-gray-400 mb-1">外滩现有竞品</div>
+                    <div className="flex items-baseline justify-center gap-1">
+                      <span className="text-xl font-bold text-gray-900">{selectedCategory.competitorCount}</span>
+                      <span className="text-xs text-gray-400">家</span>
+                    </div>
+                  </div>
+                  <div className="bg-white rounded-xl border border-gray-100 p-4 text-center">
+                    <div className="text-xs text-gray-400 mb-1">租金指数</div>
+                    <div className={`text-xl font-bold ${
+                      selectedCategory.avgRentIndex >= 110 ? 'text-amber-600' :
+                      selectedCategory.avgRentIndex >= 90 ? 'text-blue-600' : 'text-emerald-600'
+                    }`}>{selectedCategory.avgRentIndex}</div>
+                    <div className="text-[10px] text-gray-400">均值=100</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ── 楼层业态推荐 ── */}
+          {advisorSubTab === 'floor' && (
+            <div className="space-y-3">
+              <div className="flex gap-2">
+                {([
+                  { key: 'all', label: '全部楼层' },
+                  { key: 'S', label: '南区 (S)' },
+                  { key: 'N', label: '北区 (N)' },
+                ] as { key: 'all' | 'S' | 'N'; label: string }[]).map(f => (
+                  <button
+                    key={f.key}
+                    onClick={() => setFloorZoneFilter(f.key)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border cursor-pointer transition-all ${
+                      floorZoneFilter === f.key
+                        ? 'bg-gray-800 text-white border-gray-800'
+                        : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
+                    }`}
+                  >
+                    {f.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="grid gap-3">
+                {FLOOR_RECS.filter(f => floorZoneFilter === 'all' || f.zone === floorZoneFilter).map(floor => (
+                  <div key={floor.floor} className="bg-white rounded-xl border border-gray-100 p-4 flex gap-4">
+                    <div className={`flex-shrink-0 w-[72px] h-[72px] rounded-xl flex flex-col items-center justify-center ${
+                      floor.zone === 'S' ? 'bg-amber-50' : 'bg-blue-50'
+                    }`}>
+                      <span className={`text-xs font-medium mb-0.5 ${floor.zone === 'S' ? 'text-amber-600' : 'text-blue-600'}`}>
+                        {floor.zone === 'S' ? '南区' : '北区'}
+                      </span>
+                      <span className={`text-sm font-bold ${floor.zone === 'S' ? 'text-amber-700' : 'text-blue-700'}`}>
+                        {floor.floor.replace('S-', '').replace('N-', '')}
+                      </span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2 mb-1.5">
+                        <div className="flex flex-wrap gap-1.5">
+                          {floor.bestCategories.map(cat => (
+                            <span key={cat} className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded">{cat}</span>
+                          ))}
+                        </div>
+                        <span className={`text-[11px] px-1.5 py-0.5 rounded flex-shrink-0 ${
+                          floor.capacityHint === '紧张' ? 'bg-red-50 text-red-500' :
+                          floor.capacityHint === '有机会' ? 'bg-emerald-50 text-emerald-600' :
+                          'bg-gray-50 text-gray-500'
+                        }`}>{floor.capacityHint}</span>
+                      </div>
+                      <p className="text-xs text-gray-500 mb-1.5">{floor.reason}</p>
+                      <div className="text-[11px] text-gray-400 flex items-center gap-1">
+                        <Star className="w-3 h-3 text-amber-400" />
+                        现有代表：{floor.currentHighlight}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ── 竞品空白分析 ── */}
+          {advisorSubTab === 'gap' && (
+            <div className="space-y-4">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                {[
+                  { label: '蓝海机会', count: CATEGORY_GAP_DATA.filter(d => d.gap === '蓝海').length, color: '#0F6E56', bg: 'bg-emerald-50', desc: '外滩几乎空白' },
+                  { label: '值得进入', count: CATEGORY_GAP_DATA.filter(d => d.gap === '机会').length, color: '#185FA5', bg: 'bg-blue-50', desc: '竞争密度适中' },
+                  { label: '均衡竞争', count: CATEGORY_GAP_DATA.filter(d => d.gap === '均衡').length, color: '#EF9F27', bg: 'bg-amber-50', desc: '需差异化定位' },
+                  { label: '饱和/不适合', count: CATEGORY_GAP_DATA.filter(d => d.gap === '饱和' || d.gap === '不适合').length, color: '#A32D2D', bg: 'bg-red-50', desc: '建议规避' },
+                ].map(card => (
+                  <div key={card.label} className={`${card.bg} rounded-xl p-4`}>
+                    <div className="text-xs text-gray-500 mb-1">{card.label}</div>
+                    <div className="text-2xl font-bold" style={{ color: card.color }}>{card.count}</div>
+                    <div className="text-[11px] text-gray-400 mt-0.5">{card.desc}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
+                <div className="px-5 py-3 border-b border-gray-100">
+                  <h3 className="font-medium text-gray-900 text-sm">品类竞争格局 · BFC vs 外滩商圈</h3>
+                  <p className="text-xs text-gray-400 mt-0.5">气泡大小代表市场规模，左侧数字为BFC现有品牌数</p>
+                </div>
+                <div className="p-5 space-y-3">
+                  {CATEGORY_GAP_DATA.map(item => (
+                    <div key={item.name} className="flex items-center gap-3">
+                      <span className="w-[120px] text-xs text-gray-600 flex-shrink-0">{item.name}</span>
+                      <div className="flex items-center gap-2 flex-1">
+                        <span className="w-5 text-xs text-right text-gray-400 flex-shrink-0">{item.bfc}</span>
+                        <div className="flex-1 relative h-6">
+                          {/* 商圈背景条 */}
+                          <div
+                            className="absolute inset-y-0 rounded-sm"
+                            style={{
+                              left: 0,
+                              width: `${Math.min((item.district / 18) * 100, 100)}%`,
+                              background: `${item.color}22`,
+                            }}
+                          />
+                          {/* BFC 条 */}
+                          <div
+                            className="absolute inset-y-1 rounded-sm"
+                            style={{
+                              left: 0,
+                              width: `${Math.min((item.bfc / 18) * 100, 100)}%`,
+                              background: item.color,
+                              minWidth: item.bfc > 0 ? 4 : 0,
+                            }}
+                          />
+                        </div>
+                        <span className="w-5 text-xs text-gray-400 flex-shrink-0">{item.district}</span>
+                      </div>
+                      <span
+                        className="text-[11px] px-2 py-0.5 rounded-full flex-shrink-0 font-medium"
+                        style={{
+                          background: `${item.color}20`,
+                          color: item.color,
+                        }}
+                      >
+                        {item.gap}
+                      </span>
+                    </div>
+                  ))}
+                  <div className="flex items-center gap-4 pt-2 border-t border-gray-50 text-[11px] text-gray-400">
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-6 h-2.5 rounded-sm inline-block bg-gray-800 opacity-80"></span>
+                      BFC现有
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-6 h-4 rounded-sm inline-block bg-gray-200"></span>
+                      外滩商圈整体
+                    </span>
+                    <span className="ml-auto">左列=BFC数量，右列=商圈总数</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* 蓝海机会卡片 */}
+              <div>
+                <h3 className="text-sm font-medium text-gray-700 mb-3">蓝海机会详解</h3>
+                <div className="grid sm:grid-cols-3 gap-3">
+                  {[
+                    {
+                      title: '精品书店/文创',
+                      icon: '📚',
+                      color: '#0F6E56',
+                      bg: 'bg-emerald-50',
+                      points: ['外滩商圈零覆盖', '复星艺术中心强IP协同', '建议引入茑屋/Page One级品牌', '可成为外滩文化新锚点'],
+                    },
+                    {
+                      title: '亲子美育体验',
+                      icon: '🎨',
+                      color: '#185FA5',
+                      bg: 'bg-blue-50',
+                      points: ['外滩仅1家，远低于市场需求', 'BFC精英客群家庭消费力强', '建议定位高端美育/创意体验', '客单价可达500-2000元/次'],
+                    },
+                    {
+                      title: '轻奢腕表珠宝',
+                      icon: '⌚',
+                      color: '#854F0B',
+                      bg: 'bg-amber-50',
+                      points: ['外滩仅2家，陆家嘴有20+家', '金融客群强购买力', '江景橱窗极具展示价值', '先发优势窗口期约2-3年'],
+                    },
+                  ].map(card => (
+                    <div key={card.title} className={`${card.bg} rounded-xl p-4`}>
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-xl">{card.icon}</span>
+                        <span className="text-sm font-medium" style={{ color: card.color }}>{card.title}</span>
+                      </div>
+                      <ul className="space-y-1.5">
+                        {card.points.map((p, i) => (
+                          <li key={i} className="flex items-start gap-1.5 text-xs text-gray-600">
+                            <CheckCircle2 className="w-3 h-3 flex-shrink-0 mt-0.5" style={{ color: card.color }} />
+                            {p}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* 风险提示 */}
+              <div className="bg-red-50 border border-red-100 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <AlertCircle className="w-4 h-4 text-red-500" />
+                  <span className="text-sm font-medium text-red-700">需规避的品类</span>
+                </div>
+                <div className="grid sm:grid-cols-2 gap-3 text-xs text-gray-600">
+                  <div className="flex items-start gap-2">
+                    <XCircle className="w-3.5 h-3.5 text-red-400 flex-shrink-0 mt-0.5" />
+                    <span><strong>快时尚（ZARA/H&amp;M类）</strong>：与商圈高端定位严重不符，客群消费力远超快时尚客单价</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <XCircle className="w-3.5 h-3.5 text-red-400 flex-shrink-0 mt-0.5" />
+                    <span><strong>大众连锁餐饮</strong>：外滩餐饮已饱和，大众定价段空间极小，建议走精致/特色路线</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <XCircle className="w-3.5 h-3.5 text-red-400 flex-shrink-0 mt-0.5" />
+                    <span><strong>日式料理（大众）</strong>：外滩已有6家，市场趋于饱和，高端怀石料理除外</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <XCircle className="w-3.5 h-3.5 text-red-400 flex-shrink-0 mt-0.5" />
+                    <span><strong>大型超市/卖场</strong>：商圈配套已有精品超市，大面积卖场与整体氛围不协调</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
