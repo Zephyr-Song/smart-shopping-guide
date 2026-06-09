@@ -10,6 +10,7 @@ import {
   Calendar,
   Building2,
   Gem,
+  Lightbulb,
 } from 'lucide-react'
 
 const FEATURES = [
@@ -48,6 +49,15 @@ const FEATURES = [
     color: 'bg-violet-500',
     lightColor: 'bg-violet-50',
     textColor: 'text-violet-600',
+  },
+  {
+    icon: Lightbulb,
+    title: '选址顾问',
+    desc: '基于商圈数据与客群画像的品类适配度分析，楼层推荐与竞品空白挖掘',
+    path: '/analytics',
+    color: 'bg-teal-500',
+    lightColor: 'bg-teal-50',
+    textColor: 'text-teal-600',
   },
   {
     icon: FlaskConical,
