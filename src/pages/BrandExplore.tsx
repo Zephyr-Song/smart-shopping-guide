@@ -389,7 +389,6 @@ export default function BrandExplore() {
         b =>
           b.name.toLowerCase().includes(q) ||
           b.nameEn.toLowerCase().includes(q) ||
-          b.desc.toLowerCase().includes(q) ||
           b.tags.some(t => t.toLowerCase().includes(q))
       )
     }
@@ -471,7 +470,7 @@ export default function BrandExplore() {
       {/* 品类标签 */}
       <div className="flex flex-wrap gap-2">
         <button
-          onClick={() => setActiveCat('all')}
+          onClick={() => { setActiveCat('all'); setSearch(''); setZoneFilter('all') }}
           className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer border-none ${
             activeCat === 'all'
               ? 'bg-gray-800 text-white'
