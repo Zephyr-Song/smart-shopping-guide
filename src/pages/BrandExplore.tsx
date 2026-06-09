@@ -8,7 +8,7 @@ import {
   ExternalLink,
 } from 'lucide-react'
 
-// ── 真实品牌数据（来源：BFC官网 bfcsh.com、腾讯新闻2025.10、复星集团公告）──
+// ── 真实品牌数据（来源：腾讯新闻2025.10、搜狐/知乎市调日记、复星集团公告）──
 
 type BrandCategory =
   | 'luxury'
@@ -440,7 +440,7 @@ export default function BrandExplore() {
       <div>
         <h1 className="text-2xl font-bold text-gray-900">品牌探索</h1>
         <p className="text-sm text-gray-500 mt-1">
-          数据来源：BFC官方官网 (bfcsh.com)、腾讯新闻、复星集团公告 · 共计 {stats.total} 个品牌
+          数据来源：腾讯新闻、搜狐、知乎市调 · 共计 {stats.total} 个品牌
         </p>
       </div>
 
@@ -624,7 +624,7 @@ export default function BrandExplore() {
         <div>
           <p className="font-medium mb-0.5">数据来源与更新说明</p>
           <p className="text-xs leading-relaxed">
-            品牌数据整理自 BFC 外滩金融中心官方网站 (bfcsh.com) 2026年公开商户列表、腾讯新闻2025年10月《BFC时尚潮流矩阵再升级》专题报道、复星集团2025年公告。
+            品牌数据整理自腾讯新闻2025年10月《BFC时尚潮流矩阵再升级》专题报道、搜狐2025年7月《BFC人宠友好空间》专题、知乎市调日记、复星集团2025年公告。
             部分品牌可能因商场业态调整发生变化，以商场实际运营为准。
             BFC共有42个商业面积约 96,000m²，分为南区 (S) 和北区 (N) 两大区域，涵盖 S-B3 至 S1-5F、N-1F 至 N-4F 共 10 层商业空间。
           </p>
