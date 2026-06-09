@@ -3,11 +3,8 @@ import {
   Search,
   Filter,
   MapPin,
-  Star,
   Sparkles,
-  ChevronDown,
   X,
-  ExternalLink,
 } from 'lucide-react'
 
 // ── 真实品牌数据（来源：BFC官网 bfcsh.com、腾讯新闻2025.10、复星集团公告）──
