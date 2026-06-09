@@ -77,6 +77,12 @@ const BRANDS: Brand[] = [
     tags: ['瑞士', '百年品牌', '皮具鞋履'], highlight: false, emoji: '👞', website: 'https://www.bally.com',
   },
   {
+    id: 'sandriver', name: 'Sandriver', nameEn: 'Sandriver', category: 'luxury',
+    floor: 'S-1F', zone: 'S',
+    desc: '中国奢侈羊绒品牌，以内蒙古阿拉善白绒为原料，羊绒毡画为特色',
+    tags: ['羊绒', '国货', '阿拉善白绒'], highlight: false, emoji: '🧣',
+  },
+  {
     id: 'jimmychoo', name: 'Jimmy Choo', nameEn: 'Jimmy Choo', category: 'luxury',
     floor: 'S-1F', zone: 'S',
     desc: '英国奢侈鞋履品牌，戴安娜王妃御用，明星红毯首选',
@@ -165,6 +171,12 @@ const BRANDS: Brand[] = [
     floor: 'S-2F', zone: 'S',
     desc: '日式高端美甲沙龙，提供定制化艺术美甲服务',
     tags: ['日式美甲', '艺术定制'], highlight: false, emoji: '💅',
+  },
+  {
+    id: 'ljnnail', name: 'L.J Nail Salon', nameEn: 'L.J Nail Salon', category: 'beauty',
+    floor: 'N-4F', zone: 'N',
+    desc: '高端美甲沙龙，提供日式精细美甲与甲油胶定制服务',
+    tags: ['美甲', '日式', '甲油胶'], highlight: false, emoji: '✨',
   },
   {
     id: 'carr', name: 'Carr Barbershop', nameEn: 'Carr Barbershop', category: 'beauty',
@@ -344,21 +356,39 @@ const BRANDS: Brand[] = [
   // ── 宠物友好 ──
   {
     id: 'marsmart', name: 'MARSMART 火星宠物超市', nameEn: 'Marsmart Pets', category: 'pets',
-    floor: 'N-4F', zone: 'N',
-    desc: '新概念宠物生活超市，宠物用品+洗护+社交空间一站式',
+    floor: 'N-B1', zone: 'N',
+    desc: '新概念宠物生活超市，宠物用品+洗护+社交空间一站式，引入8个风格化品牌',
     tags: ['宠物超市', '洗护', '社交'], highlight: true, emoji: '🐾',
   },
   {
-    id: 'afei', name: '阿飞和巴弟', nameEn: 'Alfie & Buddy', category: 'pets',
-    floor: 'N-4F', zone: 'N',
-    desc: '国产高端宠物食品品牌，以鲜肉冻干和功能性主粮出圈',
-    tags: ['国货', '鲜肉冻干', '猫狗粮'], highlight: false, emoji: '🐱',
+    id: 'afei', name: '阿飞和巴弟 PET MART', nameEn: 'Alfie & Buddy PET MART', category: 'pets',
+    floor: 'N-B1', zone: 'N',
+    desc: '国产宠物食品品牌沉浸式IP乐园，上海首店，集合疯狂动物城等热门IP',
+    tags: ['国货', 'IP乐园', '上海首店'], highlight: true, emoji: '🐱',
   },
   {
-    id: 'petwish', name: '宠物愿望', nameEn: 'Pet Wish', category: 'pets',
-    floor: 'N-4F', zone: 'N',
+    id: 'petwish', name: '宠物愿望 PET WISH', nameEn: 'Pet Wish', category: 'pets',
+    floor: 'S-B2', zone: 'S',
     desc: '宠物综合服务店，涵盖美容、寄养、摄影、生日派对定制',
     tags: ['美容', '寄养', '宠物摄影'], highlight: false, emoji: '🐶',
+  },
+  {
+    id: 'petfresh', name: 'Pet&Fresh 派特鲜生', nameEn: 'Pet & Fresh', category: 'pets',
+    floor: 'N-B1', zone: 'N',
+    desc: '盒马创始人侯毅全新创业项目，宠物食品新零售品牌，主打鲜食与零食',
+    tags: ['新零售', '鲜食', '盒马系'], highlight: false, emoji: '🍖',
+  },
+  {
+    id: 'airpark', name: 'AIRPARK 人类友好公园', nameEn: 'AIRPARK Human Friendly Park', category: 'pets',
+    floor: 'N-B1', zone: 'N',
+    desc: '全国首家室内人宠共生公园，180㎡室内遛狗空间+宠物美容+饮品休闲区',
+    tags: ['人宠共生', '全国首店', '遛狗空间'], highlight: true, emoji: '🌳',
+  },
+  {
+    id: 'k1pet', name: 'K·1 PET', nameEn: 'K·1 PET', category: 'pets',
+    floor: 'N-B2', zone: 'N',
+    desc: '精致宠物生活方式店，提供宠物用品选购与美容服务',
+    tags: ['宠物用品', '美容'], highlight: false, emoji: '🐕',
   },
 ]
 
