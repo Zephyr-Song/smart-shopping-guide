@@ -302,7 +302,7 @@ const BRANDS: Brand[] = [
     id: 'matcha', name: 'M Stand', nameEn: 'M Stand Coffee', category: 'cafe',
     floor: 'N-1F', zone: 'N',
     desc: '上海起家的精品咖啡品牌，水泥工业风设计，燕麦曲奇拿铁爆款',
-    tags: ['上海品牌', '工业风', '创意咖啡'], highlight: false, emoji: '☕', website: 'https://www.mstand.com',
+    tags: ['上海品牌', '工业风', '创意咖啡'], highlight: false, emoji: '☕', website: 'https://www.mstand.cn',
   },
   {
     id: 'heytea', name: '喜茶', nameEn: 'HEYTEA', category: 'cafe',
@@ -352,7 +352,7 @@ const BRANDS: Brand[] = [
     id: 'afei', name: '阿飞和巴弟', nameEn: 'Alfie & Buddy', category: 'pets',
     floor: 'N-4F', zone: 'N',
     desc: '国产高端宠物食品品牌，以鲜肉冻干和功能性主粮出圈',
-    tags: ['国货', '鲜肉冻干', '猫狗粮'], highlight: false, emoji: '🐱', website: 'https://www.alfieandbuddy.com',
+    tags: ['国货', '鲜肉冻干', '猫狗粮'], highlight: false, emoji: '🐱',
   },
   {
     id: 'petwish', name: '宠物愿望', nameEn: 'Pet Wish', category: 'pets',
