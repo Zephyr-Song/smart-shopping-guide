@@ -5,6 +5,7 @@ import {
   MapPin,
   Sparkles,
   X,
+  ExternalLink,
 } from 'lucide-react'
 
 // ── 真实品牌数据（来源：BFC官网 bfcsh.com、腾讯新闻2025.10、复星集团公告）──
@@ -30,6 +31,7 @@ interface Brand {
   tags: string[]
   highlight: boolean
   emoji: string
+  website?: string
 }
 
 const CATEGORY_LABELS: Record<BrandCategory, string> = {
@@ -60,25 +62,25 @@ const BRANDS: Brand[] = [
     id: 'lanvin', name: 'LANVIN', nameEn: 'Lanvin', category: 'luxury',
     floor: 'S-1F', zone: 'S',
     desc: '法国历史最悠久的时装屋，1889年创立，以精湛剪裁和法式优雅著称',
-    tags: ['法国', '百年品牌', '外滩首店'], highlight: true, emoji: '👗',
+    tags: ['法国', '百年品牌', '外滩首店'], highlight: true, emoji: '👗', website: 'https://www.lanvin.com',
   },
   {
     id: 'versace', name: 'VERSACE', nameEn: 'Versace', category: 'luxury',
     floor: 'S-1F', zone: 'S',
     desc: '意大利奢侈品牌，以大胆印花和美杜莎标志闻名全球',
-    tags: ['意大利', '美杜莎', '时尚标杆'], highlight: false, emoji: '🏛️',
+    tags: ['意大利', '美杜莎', '时尚标杆'], highlight: false, emoji: '🏛️', website: 'https://www.versace.com',
   },
   {
     id: 'bally', name: 'BALLY', nameEn: 'Bally', category: 'luxury',
     floor: 'S-1F', zone: 'S',
     desc: '瑞士百年奢侈皮具品牌，1851年创立，以精湛制鞋工艺闻名',
-    tags: ['瑞士', '百年品牌', '皮具鞋履'], highlight: false, emoji: '👞',
+    tags: ['瑞士', '百年品牌', '皮具鞋履'], highlight: false, emoji: '👞', website: 'https://www.bally.com',
   },
   {
     id: 'jimmychoo', name: 'Jimmy Choo', nameEn: 'Jimmy Choo', category: 'luxury',
     floor: 'S-1F', zone: 'S',
     desc: '英国奢侈鞋履品牌，戴安娜王妃御用，明星红毯首选',
-    tags: ['英国', '鞋履', '明星同款'], highlight: false, emoji: '👠',
+    tags: ['英国', '鞋履', '明星同款'], highlight: false, emoji: '👠', website: 'https://www.jimmychoo.com',
   },
 
   // ── 设计师/潮流 ──
@@ -86,25 +88,25 @@ const BRANDS: Brand[] = [
     id: 'alexanderwang', name: 'alexanderwang', nameEn: 'alexander wang', category: 'designer',
     floor: 'S-1F', zone: 'S',
     desc: '纽约华裔设计师品牌，以街头感与高级时装融合的风格著称',
-    tags: ['纽约', '华裔设计师', '街头高定'], highlight: true, emoji: '🖤',
+    tags: ['纽约', '华裔设计师', '街头高定'], highlight: true, emoji: '🖤', website: 'https://www.alexanderwang.com',
   },
   {
     id: 'paulsmith', name: 'Paul Smith', nameEn: 'Paul Smith', category: 'designer',
     floor: 'S-2F', zone: 'S',
     desc: '英国设计师品牌，标志性彩色条纹设计，融合经典与幽默',
-    tags: ['英国', '彩色条纹', '男装'], highlight: false, emoji: '🌈',
+    tags: ['英国', '彩色条纹', '男装'], highlight: false, emoji: '🌈', website: 'https://www.paulsmith.com',
   },
   {
     id: 'maisonkitsune', name: 'Maison Kitsuné', nameEn: 'Maison Kitsuné', category: 'designer',
     floor: 'S-2F', zone: 'S',
     desc: '法日混血潮流品牌，以经典小狐狸标志和法式慵懒风闻名',
-    tags: ['法日混血', '小狐狸标志', '咖啡服饰'], highlight: false, emoji: '🦊',
+    tags: ['法日混血', '小狐狸标志', '咖啡服饰'], highlight: false, emoji: '🦊', website: 'https://maisonkitsune.com',
   },
   {
     id: 'it', name: 'I.T', nameEn: 'I.T Concept Store', category: 'designer',
     floor: 'S-1F', zone: 'S',
     desc: '香港潮流集合店，集结 ACNE STUDIOS、ESSENTIALS、MARINE SERRE、ADER ERROR 等国际潮牌',
-    tags: ['集合店', '香港', 'ACNE STUDIOS'], highlight: false, emoji: '🛍️',
+    tags: ['集合店', '香港', 'ACNE STUDIOS'], highlight: false, emoji: '🛍️', website: 'https://www.ithk.com',
   },
   {
     id: 'onoff', name: 'ON/OFF', nameEn: 'ON/OFF Designer Store', category: 'designer',
@@ -116,19 +118,19 @@ const BRANDS: Brand[] = [
     id: 'bebe', name: 'bebe', nameEn: 'bebe', category: 'designer',
     floor: 'S-2F', zone: 'S',
     desc: '美国当代女装品牌，以大胆性感的都市风格深受年轻女性喜爱',
-    tags: ['美国', '女装', '都市风'], highlight: false, emoji: '💃',
+    tags: ['美国', '女装', '都市风'], highlight: false, emoji: '💃', website: 'https://www.bebe.com',
   },
   {
     id: 'phantaci', name: 'PHANTACI', nameEn: 'PHANTACI', category: 'designer',
     floor: 'S-2F', zone: 'S',
     desc: '周杰伦创立的潮流品牌，以音乐与街头文化为灵感',
-    tags: ['周杰伦', '明星品牌', '街头潮流'], highlight: true, emoji: '🎵',
+    tags: ['周杰伦', '明星品牌', '街头潮流'], highlight: true, emoji: '🎵', website: 'https://www.phantacico.com',
   },
   {
     id: 'wolford', name: 'Wolford', nameEn: 'Wolford', category: 'designer',
     floor: 'S-2F', zone: 'S',
     desc: '奥地利高端贴身服饰品牌，以极致舒适的无缝针织技术闻名',
-    tags: ['奥地利', '丝袜', '无缝针织'], highlight: false, emoji: '🧦',
+    tags: ['奥地利', '丝袜', '无缝针织'], highlight: false, emoji: '🧦', website: 'https://www.wolford.com',
   },
 
   // ── 珠宝配饰 ──
@@ -136,7 +138,7 @@ const BRANDS: Brand[] = [
     id: 'chowtaifook', name: '周大福', nameEn: 'Chow Tai Fook', category: 'jewelry',
     floor: 'S-1F', zone: 'S',
     desc: '香港上市珠宝集团，全球最大珠宝零售商之一，传承近百年',
-    tags: ['香港', '黄金', '婚嫁珠宝'], highlight: false, emoji: '💍',
+    tags: ['香港', '黄金', '婚嫁珠宝'], highlight: false, emoji: '💍', website: 'https://www.ctf.com.cn',
   },
 
   // ── 美容个护 ──
@@ -144,19 +146,19 @@ const BRANDS: Brand[] = [
     id: 'laprairie', name: 'LA PRAIRIE', nameEn: 'La Prairie', category: 'beauty',
     floor: 'S-1F', zone: 'S',
     desc: '瑞士顶级护肤品牌，以鱼子精华系列闻名，奢华抗衰老科技',
-    tags: ['瑞士', '鱼子精华', '顶级抗衰'], highlight: true, emoji: '✨',
+    tags: ['瑞士', '鱼子精华', '顶级抗衰'], highlight: true, emoji: '✨', website: 'https://www.laprairie.com',
   },
   {
     id: 'ahava', name: 'AHAVA SPA', nameEn: 'AHAVA Dead Sea Spa', category: 'beauty',
     floor: 'N-4F', zone: 'N',
     desc: '以色列死海矿物护肤品牌，全球首个死海实验室认证SPA',
-    tags: ['以色列', '死海矿物', 'SPA'], highlight: false, emoji: '🧂',
+    tags: ['以色列', '死海矿物', 'SPA'], highlight: false, emoji: '🧂', website: 'https://www.ahava.com',
   },
   {
     id: 'beautyfarm', name: '美丽田园', nameEn: 'Beauty Farm', category: 'beauty',
     floor: 'N-4F', zone: 'N',
     desc: '国内高端美容连锁品牌，专注面部护理与身体管理',
-    tags: ['国内品牌', '面部护理', '连锁'], highlight: false, emoji: '🌸',
+    tags: ['国内品牌', '面部护理', '连锁'], highlight: false, emoji: '🌸', website: 'https://www.beautyfarm.com.cn',
   },
   {
     id: 'nailsoul', name: 'Nail Soul', nameEn: 'Nail Soul', category: 'beauty',
@@ -188,13 +190,13 @@ const BRANDS: Brand[] = [
     id: 'kidsland', name: 'kidsland', nameEn: 'kidsland', category: 'lifestyle',
     floor: 'N-4F', zone: 'N',
     desc: '国内领先的玩具零售品牌，精选乐高、万代等国际品牌',
-    tags: ['玩具', '乐高', '万代'], highlight: false, emoji: '🧸',
+    tags: ['玩具', '乐高', '万代'], highlight: false, emoji: '🧸', website: 'https://www.kidsland.com.cn',
   },
   {
     id: 'xiaomi', name: '小米', nameEn: 'Xiaomi', category: 'lifestyle',
     floor: 'N-2F', zone: 'N',
     desc: '小米之家体验店，智能家居+手机数码一站式体验',
-    tags: ['数码', '智能家居', '国货'], highlight: false, emoji: '📱',
+    tags: ['数码', '智能家居', '国货'], highlight: false, emoji: '📱', website: 'https://www.mi.com',
   },
   {
     id: 'rudy', name: "Sir Rudy's Pro Shop", nameEn: "Sir Rudy's Pro Shop", category: 'lifestyle',
@@ -208,7 +210,7 @@ const BRANDS: Brand[] = [
     id: 'davittorio', name: 'DA VITTORIO SHANGHAI', nameEn: 'DA VITTORIO Shanghai', category: 'dining',
     floor: 'N-3F', zone: 'N',
     desc: '意大利米其林三星餐厅，上海分店连续多年摘星，主打海鲜意面与意式服务',
-    tags: ['米其林', '意大利', '三星', '江景'], highlight: true, emoji: '⭐',
+    tags: ['米其林', '意大利', '三星', '江景'], highlight: true, emoji: '⭐', website: 'https://www.davittorio.com',
   },
   {
     id: 'xinrongji', name: '新荣记', nameEn: 'Xin Rong Ji', category: 'dining',
@@ -232,7 +234,7 @@ const BRANDS: Brand[] = [
     id: 'shanghaitan', name: '上海滩', nameEn: 'Shanghai Tang Restaurant', category: 'dining',
     floor: 'N-3F', zone: 'N',
     desc: '魔都本帮菜标杆，演绎传统上海味道，蟹粉和红烧肉为招牌',
-    tags: ['本帮菜', '蟹粉', '江景'], highlight: false, emoji: '🦐',
+    tags: ['本帮菜', '蟹粉', '江景'], highlight: false, emoji: '🦐', website: 'https://www.shanghaitang.com',
   },
   {
     id: 'laojitang', name: '老吉堂', nameEn: 'Lao Ji Tang', category: 'dining',
@@ -262,7 +264,7 @@ const BRANDS: Brand[] = [
     id: 'hutong', name: '橘焱胡同烧肉夜食', nameEn: 'Hutong Yakiniku', category: 'dining',
     floor: 'S-3F', zone: 'S',
     desc: '台北米其林推荐烧肉品牌，主打澳洲和牛与胡同秘制酱料',
-    tags: ['米其林推荐', '和牛', '台北'], highlight: false, emoji: '🥩',
+    tags: ['米其林推荐', '和牛', '台北'], highlight: false, emoji: '🥩', website: 'https://www.hutong.com.tw',
   },
   {
     id: 'primesteak', name: '高桌牛排馆', nameEn: 'Prime Steakhouse', category: 'dining',
@@ -274,7 +276,7 @@ const BRANDS: Brand[] = [
     id: 'putian', name: '莆田餐厅', nameEn: 'Putien', category: 'dining',
     floor: 'S-3F', zone: 'S',
     desc: '新加坡米其林一星福建菜，以百秒黄花鱼和莆田卤面闻名',
-    tags: ['米其林', '新加坡', '福建菜'], highlight: false, emoji: '🐠',
+    tags: ['米其林', '新加坡', '福建菜'], highlight: false, emoji: '🐠', website: 'https://www.putien.com',
   },
   {
     id: 'bairong', name: '白茸', nameEn: 'Bai Rong', category: 'dining',
@@ -300,13 +302,13 @@ const BRANDS: Brand[] = [
     id: 'matcha', name: 'M Stand', nameEn: 'M Stand Coffee', category: 'cafe',
     floor: 'N-1F', zone: 'N',
     desc: '上海起家的精品咖啡品牌，水泥工业风设计，燕麦曲奇拿铁爆款',
-    tags: ['上海品牌', '工业风', '创意咖啡'], highlight: false, emoji: '☕',
+    tags: ['上海品牌', '工业风', '创意咖啡'], highlight: false, emoji: '☕', website: 'https://www.mstand.com',
   },
   {
     id: 'heytea', name: '喜茶', nameEn: 'HEYTEA', category: 'cafe',
     floor: 'N-1F', zone: 'N',
     desc: '新茶饮头部品牌，芝士奶盖首创者，多肉葡萄和芝芝莓莓招牌',
-    tags: ['新茶饮', '芝士奶盖', '排队'], highlight: false, emoji: '🧋',
+    tags: ['新茶饮', '芝士奶盖', '排队'], highlight: false, emoji: '🧋', website: 'https://www.heytea.com',
   },
   {
     id: 'yinxi', name: '隐溪茶馆', nameEn: 'Yin Xi Tea House', category: 'cafe',
@@ -318,7 +320,7 @@ const BRANDS: Brand[] = [
     id: 'bakerspice', name: 'Baker&Spice', nameEn: 'Baker & Spice', category: 'cafe',
     floor: 'N-1F', zone: 'N',
     desc: 'Wagas旗下健康烘焙轻食品牌，全麦面包和沙拉碗为主打',
-    tags: ['健康', '烘焙', '轻食'], highlight: false, emoji: '🥖',
+    tags: ['健康', '烘焙', '轻食'], highlight: false, emoji: '🥖', website: 'https://www.bakerandspice.com.cn',
   },
   {
     id: 'laparisienne', name: '巴黎蜜语', nameEn: 'La Parisienne', category: 'cafe',
@@ -350,7 +352,7 @@ const BRANDS: Brand[] = [
     id: 'afei', name: '阿飞和巴弟', nameEn: 'Alfie & Buddy', category: 'pets',
     floor: 'N-4F', zone: 'N',
     desc: '国产高端宠物食品品牌，以鲜肉冻干和功能性主粮出圈',
-    tags: ['国货', '鲜肉冻干', '猫狗粮'], highlight: false, emoji: '🐱',
+    tags: ['国货', '鲜肉冻干', '猫狗粮'], highlight: false, emoji: '🐱', website: 'https://www.alfieandbuddy.com',
   },
   {
     id: 'petwish', name: '宠物愿望', nameEn: 'Pet Wish', category: 'pets',
@@ -555,7 +557,7 @@ export default function BrandExplore() {
                   ))}
                 </div>
 
-                {/* 底部：楼层 + 品类 */}
+                {/* 底部：楼层 + 品类 + 官网链接 */}
                 <div className="flex items-center justify-between pt-3 border-t border-gray-50">
                   <div className="flex items-center gap-1.5">
                     <MapPin className="w-3 h-3 text-gray-400" />
@@ -563,9 +565,23 @@ export default function BrandExplore() {
                       {zoneLabel} {brand.floor}
                     </span>
                   </div>
-                  <span className={`text-[10px] px-1.5 py-0.5 rounded ${CATEGORY_COLORS[brand.category]}`}>
-                    {CATEGORY_LABELS[brand.category]}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded ${CATEGORY_COLORS[brand.category]}`}>
+                      {CATEGORY_LABELS[brand.category]}
+                    </span>
+                    {brand.website && (
+                      <a
+                        href={brand.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-[10px] text-blue-500 hover:text-blue-700 hover:bg-blue-50 px-1.5 py-0.5 rounded transition-colors font-medium"
+                        title={`访问 ${brand.name} 官网`}
+                      >
+                        <ExternalLink className="w-3 h-3" />
+                        官网
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
             )
