@@ -10,7 +10,7 @@ import {
   Calendar,
   Building2,
   Gem,
-  Lightbulb,
+  Search,
 } from 'lucide-react'
 
 const FEATURES = [
@@ -42,6 +42,15 @@ const FEATURES = [
     textColor: 'text-amber-600',
   },
   {
+    icon: Search,
+    title: '品牌探索',
+    desc: '42个入驻品牌全览，按品类/楼层/区域筛选，真实BFC官网数据',
+    path: '/brands',
+    color: 'bg-teal-500',
+    lightColor: 'bg-teal-50',
+    textColor: 'text-teal-600',
+  },
+  {
     icon: BarChart3,
     title: '商圈分析',
     desc: 'BFC六大客群客流趋势、转化漏斗、客群画像、营销ROI全景数据',
@@ -49,15 +58,6 @@ const FEATURES = [
     color: 'bg-violet-500',
     lightColor: 'bg-violet-50',
     textColor: 'text-violet-600',
-  },
-  {
-    icon: Lightbulb,
-    title: '选址顾问',
-    desc: '基于商圈数据与客群画像的品类适配度分析，楼层推荐与竞品空白挖掘',
-    path: '/analytics',
-    color: 'bg-teal-500',
-    lightColor: 'bg-teal-50',
-    textColor: 'text-teal-600',
   },
   {
     icon: FlaskConical,
@@ -72,7 +72,7 @@ const FEATURES = [
 
 const STATS = [
   { icon: Building2, value: '96,000m²', label: '总商业面积', color: 'text-primary-500' },
-  { icon: Store, value: '22', label: '入驻品牌', color: 'text-emerald-500' },
+  { icon: Store, value: '42', label: '入驻品牌', color: 'text-emerald-500' },
   { icon: Users, value: '14,000+', label: '日客流量', color: 'text-amber-500' },
   { icon: Gem, value: '¥1,800', label: '平均客单价', color: 'text-violet-500' },
 ]

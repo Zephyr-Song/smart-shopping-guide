@@ -6,6 +6,7 @@ import MallMap from './pages/MallMap'
 import MarketingCalendar from './pages/MarketingCalendar'
 import Analytics from './pages/Analytics'
 import Experiment from './pages/Experiment'
+import BrandExplore from './pages/BrandExplore'
 import About from './pages/About'
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Route path="calendar" element={<MarketingCalendar />} />
         <Route path="analytics" element={<Analytics />} />
         <Route path="experiment" element={<Experiment />} />
+        <Route path="brands" element={<BrandExplore />} />
         <Route path="about" element={<About />} />
       </Route>
     </Routes>
