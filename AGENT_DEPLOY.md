@@ -35,9 +35,11 @@ cd worker
 npx wrangler login
 
 # 2. 选定厂商，编辑 worker/wrangler.toml 的 LLM_BASE_URL / LLM_MODEL
-#    DeepSeek（默认）：BASE=https://api.deepseek.com/v1  MODEL=deepseek-chat
+#    ✅ 百炼 / 通义千问（本仓库已默认配好）：
+#         BASE=https://dashscope.aliyuncs.com/compatible-mode/v1  MODEL=qwen-plus
+#        （模型广场还有 qwen-max 更强、qwen-turbo 更便宜；deepseek/kimi 等也都在百炼上可用）
+#    DeepSeek：       BASE=https://api.deepseek.com/v1  MODEL=deepseek-chat
 #    OpenAI：         BASE=https://api.openai.com/v1     MODEL=gpt-4o-mini
-#    通义千问：       BASE=https://dashscope.aliyuncs.com/compatible-mode/v1  MODEL=qwen-plus
 #    月之暗面 Kimi：  BASE=https://api.moonshot.cn/v1    MODEL=moonshot-v1-8k
 
 # 3. 设置密钥（只走 secret，不会进代码库）
