@@ -1,5 +1,6 @@
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { useState } from 'react'
+import AgentAssistant from './agent/AgentAssistant'
 import {
   ShoppingBag,
   Map,
@@ -119,6 +120,9 @@ export default function Layout() {
           </p>
         </div>
       </footer>
+
+      {/* 全局浮动导购助手「点点」 */}
+      <AgentAssistant />
     </div>
   )
 }
