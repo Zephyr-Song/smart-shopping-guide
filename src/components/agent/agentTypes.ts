@@ -1,4 +1,4 @@
-// 点点 Agent 智能体 —— 消息与卡片类型定义
+// 小助手 Agent 智能体 —— 消息与卡片类型定义
 // 这些类型被 agentEngine.ts（推理引擎）与 AgentAssistant.tsx（UI）共用。
 
 import type { UserProfile } from '../../data/mockData'
@@ -11,7 +11,7 @@ export type AgentCard =
   | ActionCardData
   | CompareCardData
 
-/** 单个店铺卡片（点点最常用的推荐结果形态） */
+/** 单个店铺卡片（小助手最常用的推荐结果形态） */
 export interface StoreCardData {
   type: 'store'
   storeId: string
@@ -68,7 +68,7 @@ export interface AgentMessage {
   cards?: AgentCard[]
 }
 
-/** 多轮对话上下文：点点会“记住”你上一句提到的店/品类/场景 */
+/** 多轮对话上下文：小助手会“记住”你上一句提到的店/品类/场景 */
 export interface AgentContext {
   lastStoreId?: string
   lastStoreName?: string

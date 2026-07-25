@@ -1,7 +1,7 @@
-// 点点 Agent —— 离线推理引擎（无需后端 / API key）
+// 小助手 Agent —— 离线推理引擎（无需后端 / API key）
 // 输入用户自然语言 + 对话上下文，输出一条助手消息（文本 + 富卡片）并更新上下文。
 //
-// 设计目标：像小红书「点点」一样，能听懂口语化的购物问题，基于 BFC 真实数据
+// 设计目标：像小红书式对话导购一样，能听懂口语化的购物问题，基于 BFC 真实数据
 // （STORES / CATEGORIES / HOURLY_TRAFFIC）给出可解释的推荐，并支持多轮追问。
 
 import { STORES, CATEGORIES, HOURLY_TRAFFIC } from '../../data/mockData'
@@ -331,7 +331,7 @@ function compareReply(a: Store, b: Store): Reply {
 
 function helpReply(): Reply {
   const text =
-    '我是「点点」，你的 BFC 私导购助手 ✨ 我能帮你：\n· 按场景/品类/预算推荐店铺（如「约会去哪吃」「预算500吃什么」）\n· 查店铺位置与楼层（「老吉堂在几楼」）\n· 看实时客流冷热（「现在人少吗」）\n· 对比两家店（「A 和 B 哪个好」）\n· 引导你做完整画像拿专属推荐\n直接说人话就行，不用客气～'
+    '我是「小助手」，你的 BFC 私导购助手 ✨ 我能帮你：\n· 按场景/品类/预算推荐店铺（如「约会去哪吃」「预算500吃什么」）\n· 查店铺位置与楼层（「老吉堂在几楼」）\n· 看实时客流冷热（「现在人少吗」）\n· 对比两家店（「A 和 B 哪个好」）\n· 引导你做完整画像拿专属推荐\n直接说人话就行，不用客气～'
   return {
     reply: {
       id: uid(),
@@ -371,7 +371,7 @@ export function runAgent(input: string, ctx: AgentContext): { reply: AgentMessag
   // 1. 问候
   if (/^(你好|您好|hi|hello|嗨|在吗|在不在|哈喽)$/i.test(text) || (/^(你好|您好|hi|hello|嗨|哈喽)/i.test(text) && text.length <= 12)) {
     return {
-      reply: { id: uid(), role: 'assistant', text: '你好呀～我是点点，你的 BFC 导购小助手。想找好吃的、挑礼物，还是看今天哪家店人少？直接说就行 😊' },
+      reply: { id: uid(), role: 'assistant', text: '你好呀～我是小助手，你的 BFC 导购小助手。想找好吃的、挑礼物，还是看今天哪家店人少？直接说就行 😊' },
       newCtx: ctx,
     }
   }

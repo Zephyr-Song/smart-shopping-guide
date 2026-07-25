@@ -1,5 +1,5 @@
-// 点点 Agent —— 全局浮动对话助手组件
-// 挂在 Layout 里即可在所有页面右下角出现一个「点点」气泡，点击展开对话面板。
+// 小助手 Agent —— 全局浮动对话助手组件
+// 挂在 Layout 里即可在所有页面右下角出现一个「小助手」气泡，点击展开对话面板。
 // 纯前端、基于真实数据（mockData）的离线推理，无需任何后端或 API key。
 
 import { useState, useRef, useEffect } from 'react'
@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { MessageCircle, X, Send, Sparkles, Star, MapPin, Wallet, Flame, RotateCcw } from 'lucide-react'
 import type { AgentCard, AgentContext, AgentMessage } from './agentTypes'
 import { runAgent } from './agentEngine'
+import { callAgent, AGENT_API_URL } from './agentClient'
 import { SUGGESTIONS, WELCOME_TEXT } from './suggestions'
 
 function uid(): string {
@@ -30,20 +31,34 @@ export default function AgentAssistant() {
     }
   }, [messages, thinking, open])
 
-  const send = (raw: string) => {
+  const send = async (raw: string) => {
     const text = raw.trim()
     if (!text || thinking) return
     const userMsg: AgentMessage = { id: uid(), role: 'user', text }
-    setMessages(prev => [...prev, userMsg])
+    const history = [...messages, userMsg]
+    setMessages(history)
     setInput('')
     setThinking(true)
-    // 轻微延迟，营造“点点在想”的自然感
-    window.setTimeout(() => {
+    try {
+      if (AGENT_API_URL) {
+        // 真·LLM agent（RAG + 工具调用），由 Cloudflare Worker 托管
+        const { answer, cards } = await callAgent(history)
+        setMessages(prev => [...prev, { id: uid(), role: 'assistant', text: answer, cards }])
+      } else {
+        // 未配置后端 → 离线规则引擎兜底
+        await new Promise(r => setTimeout(r, 450))
+        const { reply, newCtx } = runAgent(text, ctx)
+        setCtx(newCtx)
+        setMessages(prev => [...prev, reply])
+      }
+    } catch {
+      // 真 agent 异常（网络/超时/密钥缺失）→ 回退规则引擎，保证可用
       const { reply, newCtx } = runAgent(text, ctx)
       setCtx(newCtx)
       setMessages(prev => [...prev, reply])
+    } finally {
       setThinking(false)
-    }, 450)
+    }
   }
 
   const reset = () => {
@@ -77,12 +92,12 @@ export default function AgentAssistant() {
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          aria-label="打开导购助手点点"
+          aria-label="打开导购助手小助手"
           className="agent-bubble-btn fixed bottom-5 right-5 z-[60] w-14 h-14 rounded-full bg-primary-500 text-white shadow-lg shadow-primary-500/30 flex items-center justify-center cursor-pointer hover:bg-primary-600 transition-colors"
         >
           <MessageCircle className="w-6 h-6" />
           <span className="absolute -top-1 -right-1 bg-amber-400 text-[10px] font-bold text-white px-1.5 py-0.5 rounded-full">
-            点点
+            小助手
           </span>
         </button>
       )}
@@ -97,8 +112,10 @@ export default function AgentAssistant() {
                 <Sparkles className="w-4 h-4" />
               </div>
               <div className="leading-tight">
-                <div className="text-sm font-semibold">BFC 导购助手 · 点点</div>
-                <div className="text-[11px] text-white/80">在线 · 基于真实数据为你推荐</div>
+                <div className="text-sm font-semibold">BFC 导购助手 · 小助手</div>
+                <div className="text-[11px] text-white/80">
+                  {AGENT_API_URL ? '在线 · AI 驱动的导购助手' : '在线 · 离线规则模式（未接入大模型）'}
+                </div>
               </div>
             </div>
             <div className="flex items-center gap-1">
@@ -161,7 +178,7 @@ export default function AgentAssistant() {
             <input
               value={input}
               onChange={e => setInput(e.target.value)}
-              placeholder="问问点点：约会去哪吃？"
+              placeholder="问问小助手：约会去哪吃？"
               className="flex-1 text-sm px-3 py-2.5 rounded-xl bg-gray-100 border-none outline-none focus:ring-2 focus:ring-primary-300 text-gray-800 placeholder:text-gray-400"
             />
             <button
