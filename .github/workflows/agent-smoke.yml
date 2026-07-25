@@ -1,0 +1,17 @@
+name: Agent Smoke Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: POST to worker (real agent end-to-end)
+        run: |
+          echo "=== POST /chat ==="
+          curl -s -w "\n[HTTP %{http_code}] t=%{time_total}s\n" \
+            -X POST "https://bfc-agent.zephyr-song.workers.dev/chat" \
+            -H "Content-Type: application/json" \
+            -d '{"messages":[{"role":"user","content":"我想喝奶茶有推荐吗"}]}' \
+            --max-time 90 | head -c 4000
