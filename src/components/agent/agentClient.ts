@@ -16,7 +16,7 @@ export async function callAgent(
 ): Promise<AgentReply> {
   if (!AGENT_API_URL) throw new Error('AGENT_API_URL not configured')
   const controller = new AbortController()
-  const timer = setTimeout(() => controller.abort(), opts?.timeoutMs ?? 20000)
+  const timer = setTimeout(() => controller.abort(), opts?.timeoutMs ?? 8000)
   try {
     const res = await fetch(`${AGENT_API_URL}/chat`, {
       method: 'POST',
