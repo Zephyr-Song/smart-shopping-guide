@@ -1,4 +1,4 @@
-import { GraduationCap, Building2, BookOpen, Target, Users, Calendar, ExternalLink } from 'lucide-react'
+import { GraduationCap, Building2, Users, Calendar, ExternalLink } from 'lucide-react'
 
 export default function About() {
   return (
@@ -8,9 +8,6 @@ export default function About() {
           <GraduationCap className="w-6 h-6 text-primary-500" />
           关于项目
         </h1>
-        <p className="text-sm text-gray-500 mt-1">
-          西浦第七届校外导师科研项目 #26054
-        </p>
       </div>
 
       {/* Project Info */}
@@ -18,11 +15,9 @@ export default function About() {
         <h2 className="text-lg font-bold text-gray-900">项目信息</h2>
         <div className="grid sm:grid-cols-2 gap-3">
           {[
-            { icon: Target, label: '项目编号', value: '26054' },
             { icon: Building2, label: '导师单位', value: '上海复星外滩商业有限公司' },
             { icon: Users, label: '导师', value: '张丹琦 Stephen' },
             { icon: Calendar, label: '项目周期', value: '6 个月' },
-            { icon: BookOpen, label: '项目类型', value: '科研项目' },
             { icon: Building2, label: '线下地点', value: 'BFC 外滩金融中心' },
           ].map(item => {
             const Icon = item.icon

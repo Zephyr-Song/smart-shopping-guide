@@ -114,7 +114,7 @@ export default function Layout() {
       {/* Footer */}
       <footer className="border-t border-gray-200 bg-white mt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-sm text-gray-500">
-          <p>AI 智能导购系统 · 西浦校外导师科研项目 #26054</p>
+          <p>AI 智能导购系统</p>
           <p className="mt-1 text-xs text-gray-400">
             BFC 外滩金融中心 · 上海复星外滩商业有限公司
           </p>

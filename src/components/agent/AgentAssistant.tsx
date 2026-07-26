@@ -21,7 +21,6 @@ export default function AgentAssistant() {
   ])
   const [input, setInput] = useState('')
   const [thinking, setThinking] = useState(false)
-  const [backendOk, setBackendOk] = useState<boolean>(!!AGENT_API_URL)
   const [ctx, setCtx] = useState<AgentContext>({})
   const scrollRef = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
@@ -44,7 +43,6 @@ export default function AgentAssistant() {
       if (AGENT_API_URL) {
         // 真·LLM agent（RAG + 工具调用），由 Cloudflare Worker 托管
         const { answer, cards } = await callAgent(history)
-        setBackendOk(true)
         setMessages(prev => [...prev, { id: uid(), role: 'assistant', text: answer, cards }])
       } else {
         // 未配置后端 → 离线规则引擎兜底
@@ -55,7 +53,6 @@ export default function AgentAssistant() {
       }
     } catch {
       // 真 agent 异常（网络/超时/密钥缺失）→ 回退规则引擎，保证可用
-      setBackendOk(false)
       const { reply, newCtx } = runAgent(text, ctx)
       setCtx(newCtx)
       setMessages(prev => [...prev, reply])
@@ -115,14 +112,7 @@ export default function AgentAssistant() {
                 <Sparkles className="w-4 h-4" />
               </div>
               <div className="leading-tight">
-                <div className="text-sm font-semibold">BFC 导购助手 · 小助手</div>
-                <div className="text-[11px] text-white/80">
-                  {!AGENT_API_URL
-                    ? '在线 · 离线规则模式（未接入大模型）'
-                    : backendOk
-                      ? '在线 · AI 驱动的导购助手'
-                      : '离线模式 · 本地智能导购（网络受限已切换）'}
-                </div>
+                <div className="text-sm font-semibold">BFC 导购助手</div>
               </div>
             </div>
             <div className="flex items-center gap-1">

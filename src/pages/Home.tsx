@@ -136,10 +136,6 @@ export default function Home() {
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
         <div className="relative z-10 max-w-2xl">
-          <div className="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-medium mb-4">
-            <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
-            西浦校外导师科研项目 #26054
-          </div>
           <h1 className="text-3xl sm:text-4xl font-bold mb-3 leading-tight">
             BFC AI 智能导购系统
           </h1>
