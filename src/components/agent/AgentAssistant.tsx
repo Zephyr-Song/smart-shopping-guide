@@ -205,6 +205,14 @@ export default function AgentAssistant() {
 
 // ---------------------------------------------------------------------------
 
+function renderRich(text: string): string {
+  const escaped = (text ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+  return escaped.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+}
+
 function Avatar() {
   return (
     <div className="w-7 h-7 rounded-full bg-primary-500 flex items-center justify-center flex-shrink-0">
@@ -223,9 +231,10 @@ function MessageBubble({
   if (msg.role === 'user') {
     return (
       <div className="agent-msg flex justify-end">
-        <div className="max-w-[80%] bg-primary-500 text-white text-sm rounded-2xl rounded-tr-sm px-3.5 py-2.5 whitespace-pre-wrap break-words">
-          {msg.text}
-        </div>
+        <div
+          className="max-w-[80%] bg-primary-500 text-white text-sm rounded-2xl rounded-tr-sm px-3.5 py-2.5 whitespace-pre-wrap break-words"
+          dangerouslySetInnerHTML={{ __html: renderRich(msg.text ?? '') }}
+        />
       </div>
     )
   }
@@ -234,9 +243,10 @@ function MessageBubble({
       <Avatar />
       <div className="max-w-[85%] space-y-2">
         {msg.text && (
-          <div className="bg-white border border-gray-100 text-sm text-gray-700 rounded-2xl rounded-tl-sm px-3.5 py-2.5 whitespace-pre-wrap break-words">
-            {msg.text}
-          </div>
+          <div
+            className="bg-white border border-gray-100 text-sm text-gray-700 rounded-2xl rounded-tl-sm px-3.5 py-2.5 whitespace-pre-wrap break-words"
+            dangerouslySetInnerHTML={{ __html: renderRich(msg.text ?? '') }}
+          />
         )}
         {msg.cards?.map((card, i) => (
           <CardView key={i} card={card} onAction={onAction} />
@@ -270,7 +280,7 @@ function CardView({
       return (
         <div className="bg-primary-50 border border-primary-100 rounded-xl px-3 py-2 text-sm text-primary-700">
           {card.title && <div className="font-semibold mb-0.5">{card.title}</div>}
-          <div className="whitespace-pre-wrap">{card.text}</div>
+          <div className="whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: renderRich(card.text ?? '') }} />
         </div>
       )
     case 'action':
