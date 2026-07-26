@@ -331,7 +331,7 @@ function compareReply(a: Store, b: Store): Reply {
 
 function helpReply(): Reply {
   const text =
-    '我是「小助手」，你的 BFC 私导购助手 ✨ 我能帮你：\n· 按场景/品类/预算推荐店铺（如「约会去哪吃」「预算500吃什么」）\n· 查店铺位置与楼层（「老吉堂在几楼」）\n· 看实时客流冷热（「现在人少吗」）\n· 对比两家店（「A 和 B 哪个好」）\n· 引导你做完整画像拿专属推荐\n直接说人话就行，不用客气～'
+    '我是 BFC 导购助手 ✨ 我能帮你：\n· 按场景/品类/预算推荐店铺（如「约会去哪吃」「预算500吃什么」）\n· 查店铺位置与楼层（「老吉堂在几楼」）\n· 看实时客流冷热（「现在人少吗」）\n· 对比两家店（「A 和 B 哪个好」）\n· 引导你做完整画像拿专属推荐\n直接说人话就行，不用客气～'
   return {
     reply: {
       id: uid(),
@@ -371,7 +371,7 @@ export function runAgent(input: string, ctx: AgentContext): { reply: AgentMessag
   // 1. 问候
   if (/^(你好|您好|hi|hello|嗨|在吗|在不在|哈喽)$/i.test(text) || (/^(你好|您好|hi|hello|嗨|哈喽)/i.test(text) && text.length <= 12)) {
     return {
-      reply: { id: uid(), role: 'assistant', text: '你好呀～我是小助手，你的 BFC 导购小助手。想找好吃的、挑礼物，还是看今天哪家店人少？直接说就行 😊' },
+      reply: { id: uid(), role: 'assistant', text: '你好呀～我是 BFC 导购助手。想找好吃的、挑礼物，还是看今天哪家店人少？直接说就行 😊' },
       newCtx: ctx,
     }
   }

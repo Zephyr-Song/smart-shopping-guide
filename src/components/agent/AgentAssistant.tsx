@@ -92,12 +92,12 @@ export default function AgentAssistant() {
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          aria-label="打开导购助手小助手"
+          aria-label="打开 BFC 导购助手"
           className="agent-bubble-btn fixed bottom-5 right-5 z-[60] w-14 h-14 rounded-full bg-primary-500 text-white shadow-lg shadow-primary-500/30 flex items-center justify-center cursor-pointer hover:bg-primary-600 transition-colors"
         >
           <MessageCircle className="w-6 h-6" />
           <span className="absolute -top-1 -right-1 bg-amber-400 text-[10px] font-bold text-white px-1.5 py-0.5 rounded-full">
-            小助手
+            导购助手
           </span>
         </button>
       )}
@@ -175,7 +175,7 @@ export default function AgentAssistant() {
             <input
               value={input}
               onChange={e => setInput(e.target.value)}
-              placeholder="问问小助手：约会去哪吃？"
+              placeholder="问问 BFC 导购助手：约会去哪吃？"
               className="flex-1 text-sm px-3 py-2.5 rounded-xl bg-gray-100 border-none outline-none focus:ring-2 focus:ring-primary-300 text-gray-800 placeholder:text-gray-400"
             />
             <button
