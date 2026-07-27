@@ -76,6 +76,12 @@ export interface AgentContext {
   lastOccasion?: string
   /** 对话中隐式收集到的轻量画像，用于后续推荐 */
   profile?: Partial<UserProfile>
+  /** 上一轮已问过人数、正在等待人数回复时记录的预算（[min,max] 区间） */
+  pendingBudget?: [number, number] | null
+  /** 上一轮解析出的精确预算数字（如 500），用于按人均×人数最接近排序 */
+  pendingBudgetExact?: number | null
+  /** 上一轮是否为餐饮意图（用于续接“问人数”流程） */
+  pendingFood?: boolean
 }
 
 export interface AgentReply {

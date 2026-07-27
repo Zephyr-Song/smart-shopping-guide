@@ -46,14 +46,25 @@ const OCCASION_MAP: Record<string, string[]> = {
   闺蜜: ['网红餐饮', '咖啡茶饮', '美容美发', '潮流品牌', '国际精品'],
 }
 
+// 餐饮品类（search_stores 的 food_only 参数只返回这些）
+const FOOD_CATS = ['精致餐饮', '品质中餐', '网红餐饮', '快餐轻食', '咖啡茶饮']
+
 function scoreStore(
   s: (typeof STORES)[number],
-  q: { query?: string; category?: string; budgetMax?: number; occasion?: string },
+  q: { query?: string; category?: string; budgetMax?: number; occasion?: string; people?: number; foodOnly?: boolean },
 ): number {
+  // food_only：强制只返回餐饮，避免“吃什么”给出美容美发/科技数码
+  if (q.foodOnly && !FOOD_CATS.includes(s.category)) return -999
   let sc = 0
   if (q.category && (s.category === q.category || s.tags.includes(q.category))) sc += 3
   if (q.occasion && OCCASION_MAP[q.occasion]?.includes(s.category)) sc += 2
-  if (typeof q.budgetMax === 'number') {
+  // 预算 + 人数：按 人均×人数 与预算的接近程度排序（越接近越高）
+  if (typeof q.budgetMax === 'number' && typeof q.people === 'number') {
+    const total = s.avgPrice * q.people
+    const ratio = Math.abs(total - q.budgetMax) / (q.budgetMax || 1)
+    if (total <= q.budgetMax * 1.3) sc += Math.max(0, 3 - ratio * 2)
+    else sc -= 2
+  } else if (typeof q.budgetMax === 'number') {
     if (s.avgPrice <= q.budgetMax) sc += 2
     else if (s.avgPrice <= q.budgetMax * 1.3) sc += 0.5
   }
@@ -91,7 +102,9 @@ export const TOOL_DEFS = [
         properties: {
           query: { type: 'string', description: '自由文本，如“精品咖啡”“川菜”' },
           category: { type: 'string', description: '品类名，如“咖啡茶饮”“国际精品”' },
-          budget_max: { type: 'number', description: '人均预算上限（元）' },
+          budget_max: { type: 'number', description: '总预算上限（元）。与 people 同时给出时，按 人均×人数 最接近预算排序' },
+          people: { type: 'number', description: '就餐人数；提供后按 人均×人数 最接近 budget_max 排序' },
+          food_only: { type: 'boolean', description: '为 true 时只返回餐饮品类（精致餐饮/品质中餐/网红餐饮/快餐轻食/咖啡茶饮），用于“吃什么”类查询，避免返回美容美发等非餐饮' },
           occasion: { type: 'string', description: '场景：约会/带娃/聚餐/送礼/购物/闺蜜' },
         },
         required: [],
@@ -182,11 +195,15 @@ export function executeTool(name: string, args: Record<string, any>): ToolResult
   switch (name) {
     case 'search_stores': {
       const budget = args.budget_max != null ? Number(args.budget_max) : undefined
+      const people = args.people != null ? Number(args.people) : undefined
+      const foodOnly = args.food_only === true
       const ranked = STORES.map(s => ({ s, sc: scoreStore(s, {
         query: args.query,
         category: args.category,
         budgetMax: budget,
         occasion: args.occasion,
+        people,
+        foodOnly,
       }) }))
         .filter(x => x.sc > 0)
         .sort((a, b) => b.sc - a.sc)

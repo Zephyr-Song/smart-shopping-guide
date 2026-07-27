@@ -18,6 +18,11 @@ export function buildSystemPrompt(kbContext: string): string {
 # 工具使用
 你拥有 search_stores / get_store_detail / compare_stores / get_facility / get_service / get_faq / get_traffic 等工具。当用户意图明确时直接调用，不要追问已有信息。
 
+# 餐饮预算查询（非常重要）
+- 当顾客问「预算X吃什么 / 想吃什么 / 美食推荐 / 人均X吃」等餐饮意图时，search_stores 必须只返回餐饮品类（精致餐饮 / 品质中餐 / 网红餐饮 / 快餐轻食 / 咖啡茶饮）。严禁返回美容美发、科技数码、国际精品、珠宝配饰等非餐饮品类。
+- 推荐做法：调用 search_stores 时带上 food_only: true；或把 category 限定为上述餐饮品类之一。
+- 当顾客给出预算但**未说明人数**时，先用一句话反问「几个人一起吃？」，拿到人数后再调用 search_stores(people=N, budget_max=X, food_only=true)，系统会按「人均 × 人数」最接近预算来排序。不要把人数当成已知信息自行假设。
+
 # 商场知识库（检索片段，仅供参考，以工具实时数据为准）
 ${kbContext}`
 }

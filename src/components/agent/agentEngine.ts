@@ -54,6 +54,9 @@ const OCCASION_KEYWORDS: Record<string, string[]> = {
   单人: ['一个人', '独自', '自己逛', '独处', ' solo'],
 }
 
+/** 餐饮品类（用于“吃什么/预算X吃”时强制限定，避免混入美容美发等非餐饮） */
+const FOOD_CATEGORIES = ['精致餐饮', '品质中餐', '网红餐饮', '快餐轻食', '咖啡茶饮']
+
 // ---------------------------------------------------------------------------
 // 工具函数
 // ---------------------------------------------------------------------------
@@ -84,11 +87,17 @@ function toStoreCard(store: Store, reason?: string, matchPercent?: number): Stor
   }
 }
 
+/** 从文本里解析出明确的预算数字（如 500），无则返回 null */
+function budgetNumberFromText(text: string): number | null {
+  const m = text.match(/(?:预算|人均|花费|大概|约|控制在)\D{0,4}(\d{2,5})|(\d{2,5})\s*(?:元|块|rmb|RMB|块钱)/i)
+  const num = m ? Number(m[1] || m[2]) : null
+  return num && !Number.isNaN(num) ? num : null
+}
+
 /** 识别预算区间（返回 [min, max]，无信号返回 null） */
 function detectBudget(text: string): [number, number] | null {
-  const m = text.match(/(?:预算|人均|花费|大概|约|控制在)\D{0,4}(\d{2,5})|(\d{2,5})\s*(?:元|块|rmb|RMB)/i)
-  const num = m ? Number(m[1] || m[2]) : null
-  if (num && !Number.isNaN(num)) {
+  const num = budgetNumberFromText(text)
+  if (num != null) {
     if (num <= 200) return [0, 200]
     if (num <= 1000) return [0, 1000]
     if (num <= 5000) return [0, 5000]
@@ -99,6 +108,26 @@ function detectBudget(text: string): [number, number] | null {
   if (/高档|高端|轻奢|奢华|贵一点|品质|不将就/.test(text)) return [1000, 5000]
   if (/不差钱|随便|不设限|顶配|闭眼入/.test(text)) return [0, 99999]
   return null
+}
+
+/** 识别就餐人数（1-30），支持数字与中文数词（一/两/三…/十） */
+function detectPeople(text: string): number | null {
+  const cn: Record<string, number> = { '一': 1, '两': 2, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9, '十': 10 }
+  const m = text.match(/(\d{1,2})\s*(?:个)?\s*(?:人|位|桌|口)/)
+  if (m) {
+    const n = Number(m[1])
+    if (n >= 1 && n <= 30) return n
+  }
+  for (const [w, n] of Object.entries(cn)) {
+    if (new RegExp(w + '\\s*(?:个)?\\s*(?:人|位|桌|口)').test(text)) return n
+  }
+  return null
+}
+
+/** 是否为餐饮意图（明确指向“吃”的查询） */
+function detectFoodIntent(text: string): boolean {
+  if (FOOD_CATEGORIES.some(c => detectCategories(text).includes(c))) return true
+  return /(好吃|美食|餐厅|吃饭|就餐|用餐|吃货|吃什么|想吃|下馆子|觅食|撮一顿|饭馆|大餐|便饭|吃顿|吃啥|哪里吃|吃饭地方|聚餐|宴请|吃口|整点吃的|吃点|吃东西|饿了|找个吃的|来点吃的)/.test(text)
 }
 
 function detectCategories(text: string): string[] {
@@ -148,13 +177,19 @@ function scoreStores(opts: {
   occasion: string | null
   budget: [number, number] | null
   text: string
+  allowedCategories?: string[] | null
 }): Scored[] {
-  const { categories, occasion, budget, text } = opts
+  const { categories, occasion, budget, text, allowedCategories } = opts
   const occasionCats = occasion ? OCCASION_MAP[occasion]?.cats || [] : []
 
   const scored: Scored[] = STORES.map(store => {
     let score = 0
     const reasons: string[] = []
+
+    // 餐饮意图等强约束：非允许品类直接跳过
+    if (allowedCategories && !allowedCategories.includes(store.category)) {
+      return { store, score: -999, reasons: [] }
+    }
 
     if (categories.includes(store.category)) {
       score += 5
@@ -215,12 +250,55 @@ function budgetStyleFromRange([, max]: [number, number]): string {
 type Reply = { reply: AgentMessage; newCtx: AgentContext }
 
 function recommendReply(text: string, ctx: AgentContext): Reply {
+  const foodIntent = detectFoodIntent(text) || !!ctx.pendingFood
+  const budgetExact = budgetNumberFromText(text)
+  const budget = detectBudget(text)
+  const people = detectPeople(text)
+
+  // 续接上一轮“问人数”的回复：已拿到人数 → 直接按人均×人数推荐
+  if (ctx.pendingBudget && people) {
+    return budgetPeopleReply(ctx.pendingBudgetExact ?? ctx.pendingBudget[1], people, ctx)
+  }
+  // 上一轮问过人数、这轮仍没给人数 → 继续追问（不强行推荐）
+  if (ctx.pendingBudget && !people) {
+    return {
+      reply: {
+        id: uid(),
+        role: 'assistant',
+        text: '记得告诉我几个人一起吃呀～比如「2个人」「4人」，我好帮你按人均算预算 😊',
+      },
+      newCtx: ctx,
+    }
+  }
+
+  // 餐饮 + 预算 + 还不知道人数 → 先反问人数，把预算暂存到上下文
+  if (foodIntent && budget && !people) {
+    const bt = budgetExact
+      ? `¥${budgetExact}`
+      : `${budget[0] === 0 ? '' : budget[0] + '-'}${budget[1] >= 99999 ? '不限' : budget[1] + '元'}`
+    return {
+      reply: {
+        id: uid(),
+        role: 'assistant',
+        text: `${bt}预算～几个人一起吃呀？告诉我人数（比如「2个人」「4人」），我按人均帮你挑最划算、也最接近预算的餐厅 🍽️`,
+      },
+      newCtx: { ...ctx, pendingBudget: budget, pendingBudgetExact: budgetExact, pendingFood: true },
+    }
+  }
+
+  // 餐饮 + 预算 + 已知人数 → 按 人均×人数 最接近预算推荐
+  if (foodIntent && budget && people) {
+    return budgetPeopleReply(budgetExact ?? budget[1], people, ctx)
+  }
+
   const categories = detectCategories(text)
   const occasion = detectOccasion(text)
-  const budget = detectBudget(text)
+  // 餐饮意图：仅允许餐饮品类参与评分
+  const effCategories = foodIntent && categories.length === 0 ? FOOD_CATEGORIES : categories
+  const allowed = foodIntent ? FOOD_CATEGORIES : null
 
   // 信号不足：引导用户补充
-  if (categories.length === 0 && !occasion && !budget) {
+  if (effCategories.length === 0 && !occasion && !budget) {
     const cats = CATEGORIES.slice(0, 8).map(c => ({
       type: 'category' as const,
       name: c.name,
@@ -239,7 +317,7 @@ function recommendReply(text: string, ctx: AgentContext): Reply {
     }
   }
 
-  const scored = scoreStores({ categories, occasion, budget, text })
+  const scored = scoreStores({ categories: effCategories, occasion, budget, text, allowedCategories: allowed })
   const top = scored.slice(0, 4)
   const cards: StoreCardData[] = top.map(s => {
     const maxScore = top[0].score || 1
@@ -274,6 +352,40 @@ function recommendReply(text: string, ctx: AgentContext): Reply {
     newCtx.lastStoreName = cards[0].name
   }
 
+  return { reply: { id: uid(), role: 'assistant', text: lead, cards }, newCtx }
+}
+
+/**
+ * 按“人均 × 人数 最接近总预算”推荐餐饮（不混入美容美发等非餐饮）。
+ * total = 总预算（元），people = 就餐人数。
+ */
+function budgetPeopleReply(total: number, people: number, ctx: AgentContext): Reply {
+  const candidates = STORES.filter(s => FOOD_CATEGORIES.includes(s.category))
+  const ranked = candidates
+    .map(s => {
+      const totalCost = s.avgPrice * people
+      return { store: s, totalCost, diff: Math.abs(totalCost - total) }
+    })
+    .sort((a, b) => a.diff - b.diff)
+  const top = ranked.slice(0, 4)
+  const cards: StoreCardData[] = top.map(x => {
+    const match = Math.max(45, Math.round(100 - (x.diff / total) * 100))
+    const reason = `人均 ¥${x.store.avgPrice} × ${people}人 = ¥${x.totalCost.toLocaleString()}，最接近 ¥${total} 预算`
+    return toStoreCard(x.store, reason, match)
+  })
+  const lead = `按 ${people} 人、总预算 ¥${total} 算，这几家餐厅的人均总价最接近你的预算 👇`
+  const newCtx: AgentContext = {
+    ...ctx,
+    pendingBudget: null,
+    pendingBudgetExact: null,
+    pendingFood: false,
+    lastCategory: '精致餐饮',
+    lastOccasion: ctx.lastOccasion,
+  }
+  if (cards[0]) {
+    newCtx.lastStoreId = cards[0].storeId
+    newCtx.lastStoreName = cards[0].name
+  }
   return { reply: { id: uid(), role: 'assistant', text: lead, cards }, newCtx }
 }
 
@@ -466,7 +578,8 @@ export function runAgent(input: string, ctx: AgentContext): { reply: AgentMessag
     /推荐|选一家|选个|去哪|哪里|帮我找|帮我选|有什么.*(店|品牌|餐厅|地方|好去处)|想吃|想买|想逛|适合/.test(text) ||
     detectCategories(text).length ||
     detectOccasion(text) ||
-    detectBudget(text)
+    detectBudget(text) ||
+    ctx.pendingBudget
   ) {
     return recommendReply(text, ctx)
   }
