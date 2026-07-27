@@ -28,7 +28,12 @@ export async function callAgent(
     })
     if (!res.ok) throw new Error(`agent http ${res.status}`)
     const data = await res.json()
-    return { answer: data.answer ?? '', cards: data.cards }
+    const answer: string = data.answer ?? ''
+    // 防御：Worker 侧异常兜底文案 / 空回答 → 视为失败，抛异常让调用方回退本地引擎
+    if (!answer.trim() || /暂时连不上|稍后再试或联系客服/.test(answer)) {
+      throw new Error('agent degraded answer')
+    }
+    return { answer, cards: data.cards }
   } finally {
     clearTimeout(timer)
   }

@@ -64,6 +64,7 @@ async function runAgentLoop(
   messages: any[],
   env: Env,
   onTool: (r: ToolResult) => void,
+  lastUser: string,
 ): Promise<string> {
   let msgs = messages.map(m => ({ ...m }))
   for (let i = 0; i < 5; i++) {
@@ -120,14 +121,16 @@ export default {
 
     const cards: AgentCard[] = []
     try {
-      const answer = await runAgentLoop(chatMessages, env, r => collectCards(r, cards))
+      const answer = await runAgentLoop(chatMessages, env, r => collectCards(r, cards), lastUser)
       return new Response(JSON.stringify({ answer, cards }), {
         headers: { 'Content-Type': 'application/json', ...CORS },
       })
     } catch (e: any) {
+      // 返回 502：让前端 callAgent 抛异常 → AgentAssistant 回退到本地规则引擎，
+      // 用户不会再看到"暂时连不上"这类原始错误文案。
       return new Response(
-        JSON.stringify({ answer: '抱歉，智能助手暂时连不上，请稍后再试或联系客服中心 🙏', cards: [] }),
-        { status: 200, headers: { 'Content-Type': 'application/json', ...CORS } },
+        JSON.stringify({ error: 'agent_upstream_failed', message: String(e?.message || e).slice(0, 200) }),
+        { status: 502, headers: { 'Content-Type': 'application/json', ...CORS } },
       )
     }
   },
