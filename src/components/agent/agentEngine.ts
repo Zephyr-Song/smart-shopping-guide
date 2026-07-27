@@ -357,6 +357,7 @@ function recommendReply(text: string, ctx: AgentContext): Reply {
 
 /**
  * 按“人均 × 人数 最接近总预算”推荐餐饮（不混入美容美发等非餐饮）。
+ * 预算是硬约束：人均×人数 超过预算的门店一律不推荐。
  * total = 总预算（元），people = 就餐人数。
  */
 function budgetPeopleReply(total: number, people: number, ctx: AgentContext): Reply {
@@ -367,13 +368,23 @@ function budgetPeopleReply(total: number, people: number, ctx: AgentContext): Re
       return { store: s, totalCost, diff: Math.abs(totalCost - total) }
     })
     .sort((a, b) => a.diff - b.diff)
-  const top = ranked.slice(0, 4)
+  // 硬过滤：只保留预算内的门店（人均×人数 ≤ 总预算）
+  const within = ranked.filter(x => x.totalCost <= total)
+  const overBudget = within.length === 0
+  // 预算内无店（预算过低）→ 兜底给最便宜的几家，并如实说明
+  const top = overBudget
+    ? [...ranked].sort((a, b) => a.totalCost - b.totalCost).slice(0, 3)
+    : within.slice(0, 4)
   const cards: StoreCardData[] = top.map(x => {
     const match = Math.max(45, Math.round(100 - (x.diff / total) * 100))
-    const reason = `人均 ¥${x.store.avgPrice} × ${people}人 = ¥${x.totalCost.toLocaleString()}，最接近 ¥${total} 预算`
+    const reason = overBudget
+      ? `人均 ¥${x.store.avgPrice} × ${people}人 = ¥${x.totalCost.toLocaleString()}（超出预算，全场最实惠之选）`
+      : `人均 ¥${x.store.avgPrice} × ${people}人 = ¥${x.totalCost.toLocaleString()}，不超 ¥${total} 预算`
     return toStoreCard(x.store, reason, match)
   })
-  const lead = `按 ${people} 人、总预算 ¥${total} 算，这几家餐厅的人均总价最接近你的预算 👇`
+  const lead = overBudget
+    ? `按 ${people} 人、总预算 ¥${total} 算，暂时没有预算内的餐厅 😥 给你几家全场最实惠的参考，或者试试快餐轻食/咖啡茶饮～`
+    : `按 ${people} 人、总预算 ¥${total} 算，这几家都在预算内、且总价最贴近预算 👇`
   const newCtx: AgentContext = {
     ...ctx,
     pendingBudget: null,

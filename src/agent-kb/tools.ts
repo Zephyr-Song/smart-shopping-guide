@@ -58,15 +58,18 @@ function scoreStore(
   let sc = 0
   if (q.category && (s.category === q.category || s.tags.includes(q.category))) sc += 3
   if (q.occasion && OCCASION_MAP[q.occasion]?.includes(s.category)) sc += 2
-  // 预算 + 人数：按 人均×人数 与预算的接近程度排序（越接近越高）
+  // 预算 + 人数：超预算直接淘汰；预算内按 人均×人数 越接近预算越高
   if (typeof q.budgetMax === 'number' && typeof q.people === 'number') {
     const total = s.avgPrice * q.people
+    if (total > q.budgetMax) return -999 // 硬约束：人均×人数 不得超过总预算
     const ratio = Math.abs(total - q.budgetMax) / (q.budgetMax || 1)
-    if (total <= q.budgetMax * 1.3) sc += Math.max(0, 3 - ratio * 2)
-    else sc -= 2
+    sc += Math.max(0, 3 - ratio * 2)
   } else if (typeof q.budgetMax === 'number') {
+    // 仅有预算：餐饮查询同样硬过滤超预算门店；非餐饮保留轻度容忍
+    if (q.foodOnly && s.avgPrice > q.budgetMax) return -999
     if (s.avgPrice <= q.budgetMax) sc += 2
     else if (s.avgPrice <= q.budgetMax * 1.3) sc += 0.5
+    else sc -= 2
   }
   if (q.query) {
     const t = q.query.toLowerCase()
@@ -194,8 +197,27 @@ export const TOOL_DEFS = [
 export function executeTool(name: string, args: Record<string, any>, userText?: string): ToolResult {
   switch (name) {
     case 'search_stores': {
-      const budget = args.budget_max != null ? Number(args.budget_max) : undefined
-      const people = args.people != null ? Number(args.people) : undefined
+      // 预算：优先用模型传参；缺省时从用户原话兜底解析（"预算500 / 500元"）
+      let budget = args.budget_max != null ? Number(args.budget_max) : undefined
+      if (budget == null && userText) {
+        const m = String(userText).match(/(?:预算|人均|控制在)\D{0,4}(\d{2,5})|(\d{2,5})\s*(?:元|块|块钱)/)
+        const n = m ? Number(m[1] || m[2]) : NaN
+        if (!Number.isNaN(n) && n > 0) budget = n
+      }
+      // 人数：优先用模型传参；缺省时从用户原话兜底解析（"一个人/2个人/两位"）
+      let people = args.people != null ? Number(args.people) : undefined
+      if (people == null && userText) {
+        const ut = String(userText)
+        const m = ut.match(/(\d{1,2})\s*(?:个)?\s*(?:人|位)/)
+        if (m) people = Number(m[1])
+        else if (/一个人|独自|单人|就我自己|自己吃/.test(ut)) people = 1
+        else {
+          const cn: Record<string, number> = { 两: 2, 二: 2, 三: 3, 四: 4, 五: 5, 六: 6, 七: 7, 八: 8, 九: 9, 十: 10 }
+          for (const [w, n] of Object.entries(cn)) {
+            if (new RegExp(`${w}\\s*(?:个)?\\s*(?:人|位)`).test(ut)) { people = n; break }
+          }
+        }
+      }
       // 餐饮意图强制只返回餐饮品类：显式 food_only、query 含吃、或用户原话含吃，任一即生效
       const foodOnly =
         args.food_only === true ||

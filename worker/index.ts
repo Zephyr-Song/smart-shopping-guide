@@ -115,13 +115,15 @@ export default {
       ? body.messages
       : []
     const lastUser = [...messages].reverse().find(m => m.role === 'user')?.content || ''
+    // 工具兜底解析用：拼接全部用户发言（预算可能在第一轮、人数在后续轮次）
+    const allUserText = messages.filter(m => m.role === 'user').map(m => m.content).join('\n')
     const kbContext = retrieve(lastUser, 6)
     const system = buildSystemPrompt(kbContext)
     const chatMessages = [{ role: 'system', content: system }, ...messages]
 
     const cards: AgentCard[] = []
     try {
-      const answer = await runAgentLoop(chatMessages, env, r => collectCards(r, cards), lastUser)
+      const answer = await runAgentLoop(chatMessages, env, r => collectCards(r, cards), allUserText)
       return new Response(JSON.stringify({ answer, cards }), {
         headers: { 'Content-Type': 'application/json', ...CORS },
       })
