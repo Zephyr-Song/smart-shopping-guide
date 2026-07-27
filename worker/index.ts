@@ -80,7 +80,7 @@ async function runAgentLoop(
         } catch {
           args = {}
         }
-        const result = executeTool(tc.function?.name || '', args)
+        const result = executeTool(tc.function?.name || '', args, lastUser)
         onTool(result)
         msgs.push({
           role: 'tool',

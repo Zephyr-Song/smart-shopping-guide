@@ -191,12 +191,16 @@ export const TOOL_DEFS = [
 // ---------------------------------------------------------------------------
 // 执行器（在 Worker 中运行）
 // ---------------------------------------------------------------------------
-export function executeTool(name: string, args: Record<string, any>): ToolResult {
+export function executeTool(name: string, args: Record<string, any>, userText?: string): ToolResult {
   switch (name) {
     case 'search_stores': {
       const budget = args.budget_max != null ? Number(args.budget_max) : undefined
       const people = args.people != null ? Number(args.people) : undefined
-      const foodOnly = args.food_only === true
+      // 餐饮意图强制只返回餐饮品类：显式 food_only、query 含吃、或用户原话含吃，任一即生效
+      const foodOnly =
+        args.food_only === true ||
+        /(好吃|美食|餐厅|吃饭|就餐|用餐|吃货|吃什么|想吃|下馆子|觅食|饭馆|大餐|便饭|吃顿|吃啥|哪里吃|聚餐|宴请|吃口|整点吃的|吃点|吃东西|饿了|找个吃的|来点吃的)/.test(String(args.query || '')) ||
+        /(好吃|美食|餐厅|吃饭|就餐|用餐|吃货|吃什么|想吃|下馆子|觅食|饭馆|大餐|便饭|吃顿|吃啥|哪里吃|聚餐|宴请|吃口|整点吃的|吃点|吃东西|饿了|找个吃的|来点吃的)/.test(String(userText || ''))
       const ranked = STORES.map(s => ({ s, sc: scoreStore(s, {
         query: args.query,
         category: args.category,
