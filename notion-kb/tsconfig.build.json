@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "target": "ES2019", "module": "CommonJS", "moduleResolution": "node",
+    "esModuleInterop": true, "skipLibCheck": true, "ignoreDeprecations": "6.0",
+    "rootDir": "../src/data", "outDir": "dist"
+  },
+  "files": ["../src/data/mockData.ts"]
+}

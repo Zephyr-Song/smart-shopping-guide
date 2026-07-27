@@ -7,6 +7,7 @@
 import { STORES, CATEGORIES, HOURLY_TRAFFIC } from '../../data/mockData'
 import type { Store } from '../../data/mockData'
 import type { AgentContext, AgentMessage, StoreCardData } from './agentTypes'
+import { searchKb } from '../../agent-kb'
 
 // ---------------------------------------------------------------------------
 // 词典与映射
@@ -362,6 +363,58 @@ function fallbackReply(): Reply {
 }
 
 // ---------------------------------------------------------------------------
+// 知识问答：活动 / 展览 / 打卡机位 / 品牌导购 / 宠物友好 / 夜生活 / 餐厅详情
+// 检索已接入 Notion 知识库的本地镜像（src/agent-kb/webContent.ts），无需联网。
+// ---------------------------------------------------------------------------
+
+const KB_LEAD: Record<string, string> = {
+  '活动': 'BFC 近期有这些活动可以逛 👇',
+  '展览': 'BFC 这边的艺术展览 👇',
+  '打卡攻略': 'BFC 这几处很出片 / 好打卡 📸',
+  '品牌导购': 'BFC 这些品牌 / 店铺值得逛 🛍️',
+  '宠物友好': 'BFC 宠物友好好去处 🐾',
+  '夜生活': 'BFC 夜生活去处 🌙',
+  '餐厅信息': '这几家餐厅你可以看看 🍽️',
+}
+
+/** 当问题命中知识库（活动/展览/打卡/品牌/宠物/夜生活/餐厅详情）时，用检索结果组织回答 */
+function knowledgeReply(text: string, ctx: AgentContext): Reply | null {
+  const hits = searchKb(text, 8).filter(h => h.score > 0)
+  if (!hits.length) return null
+  const seen = new Set<string>()
+  const top = hits
+    .filter(h => {
+      if (seen.has(h.item.title)) return false
+      seen.add(h.item.title)
+      return true
+    })
+    .slice(0, 5)
+  const cats = top.map(h => h.item.category)
+  const leadCat =
+    (['活动', '展览', '打卡攻略', '品牌导购', '宠物友好', '夜生活'] as const).find(c => cats.includes(c)) ||
+    '餐厅信息'
+  const lines = top.map(h => {
+    const one = h.item.content.length > 48 ? h.item.content.slice(0, 46) + '…' : h.item.content
+    return `· ${h.item.title}（${h.item.category}）：${one}`
+  })
+  const replyText =
+    `${KB_LEAD[leadCat]}\n${lines.join('\n')}\n\n（信息来自公开采集，以门店 / 官方实时为准）`
+  return { reply: { id: uid(), role: 'assistant', text: replyText }, newCtx: ctx }
+}
+
+/** 店铺被点名且问电话/营业时间时，从知识库补全详情 */
+function storeDetailReply(store: Store, text: string): Reply | null {
+  if (!/电话|营业时间|几点开|几点营业|什么时候开|几点关门|营业吗/.test(text)) return null
+  const detail = searchKb(store.name, 5).find(h => h.score > 0 && /电话|营业时间/.test(h.item.content))
+  if (!detail) return null
+  const text2 = `「${store.name}」${detail.item.content.replace(/｜/g, '，')}。`
+  return {
+    reply: { id: uid(), role: 'assistant', text: text2, cards: [toStoreCard(store)] },
+    newCtx: { lastStoreId: store.id, lastStoreName: store.name },
+  }
+}
+
+// ---------------------------------------------------------------------------
 // 入口：意图识别 + 分发
 // ---------------------------------------------------------------------------
 
@@ -383,6 +436,8 @@ export function runAgent(input: string, ctx: AgentContext): { reply: AgentMessag
   // 4. 店铺相关（提及店名或代词）
   const mentioned = findMentionedStore(text) || pronounStore(text, ctx)
   if (mentioned) {
+    const detail = storeDetailReply(mentioned, text)
+    if (detail) return detail
     if (/在哪|怎么去|楼层|位置|路线|怎么走|几楼|怎么到/.test(text)) return navigationReply(mentioned)
     if (/人少|人多|清静|安静|不挤|冷清|客流|热闹|现在.*人|营业/.test(text)) return trafficReply(text, mentioned)
     if (/怎么样|好吗|评价|评分|推荐吗|值得|行不行|靠不靠谱/.test(text)) return storeInfoReply(mentioned, true)
@@ -400,7 +455,13 @@ export function runAgent(input: string, ctx: AgentContext): { reply: AgentMessag
     return trafficReply(text, null)
   }
 
-  // 7. 推荐类
+  // 7. 知识问答（活动 / 展览 / 打卡 / 品牌 / 宠物 / 夜生活 / 餐厅详情）—— 优先于泛推荐
+  if (/活动|展览|机位|出片|拍照|探店|品牌|旗舰店|买手|市集|音乐节|演艺|宠物|夜生活|酒吧|电话|营业时间|几点开|什么时候开|几点营业/.test(text)) {
+    const r = knowledgeReply(text, ctx)
+    if (r) return r
+  }
+
+  // 8. 推荐类
   if (
     /推荐|选一家|选个|去哪|哪里|帮我找|帮我选|有什么.*(店|品牌|餐厅|地方|好去处)|想吃|想买|想逛|适合/.test(text) ||
     detectCategories(text).length ||
