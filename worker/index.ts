@@ -20,6 +20,14 @@ const CORS = {
   'Access-Control-Allow-Headers': 'Content-Type',
 }
 
+/**
+ * 清洗模型偶发混入的非预期外文（如 qwen 生成的西里尔字母/俄文），
+ * 保留中文、拉丁字母（品牌名）、数字、标点与 emoji。
+ */
+function sanitizeAnswer(text: string): string {
+  return text.replace(/[\u0400-\u04FF\u0500-\u052F\uA640-\uA69F]/g, '')
+}
+
 function collectCards(r: ToolResult, cards: AgentCard[]) {
   if (r.kind === 'stores') {
     for (const c of r.data) cards.push(c)
@@ -81,7 +89,7 @@ async function runAgentLoop(
         })
       }
     } else {
-      return msg.content || ''
+      return sanitizeAnswer(msg.content || '')
     }
   }
   return '抱歉，我这边有点忙，请稍后再试～'

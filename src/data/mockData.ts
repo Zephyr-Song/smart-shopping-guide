@@ -172,16 +172,16 @@ export const BFC_SEGMENTS: BFCSegment[] = [
 export const STORES: Store[] = [
   // ==================== 南区 South Retail ====================
   // 4F - 品质中餐聚集区（7家）
-  { id: 's001', name: '老吉堂', category: '精致餐饮', floor: 'S-L4', x: 8, y: 16, description: '本帮菜传承名店', tags: ['本帮菜', '老字号'], rating: 4.5, avgPrice: 500, visitorCount: 320, conversionRate: 0.78, heatmap: 0.60 },
+  { id: 's001', name: '老吉堂', category: '精致餐饮', floor: 'S-L4', x: 8, y: 16, description: '本帮菜传承名店', tags: ['本帮菜', '老字号'], rating: 4.5, avgPrice: 218, visitorCount: 320, conversionRate: 0.78, heatmap: 0.60 },
   { id: 's002', name: '满愿家', category: '精致餐饮', floor: 'S-L4', x: 24, y: 16, description: '高端中式私宴', tags: ['私宴', '中式'], rating: 4.6, avgPrice: 680, visitorCount: 260, conversionRate: 0.82, heatmap: 0.55 },
-  { id: 's003', name: '青鹤荟', category: '精致餐饮', floor: 'S-L4', x: 40, y: 16, description: '新派东方料理', tags: ['新派', '东方'], rating: 4.4, avgPrice: 550, visitorCount: 240, conversionRate: 0.75, heatmap: 0.52 },
-  { id: 's004', name: '泰珍荟', category: '精致餐饮', floor: 'S-L4', x: 56, y: 16, description: '泰式精致料理', tags: ['泰餐', '精致'], rating: 4.5, avgPrice: 480, visitorCount: 300, conversionRate: 0.72, heatmap: 0.58 },
-  { id: 's005', name: '高桌', category: '精致餐饮', floor: 'S-L4', x: 72, y: 16, description: '高端西餐牛排馆', tags: ['牛排', '西餐'], rating: 4.6, avgPrice: 880, visitorCount: 200, conversionRate: 0.85, heatmap: 0.48 },
-  { id: 's006', name: '晴空', category: '精致餐饮', floor: 'S-L4', x: 88, y: 16, description: '日式料理名店', tags: ['日料', '精致'], rating: 4.6, avgPrice: 700, visitorCount: 220, conversionRate: 0.76, heatmap: 0.50 },
+  { id: 's003', name: '青鹤荟', category: '精致餐饮', floor: 'S-L4', x: 40, y: 16, description: '新派潮州菜（菁禧荟）', tags: ['新派', '潮州菜', '米其林'], rating: 4.8, avgPrice: 880, visitorCount: 240, conversionRate: 0.75, heatmap: 0.52 },
+  { id: 's004', name: '泰珍荟', category: '精致餐饮', floor: 'S-L4', x: 56, y: 16, description: '泰式精致料理', tags: ['泰餐', '精致'], rating: 4.5, avgPrice: 350, visitorCount: 300, conversionRate: 0.72, heatmap: 0.58 },
+  { id: 's005', name: '高桌', category: '精致餐饮', floor: 'S-L4', x: 72, y: 16, description: '高端西餐牛排馆', tags: ['牛排', '西餐'], rating: 4.6, avgPrice: 600, visitorCount: 200, conversionRate: 0.85, heatmap: 0.48 },
+  { id: 's006', name: '晴空', category: '精致餐饮', floor: 'S-L4', x: 88, y: 16, description: '米其林三星主厨日式怀石料理', tags: ['日料', '精致', '怀石'], rating: 4.6, avgPrice: 1500, visitorCount: 220, conversionRate: 0.76, heatmap: 0.50 },
   { id: 's007', name: 'Moon N Back', category: '精致餐饮', floor: 'S-L4', x: 48, y: 24, description: '融合创意料理酒吧', tags: ['创意', '酒吧'], rating: 4.4, avgPrice: 450, visitorCount: 350, conversionRate: 0.65, heatmap: 0.55 },
   // 3F - 时尚餐饮 + 生活方式（5家）
   { id: 's008', name: 'DIM SUM MARVEL', category: '品质中餐', floor: 'S-L3', x: 12, y: 34, description: '新派点心专门店', tags: ['点心', '新派'], rating: 4.3, avgPrice: 120, visitorCount: 800, conversionRate: 0.62, heatmap: 0.72 },
-  { id: 's009', name: 'MEET THE BUND', category: '品质中餐', floor: 'S-L3', x: 32, y: 34, description: '外滩江景中餐', tags: ['江景', '中餐'], rating: 4.4, avgPrice: 350, visitorCount: 550, conversionRate: 0.70, heatmap: 0.65 },
+  { id: 's009', name: 'MEET THE BUND', category: '品质中餐', floor: 'S-L3', x: 32, y: 34, description: '外滩江景闽菜（米其林一星）', tags: ['江景', '闽菜', '米其林'], rating: 4.4, avgPrice: 800, visitorCount: 550, conversionRate: 0.70, heatmap: 0.65 },
   { id: 's010', name: '炙焰炉子炉馆', category: '品质中餐', floor: 'S-L3', x: 54, y: 34, description: '明火烤炉料理', tags: ['烤炉', '创意'], rating: 4.3, avgPrice: 200, visitorCount: 600, conversionRate: 0.68, heatmap: 0.62 },
   { id: 's011', name: 'A&M CROWNED SALON', category: '美容美发', floor: 'S-L3', x: 74, y: 34, description: '高端美发沙龙', tags: ['美发', '高端'], rating: 4.5, avgPrice: 500, visitorCount: 280, conversionRate: 0.55, heatmap: 0.45 },
   { id: 's012', name: 'MOMODA', category: '网红餐饮', floor: 'S-L3', x: 90, y: 34, description: '网红创意轻食', tags: ['网红', '轻食'], rating: 4.2, avgPrice: 80, visitorCount: 1100, conversionRate: 0.60, heatmap: 0.75 },
@@ -230,7 +230,7 @@ export const STORES: Store[] = [
   { id: 's051', name: 'FIVE DOCTORS', category: '美容美发', floor: 'S-B1', x: 86, y: 84, description: '高端医美诊所', tags: ['医美', '高端'], rating: 4.3, avgPrice: 3000, visitorCount: 100, conversionRate: 0.20, heatmap: 0.30 },
   // B2 - 餐饮/数码/宠物（10家）
   { id: 's052', name: '阿不就台湾食堂', category: '快餐轻食', floor: 'S-B2', x: 6, y: 78, description: '台湾风味小吃', tags: ['台湾', '小吃'], rating: 4.3, avgPrice: 45, visitorCount: 900, conversionRate: 0.68, heatmap: 0.55 },
-  { id: 's053', name: '莆田', category: '品质中餐', floor: 'S-B2', x: 20, y: 78, description: '福建莆田米其林餐厅', tags: ['福建菜', '米其林'], rating: 4.4, avgPrice: 180, visitorCount: 650, conversionRate: 0.72, heatmap: 0.58 },
+  { id: 's053', name: '莆田', category: '品质中餐', floor: 'S-B2', x: 20, y: 78, description: '福建莆田米其林餐厅', tags: ['福建菜', '米其林'], rating: 4.4, avgPrice: 145, visitorCount: 650, conversionRate: 0.72, heatmap: 0.58 },
   { id: 's054', name: '喜茶', category: '咖啡茶饮', floor: 'S-B2', x: 32, y: 78, description: '新式茶饮开创者', tags: ['茶饮', '网红'], rating: 4.3, avgPrice: 25, visitorCount: 3500, conversionRate: 0.80, heatmap: 0.88 },
   { id: 's055', name: '小爱同学', category: '科技数码', floor: 'S-B2', x: 44, y: 78, description: '小米AIoT体验店', tags: ['智能', '体验'], rating: 4.3, avgPrice: 500, visitorCount: 1800, conversionRate: 0.25, heatmap: 0.70 },
   { id: 's056', name: '小米', category: '科技数码', floor: 'S-B2', x: 58, y: 78, description: '小米之家旗舰店', tags: ['数码', '旗舰'], rating: 4.4, avgPrice: 1500, visitorCount: 2500, conversionRate: 0.32, heatmap: 0.78 },
@@ -244,16 +244,16 @@ export const STORES: Store[] = [
 
   // ==================== 北区 North Retail ====================
   // N3 - 精致餐饮集群
-  { id: 'n001', name: '上海滩餐厅', category: '精致餐饮', floor: 'N-L3-5F', x: 40, y: 16, description: '上海滩品牌旗舰餐厅', tags: ['上海菜', '地标'], rating: 4.5, avgPrice: 700, visitorCount: 220, conversionRate: 0.72, heatmap: 0.52 },
-  { id: 'n002', name: '新荣记', category: '精致餐饮', floor: 'N-L3-3F', x: 18, y: 24, description: '米其林台州菜标杆', tags: ['米其林', '台州菜'], rating: 4.8, avgPrice: 1200, visitorCount: 280, conversionRate: 0.85, heatmap: 0.60 },
+  { id: 'n001', name: '上海滩餐厅', category: '精致餐饮', floor: 'N-L3-5F', x: 40, y: 16, description: '上海滩品牌旗舰餐厅', tags: ['上海菜', '地标'], rating: 4.5, avgPrice: 580, visitorCount: 220, conversionRate: 0.72, heatmap: 0.52 },
+  { id: 'n002', name: '新荣记', category: '精致餐饮', floor: 'N-L3-3F', x: 18, y: 24, description: '米其林台州菜标杆', tags: ['米其林', '台州菜'], rating: 4.8, avgPrice: 874, visitorCount: 280, conversionRate: 0.85, heatmap: 0.60 },
   { id: 'n003', name: 'DA Vittorio Shanghai', category: '精致餐饮', floor: 'N-L3-3F', x: 62, y: 24, description: '米其林三星意大利餐厅', tags: ['米其林三星', '意餐'], rating: 4.8, avgPrice: 2000, visitorCount: 160, conversionRate: 0.90, heatmap: 0.48 },
-  { id: 'n004', name: '柴门荟', category: '精致餐饮', floor: 'N-L3-2F', x: 40, y: 32, description: '川菜高端品牌', tags: ['川菜', '高端'], rating: 4.4, avgPrice: 500, visitorCount: 300, conversionRate: 0.78, heatmap: 0.55 },
+  { id: 'n004', name: '柴门荟', category: '精致餐饮', floor: 'N-L3-2F', x: 40, y: 32, description: '川菜高端品牌（米其林一星）', tags: ['川菜', '高端', '米其林'], rating: 4.4, avgPrice: 600, visitorCount: 300, conversionRate: 0.78, heatmap: 0.55 },
   { id: 'n005', name: '莱珀妮 La Prairie', category: '国际精品', floor: 'N-L3-1F', x: 18, y: 40, description: '瑞士奢华护肤品牌', tags: ['护肤', '奢华'], rating: 4.7, avgPrice: 5000, visitorCount: 350, conversionRate: 0.15, heatmap: 0.48 },
   { id: 'n006', name: '陆家居', category: '生活方式', floor: 'N-L3-1F', x: 48, y: 40, description: '高端家居品牌集合', tags: ['家居', '高端'], rating: 4.3, avgPrice: 3000, visitorCount: 200, conversionRate: 0.12, heatmap: 0.38 },
   { id: 'n007', name: '梅赛德斯-迈巴赫', category: '汽车体验', floor: 'N-L3-1F', x: 78, y: 40, description: '迈巴赫城市品牌中心', tags: ['汽车', '迈巴赫'], rating: 4.7, avgPrice: 2000000, visitorCount: 400, conversionRate: 0.02, heatmap: 0.48 },
   // N2 - 茶馆SPA + 网红餐饮（不再叫高茶）
   { id: 'n008', name: '隐溪茶馆 SPA', category: '茶馆SPA', floor: 'N-L2-2F', x: 40, y: 50, description: '精品茶馆与SPA养生空间', tags: ['茶馆', 'SPA', '养生'], rating: 4.6, avgPrice: 300, visitorCount: 500, conversionRate: 0.58, heatmap: 0.55 },
-  { id: 'n009', name: '白茸', category: '网红餐饮', floor: 'N-L2-1F', x: 10, y: 58, description: '新派创意料理', tags: ['创意', '新派'], rating: 4.3, avgPrice: 180, visitorCount: 900, conversionRate: 0.62, heatmap: 0.65 },
+  { id: 'n009', name: '白茸', category: '网红餐饮', floor: 'N-L2-1F', x: 10, y: 58, description: '米其林推荐鲁菜', tags: ['鲁菜', '创意'], rating: 4.3, avgPrice: 420, visitorCount: 900, conversionRate: 0.62, heatmap: 0.65 },
   { id: 'n010', name: '复兴面王深夜食堂', category: '网红餐饮', floor: 'N-L2-1F', x: 28, y: 58, description: '深夜人气面馆', tags: ['面馆', '深夜'], rating: 4.4, avgPrice: 45, visitorCount: 2200, conversionRate: 0.75, heatmap: 0.82 },
   { id: 'n011', name: 'PHANTACI', category: '潮流品牌', floor: 'N-L2-1F', x: 48, y: 58, description: '周杰伦潮流品牌店', tags: ['周杰伦', '潮牌'], rating: 4.3, avgPrice: 1200, visitorCount: 1500, conversionRate: 0.20, heatmap: 0.72 },
   { id: 'n012', name: '橘炭胡同·乌喜', category: '网红餐饮', floor: 'N-L2-1F', x: 66, y: 58, description: '日式烧鸟居酒屋', tags: ['烧鸟', '居酒屋'], rating: 4.4, avgPrice: 200, visitorCount: 600, conversionRate: 0.68, heatmap: 0.58 },
