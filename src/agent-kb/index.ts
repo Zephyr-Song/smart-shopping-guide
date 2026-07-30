@@ -37,8 +37,8 @@ function tokenize(q: string): string[] {
   for (const seg of cjk) {
     for (let i = 0; i < seg.length - 1; i++) terms.add(seg.slice(i, i + 2))
   }
-  // 拉丁词
-  for (const w of text.split(/[^a-z0-9一-龥]+/i)) {
+  // 拉丁词：从混合文本中抽取连续拉丁/数字串（避免中英文粘连导致 "有ktv吗" 无法切出 "ktv"）
+  for (const w of text.match(/[a-z0-9]+/gi) ?? []) {
     if (w.length >= 2) terms.add(w.toLowerCase())
   }
   terms.delete('')

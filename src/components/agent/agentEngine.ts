@@ -582,7 +582,7 @@ export function runAgent(input: string, ctx: AgentContext): { reply: AgentMessag
   }
 
   // 7. 知识问答（活动 / 展览 / 打卡 / 品牌 / 宠物 / 夜生活 / 娱乐休闲 / 餐厅详情）—— 优先于泛推荐
-  if (/活动|展览|机位|出片|拍照|探店|品牌|旗舰店|买手|市集|音乐节|演艺|宠物|夜生活|酒吧|电话|营业时间|几点开|什么时候开|几点营业|影院|电影|ktv|密室|逃脱|玩乐|娱乐|livehouse|艺术中心/i.test(text)) {
+  if (/活动|展览|机位|出片|拍照|探店|品牌|旗舰店|买手|市集|音乐节|演艺|宠物|夜生活|酒吧|电话|营业时间|几点开|什么时候开|几点营业|影院|影城|电影|ktv|密室|逃脱|玩乐|娱乐|livehouse|艺术中心|bar|tz house/i.test(text)) {
     const r = knowledgeReply(text, ctx)
     if (r) return r
   }
