@@ -6,6 +6,7 @@ import { SERVICES } from './services'
 import { FAQ } from './faq'
 import { POLICIES } from './policies'
 import { WEB_CONTENT } from './webContent'
+import { ENTERTAINMENT } from './entertainment'
 
 // 把真实店铺数据转成知识库条目
 const STORE_ITEMS: KbItem[] = STORES.map(s => ({
@@ -24,6 +25,7 @@ export const KB_ITEMS: KbItem[] = [
   ...FAQ,
   ...POLICIES,
   ...WEB_CONTENT,
+  ...ENTERTAINMENT,
 ]
 
 /** 生成查询词：原文 + CJK 二元组 + 拉丁词，提升中文短查询召回 */

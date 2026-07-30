@@ -497,6 +497,7 @@ const KB_LEAD: Record<string, string> = {
   '品牌导购': 'BFC 这些品牌 / 店铺值得逛 🛍️',
   '宠物友好': 'BFC 宠物友好好去处 🐾',
   '夜生活': 'BFC 夜生活去处 🌙',
+  '娱乐休闲': 'BFC 这些休闲玩乐去处 🎡',
   '餐厅信息': '这几家餐厅你可以看看 🍽️',
 }
 
@@ -513,8 +514,10 @@ function knowledgeReply(text: string, ctx: AgentContext): Reply | null {
     })
     .slice(0, 5)
   const cats = top.map(h => h.item.category)
+  // 引导语跟随最高分命中条目的品类，避免被低分词条（如 0.5 分的打卡）带偏
+  const topCat = top[0]?.item.category
   const leadCat =
-    (['活动', '展览', '打卡攻略', '品牌导购', '宠物友好', '夜生活'] as const).find(c => cats.includes(c)) ||
+    (topCat && KB_LEAD[topCat] ? topCat : (['活动', '展览', '打卡攻略', '品牌导购', '宠物友好', '夜生活', '娱乐休闲'] as const).find(c => cats.includes(c))) ||
     '餐厅信息'
   const lines = top.map(h => {
     const one = h.item.content.length > 48 ? h.item.content.slice(0, 46) + '…' : h.item.content
@@ -578,8 +581,8 @@ export function runAgent(input: string, ctx: AgentContext): { reply: AgentMessag
     return trafficReply(text, null)
   }
 
-  // 7. 知识问答（活动 / 展览 / 打卡 / 品牌 / 宠物 / 夜生活 / 餐厅详情）—— 优先于泛推荐
-  if (/活动|展览|机位|出片|拍照|探店|品牌|旗舰店|买手|市集|音乐节|演艺|宠物|夜生活|酒吧|电话|营业时间|几点开|什么时候开|几点营业/.test(text)) {
+  // 7. 知识问答（活动 / 展览 / 打卡 / 品牌 / 宠物 / 夜生活 / 娱乐休闲 / 餐厅详情）—— 优先于泛推荐
+  if (/活动|展览|机位|出片|拍照|探店|品牌|旗舰店|买手|市集|音乐节|演艺|宠物|夜生活|酒吧|电话|营业时间|几点开|什么时候开|几点营业|影院|电影|ktv|密室|逃脱|玩乐|娱乐|livehouse|艺术中心/i.test(text)) {
     const r = knowledgeReply(text, ctx)
     if (r) return r
   }
