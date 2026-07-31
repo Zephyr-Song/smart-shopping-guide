@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -9,14 +10,24 @@
   --color-primary-500: #6366f1;
   --color-primary-600: #4f46e5;
   --color-primary-700: #4338ca;
-  --color-accent-400: #f472b6;
-  --color-accent-500: #ec4899;
-  --color-success-400: #4ade80;
-  --color-success-500: #22c55e;
-  --color-warning-400: #facc15;
-  --color-warning-500: #eab308;
-  --color-danger-400: #f87171;
-  --color-danger-500: #ef4444;
+  --color-primary-800: #3730a3;
+  --color-primary-900: #312e81;
+
+  --color-ink: #1a1a2e;
+  --color-champagne: #c9a96e;
+  --color-champagne-soft: #f3ecdd;
+
+  --color-rose-glow: #e8b4b8;
+  --color-jade: #5f8d77;
+
+  --font-display: "Noto Serif SC", serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+
+  --shadow-soft: 0 1px 2px rgba(26, 26, 46, 0.04),
+    0 8px 24px -8px rgba(26, 26, 46, 0.12);
+  --shadow-lift: 0 4px 12px -4px rgba(26, 26, 46, 0.1),
+    0 24px 48px -16px rgba(79, 70, 229, 0.22);
 }
 
 html {
@@ -25,12 +36,116 @@ html {
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
-    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: var(--color-ink);
+  background:
+    radial-gradient(1200px 600px at 85% -10%, rgba(99, 102, 241, 0.06), transparent 60%),
+    radial-gradient(900px 500px at 5% 0%, rgba(201, 169, 110, 0.05), transparent 55%),
+    #fafaf9;
 }
 
 #root {
   min-height: 100vh;
+}
+
+/* —— 精致工具类 —— */
+.font-display {
+  font-family: var(--font-display);
+}
+
+.text-gradient {
+  background: linear-gradient(120deg, #1a1a2e 0%, #4f46e5 55%, #3730a3 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(14px) saturate(180%);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+}
+
+.glass-dark {
+  background: rgba(26, 26, 46, 0.55);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+}
+
+.shadow-soft {
+  box-shadow: var(--shadow-soft);
+}
+
+.shadow-lift {
+  box-shadow: var(--shadow-lift);
+}
+
+/* 细腻边框 */
+.ring-hairline {
+  box-shadow: inset 0 0 0 1px rgba(26, 26, 46, 0.06);
+}
+
+/* 入场动画 */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes float-soft {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-float {
+  animation: float-soft 4s ease-in-out infinite;
+}
+
+/* 光斑装饰 */
+.glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* 点阵纹理 */
+.dot-grid {
+  background-image: radial-gradient(rgba(26, 26, 46, 0.06) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* 卡片 hover 微交互 */
+.card-hover {
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lift);
+  border-color: rgba(99, 102, 241, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up,
+  .animate-float {
+    animation: none;
+  }
 }

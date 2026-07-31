@@ -30,16 +30,17 @@ export default function Layout() {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
+      <header className="glass border-b border-black/5 sticky top-0 z-50 shadow-soft">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <Link to="/" className="flex items-center gap-2 no-underline">
-              <div className="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
+            <Link to="/" className="flex items-center gap-2.5 no-underline group">
+              <div className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-lift">
                 <Sparkles className="w-5 h-5 text-white" />
+                <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-champagne ring-2 ring-white" />
               </div>
-              <span className="text-lg font-bold text-gray-900">
+              <span className="text-lg font-bold text-ink font-display tracking-tight">
                 AI 智能导购
               </span>
             </Link>
@@ -53,14 +54,17 @@ export default function Layout() {
                   <Link
                     key={item.path}
                     to={item.path}
-                    className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium no-underline transition-colors ${
+                    className={`relative flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium no-underline transition-colors ${
                       active
-                        ? 'bg-primary-50 text-primary-600'
-                        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                        ? 'text-primary-600'
+                        : 'text-gray-500 hover:text-ink'
                     }`}
                   >
                     <Icon className="w-4 h-4" />
                     {item.label}
+                    {active && (
+                      <span className="absolute left-3 right-3 -bottom-px h-0.5 rounded-full bg-gradient-to-r from-primary-500 to-primary-700" />
+                    )}
                   </Link>
                 )
               })}
@@ -82,7 +86,7 @@ export default function Layout() {
 
         {/* Mobile Nav */}
         {mobileOpen && (
-          <div className="md:hidden border-t border-gray-100 bg-white">
+          <div className="md:hidden border-t border-black/5 glass">
             {NAV_ITEMS.map(item => {
               const Icon = item.icon
               const active = location.pathname === item.path
@@ -91,10 +95,10 @@ export default function Layout() {
                   key={item.path}
                   to={item.path}
                   onClick={() => setMobileOpen(false)}
-                  className={`flex items-center gap-2 px-4 py-3 text-sm font-medium no-underline border-b border-gray-50 ${
+                  className={`flex items-center gap-2 px-4 py-3 text-sm font-medium no-underline border-b border-black/5 ${
                     active
                       ? 'bg-primary-50 text-primary-600'
-                      : 'text-gray-600 hover:bg-gray-50'
+                      : 'text-gray-600 hover:bg-white/60'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
@@ -112,11 +116,17 @@ export default function Layout() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 bg-white mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-sm text-gray-500">
-          <p>AI 智能导购系统</p>
+      <footer className="border-t border-black/5 glass mt-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center">
+              <Sparkles className="w-3.5 h-3.5 text-white" />
+            </div>
+            <span className="text-sm font-semibold text-ink font-display">AI 智能导购</span>
+          </div>
+          <p className="text-sm text-gray-500">BFC 外滩金融中心 · 上海复星外滩商业有限公司</p>
           <p className="mt-1 text-xs text-gray-400">
-            BFC 外滩金融中心 · 上海复星外滩商业有限公司
+            基于真实商业数据的 AI 精准营销研究 · 西浦 #26054
           </p>
         </div>
       </footer>

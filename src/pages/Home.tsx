@@ -11,6 +11,7 @@ import {
   Building2,
   Gem,
   Search,
+  Sparkles,
 } from 'lucide-react'
 
 const FEATURES = [
@@ -132,26 +133,32 @@ export default function Home() {
   return (
     <div className="space-y-10">
       {/* Hero */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 px-8 py-12 text-white">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 px-8 sm:px-12 py-14 sm:py-16 text-white">
+        {/* 层次光晕 */}
+        <div className="glow-orb w-80 h-80 bg-primary-400/40 -top-20 -right-10" />
+        <div className="glow-orb w-72 h-72 bg-champagne/20 bottom-0 left-0" />
+        <div className="absolute inset-0 dot-grid opacity-[0.12]" />
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
         <div className="relative z-10 max-w-2xl">
-          <h1 className="text-3xl sm:text-4xl font-bold mb-3 leading-tight">
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full bg-white/10 border border-white/15 text-white/90 mb-5">
+            <Sparkles className="w-3.5 h-3.5" /> 外滩金融中心 · AI 精准营销研究
+          </span>
+          <h1 className="font-display text-4xl sm:text-5xl font-bold mb-4 leading-tight tracking-tight">
             BFC AI 智能导购系统
           </h1>
           <p className="text-white/80 text-base sm:text-lg leading-relaxed max-w-xl">
             基于 BFC 外滩金融中心真实商业数据，探究 AI 精准营销对线下商业综合体消费者购物体验与购买决策的影响
           </p>
-          <div className="flex flex-wrap gap-3 mt-6">
+          <div className="flex flex-wrap gap-3 mt-7">
             <Link
               to="/guide"
-              className="inline-flex items-center gap-2 bg-white text-primary-600 font-semibold px-5 py-2.5 rounded-xl hover:bg-gray-50 transition no-underline text-sm"
+              className="inline-flex items-center gap-2 bg-white text-primary-700 font-semibold px-6 py-3 rounded-xl hover:bg-primary-50 transition no-underline text-sm shadow-lg shadow-primary-900/30"
             >
               开始导购体验 <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               to="/map"
-              className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm text-white font-medium px-5 py-2.5 rounded-xl hover:bg-white/25 transition no-underline text-sm border border-white/20"
+              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white font-medium px-6 py-3 rounded-xl hover:bg-white/20 transition no-underline text-sm border border-white/25"
             >
               查看商场地图
             </Link>
@@ -161,7 +168,7 @@ export default function Home() {
 
       {/* BFC Core Segments */}
       <div>
-        <h2 className="text-xl font-bold text-gray-900 mb-5 flex items-center gap-2">
+        <h2 className="font-display text-xl font-bold text-ink mb-5 flex items-center gap-2">
           <Users className="w-5 h-5 text-primary-500" />
           BFC 六大核心客群
         </h2>
@@ -169,7 +176,7 @@ export default function Home() {
           {BFC_SEGMENTS_PREVIEW.map((seg, i) => (
             <div
               key={i}
-              className="bg-white rounded-xl border border-gray-100 p-5 hover:shadow-md transition-shadow"
+              className="card-hover bg-white rounded-2xl border border-black/5 p-5 shadow-soft ring-hairline"
             >
               <div
                 className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-sm mb-3"
@@ -196,7 +203,7 @@ export default function Home() {
           return (
             <div
               key={i}
-              className="bg-white rounded-xl border border-gray-100 p-5 flex items-center gap-4 hover:shadow-md transition-shadow"
+              className="card-hover bg-white rounded-2xl border border-black/5 p-5 flex items-center gap-4 shadow-soft ring-hairline"
             >
               <div className={`p-2.5 rounded-lg bg-gray-50 ${stat.color}`}>
                 <Icon className="w-5 h-5" />
@@ -214,7 +221,7 @@ export default function Home() {
 
       {/* Feature Cards */}
       <div>
-        <h2 className="text-xl font-bold text-gray-900 mb-5">核心功能模块</h2>
+        <h2 className="font-display text-xl font-bold text-ink mb-5">核心功能模块</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {FEATURES.map(feature => {
             const Icon = feature.icon
@@ -222,7 +229,7 @@ export default function Home() {
               <Link
                 key={feature.path}
                 to={feature.path}
-                className="group block bg-white rounded-xl border border-gray-100 p-6 hover:shadow-lg hover:border-gray-200 transition-all no-underline"
+                className="group block card-hover bg-white rounded-2xl border border-black/5 p-6 shadow-soft ring-hairline no-underline"
               >
                 <div className="flex items-start gap-4">
                   <div
@@ -248,7 +255,7 @@ export default function Home() {
 
       {/* BFC Zone Overview */}
       <div className="grid sm:grid-cols-2 gap-4">
-        <div className="bg-white rounded-xl border border-gray-100 p-6">
+        <div className="card-hover bg-white rounded-2xl border border-black/5 p-6 shadow-soft ring-hairline">
           <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
             <Building2 className="w-4 h-4 text-primary-500" />
             南区 South Retail
@@ -263,7 +270,7 @@ export default function Home() {
             <div className="flex justify-between py-1"><span>B2/B3/S1</span><span className="text-gray-400">数码·宠物·汽车·健身</span></div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-100 p-6">
+        <div className="card-hover bg-white rounded-2xl border border-black/5 p-6 shadow-soft ring-hairline">
           <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
             <Building2 className="w-4 h-4 text-emerald-500" />
             北区 North Retail
@@ -280,8 +287,8 @@ export default function Home() {
       </div>
 
       {/* Research Context */}
-      <div className="bg-white rounded-xl border border-gray-100 p-6">
-        <h2 className="text-lg font-bold text-gray-900 mb-3">研究背景</h2>
+      <div className="card-hover bg-white rounded-2xl border border-black/5 p-6 shadow-soft ring-hairline">
+        <h2 className="font-display text-lg font-bold text-ink mb-3">研究背景</h2>
         <p className="text-sm text-gray-600 leading-relaxed">
           线下商业综合体面临线上分流、传统营销低效等运营困境，AI
           驱动的精准营销通过用户画像与个性化触达，成为实体商业激活客流、提升转化的核心抓手。本项目以

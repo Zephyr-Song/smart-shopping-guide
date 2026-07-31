@@ -78,14 +78,14 @@ export default function AgentAssistant() {
       <style>{`
         @keyframes agent-pop { 0%{transform:scale(.6);opacity:0} 100%{transform:scale(1);opacity:1} }
         @keyframes agent-rise { 0%{transform:translateY(16px);opacity:0} 100%{transform:translateY(0);opacity:1} }
-        @keyframes agent-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(168,85,247,.45)} 50%{box-shadow:0 0 0 12px rgba(168,85,247,0)} }
+        @keyframes agent-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(99,102,241,.45)} 50%{box-shadow:0 0 0 12px rgba(168,85,247,0)} }
         @keyframes agent-typing { 0%,60%,100%{transform:translateY(0);opacity:.4} 30%{transform:translateY(-4px);opacity:1} }
         .agent-bubble-btn{ animation: agent-pulse 2.4s infinite; }
         .agent-panel{ animation: agent-rise .22s ease-out; }
         .agent-msg{ animation: agent-pop .2s ease-out; }
         .agent-dot{ animation: agent-typing 1.2s infinite; }
         .agent-scroll::-webkit-scrollbar{ width:6px }
-        .agent-scroll::-webkit-scrollbar-thumb{ background:#e5e7eb; border-radius:9999px }
+        .agent-scroll::-webkit-scrollbar-thumb{ background:rgba(99,102,241,.25); border-radius:9999px }
       `}</style>
 
       {/* 浮动气泡 */}
@@ -93,7 +93,7 @@ export default function AgentAssistant() {
         <button
           onClick={() => setOpen(true)}
           aria-label="打开 BFC 导购助手"
-          className="agent-bubble-btn fixed bottom-5 right-5 z-[60] w-14 h-14 rounded-full bg-primary-500 text-white shadow-lg shadow-primary-500/30 flex items-center justify-center cursor-pointer hover:bg-primary-600 transition-colors"
+          className="agent-bubble-btn fixed bottom-5 right-5 z-[60] w-14 h-14 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 text-white shadow-lift flex items-center justify-center cursor-pointer hover:from-primary-600 hover:to-primary-800 transition-colors"
         >
           <MessageCircle className="w-6 h-6" />
           <span className="absolute -top-1 -right-1 bg-amber-400 text-[10px] font-bold text-white px-1.5 py-0.5 rounded-full">
@@ -104,9 +104,9 @@ export default function AgentAssistant() {
 
       {/* 对话面板 */}
       {open && (
-        <div className="agent-panel fixed bottom-5 right-5 z-[60] w-[min(92vw,400px)] h-[min(78vh,620px)] bg-white rounded-2xl shadow-2xl shadow-black/20 flex flex-col overflow-hidden border border-gray-100">
+        <div className="agent-panel fixed bottom-5 right-5 z-[60] w-[min(92vw,400px)] h-[min(78vh,620px)] glass rounded-3xl shadow-lift flex flex-col overflow-hidden border border-black/5">
           {/* 头部 */}
-          <div className="flex items-center justify-between px-4 py-3 bg-primary-500 text-white">
+          <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-primary-600 to-primary-700 text-white">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
                 <Sparkles className="w-4 h-4" />
@@ -135,7 +135,7 @@ export default function AgentAssistant() {
           </div>
 
           {/* 消息区 */}
-          <div ref={scrollRef} className="agent-scroll flex-1 overflow-y-auto px-3 py-4 space-y-3 bg-gray-50">
+          <div ref={scrollRef} className="agent-scroll flex-1 overflow-y-auto px-3 py-4 space-y-3 bg-gray-50/70/70/70">
             {messages.map(m => (
               <MessageBubble key={m.id} msg={m} onAction={onAction} />
             ))}
