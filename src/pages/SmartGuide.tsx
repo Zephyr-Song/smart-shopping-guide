@@ -31,7 +31,13 @@ import {
   buildFollowUpSystem,
   getApiKey,
   setApiKey,
-  hasApiKey,
+  getBaseUrl,
+  setBaseUrl,
+  getModel,
+  setModel,
+  isAiReady,
+  PROVIDERS,
+  type ProviderId,
   type AiMessage,
 } from '../services/aiGuide'
 
@@ -114,6 +120,9 @@ export default function SmartGuide() {
   const [narrative, setNarrative] = useState('')
   const [showSettings, setShowSettings] = useState(false)
   const [apiKeyInput, setApiKeyInput] = useState('')
+  const [providerInput, setProviderInput] = useState<ProviderId>('deepseek')
+  const [baseUrlInput, setBaseUrlInput] = useState('')
+  const [modelInput, setModelInput] = useState('')
   const [keySaved, setKeySaved] = useState(false)
   const [keyTesting, setKeyTesting] = useState(false)
   const [keyTestMsg, setKeyTestMsg] = useState('')
@@ -159,8 +168,8 @@ export default function SmartGuide() {
     setNarrative('')
     setChat([])
 
-    // 无 Key → 直接走规则推荐
-    if (!hasApiKey()) {
+    // 未完整配置 → 直接走规则推荐
+    if (!isAiReady()) {
       setRecommendations(generateRecommendations(fullProfile))
       setLoading(false)
       return
@@ -187,7 +196,7 @@ export default function SmartGuide() {
 
   const handleAsk = async () => {
     const q = chatInput.trim()
-    if (!q || chatLoading || !hasApiKey()) return
+    if (!q || chatLoading || !isAiReady()) return
     const chosenNames = recommendations
       .map((r) => STORES.find((s) => s.id === r.storeId)?.name)
       .filter(Boolean) as string[]
@@ -214,6 +223,8 @@ export default function SmartGuide() {
 
   const handleSaveKey = () => {
     setApiKey(apiKeyInput)
+    setBaseUrl(baseUrlInput)
+    setModel(modelInput)
     setKeySaved(true)
     setTimeout(() => setKeySaved(false), 2000)
   }
@@ -221,17 +232,22 @@ export default function SmartGuide() {
   const handleTestKey = async () => {
     setKeyTesting(true)
     setKeyTestMsg('')
-    const prev = getApiKey()
-    // 临时用输入框的值测试
-    if (apiKeyInput.trim()) setApiKey(apiKeyInput.trim())
+    const prevKey = getApiKey()
+    const prevUrl = getBaseUrl()
+    const prevModel = getModel()
+    // 临时用输入框的值测试（测试完若未保存则恢复原值）
+    setApiKey(apiKeyInput.trim())
+    setBaseUrl(baseUrlInput.trim())
+    setModel(modelInput.trim())
     try {
       const r = await askFollowUp([{ role: 'user', content: '回复 ok 两个字即可' }])
-      setKeyTestMsg(r ? '✅ Key 有效，可正常调用' : '⚠️ 返回为空')
+      setKeyTestMsg(r ? '✅ 配置有效，可正常调用' : '⚠️ 返回为空')
     } catch (e) {
       setKeyTestMsg(`❌ ${(e as Error).message}`)
     } finally {
-      // 若原来没存过且测试后用户没保存，恢复现场
-      if (!prev && !apiKeyInput.trim()) setApiKey('')
+      if (!prevKey && !apiKeyInput.trim()) setApiKey('')
+      if (!prevUrl && !baseUrlInput.trim()) setBaseUrl('')
+      if (!prevModel && !modelInput.trim()) setModel('')
       setKeyTesting(false)
     }
   }
@@ -262,23 +278,30 @@ export default function SmartGuide() {
             AI 智能导购
           </h1>
           <p className="text-gray-500 mt-1 text-sm">
-            基于BFC六大客群画像与 DeepSeek 大模型，获取个性化店铺推荐
+            基于BFC客群画像与可配置大模型，获取个性化店铺推荐
           </p>
         </div>
         <button
           onClick={() => {
+            const savedUrl = getBaseUrl()
+            const matched = PROVIDERS.find(
+              (p) => p.id !== 'custom' && p.baseUrl === savedUrl
+            )
+            setProviderInput(matched ? matched.id : 'custom')
             setApiKeyInput(getApiKey())
+            setBaseUrlInput(savedUrl)
+            setModelInput(getModel())
             setShowSettings(true)
           }}
           className="mt-1 flex items-center gap-1.5 px-3 py-2 rounded-xl border border-gray-200 text-gray-600 hover:border-primary-300 hover:text-primary-600 transition cursor-pointer bg-white"
-          title="配置 DeepSeek API Key"
+          title="配置 AI 接口（服务商 / Key / 模型）"
         >
           <Settings className="w-4 h-4" />
           <span className="text-xs">AI 设置</span>
-          {hasApiKey() ? (
+          {isAiReady() ? (
             <span className="w-2 h-2 rounded-full bg-green-500" title="已接入真 AI" />
           ) : (
-            <span className="w-2 h-2 rounded-full bg-gray-300" title="未配置，使用规则推荐" />
+            <span className="w-2 h-2 rounded-full bg-gray-300" title="未完整配置，使用规则推荐" />
           )}
         </button>
       </div>
@@ -551,7 +574,7 @@ export default function SmartGuide() {
           {loading && (
             <div className="bg-white rounded-xl border border-gray-100 p-8 flex flex-col items-center justify-center gap-3 text-gray-400">
               <Loader2 className="w-6 h-6 animate-spin text-primary-500" />
-              <span className="text-sm">DeepSeek 正在为你生成专属推荐…</span>
+              <span className="text-sm">AI 正在为你生成专属推荐…</span>
             </div>
           )}
 
@@ -572,11 +595,11 @@ export default function SmartGuide() {
             </div>
           )}
 
-          {/* 无 Key 提示 */}
-          {!loading && !hasApiKey() && (
+          {/* 未配置提示 */}
+          {!loading && !isAiReady() && (
             <div className="bg-gray-50 border border-gray-200 rounded-xl p-3 text-xs text-gray-500 flex items-center gap-2">
               <KeyRound className="w-3.5 h-3.5" />
-              当前使用规则推荐。点击右上角「AI 设置」填入 DeepSeek Key，即可切换为真 AI 个性化导购。
+              当前使用规则推荐。点击右上角「AI 设置」填入 Key 与接口信息，即可切换为真 AI 个性化导购。
             </div>
           )}
 
@@ -632,7 +655,7 @@ export default function SmartGuide() {
           </div>
 
           {/* 追问对话 */}
-          {hasApiKey() && !loading && (
+          {isAiReady() && !loading && (
             <div className="bg-white rounded-xl border border-gray-100 p-4 space-y-3">
               <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
                 <Sparkles className="w-4 h-4 text-primary-500" />
@@ -688,10 +711,10 @@ export default function SmartGuide() {
           <div className="bg-primary-50 rounded-xl p-4 text-sm text-primary-700">
             <strong>推荐说明：</strong>基于你选择的 BFC 客群画像（{profile.persona}），
             消费优先级（{profile.priority}）、预算风格（{profile.budgetStyle}）及兴趣标签，
-            {hasApiKey() ? (
-              <>由 <strong>DeepSeek 大模型</strong> 实时生成个性化推荐与推荐理由，可继续追问细化。</>
+            {isAiReady() ? (
+              <>由 <strong>大模型实时推理</strong> 生成个性化推荐与推荐理由，可继续追问细化。</>
             ) : (
-              <>通过多维度匹配算法生成个性化推荐（在右上角「AI 设置」填入 Key 后切换为真 AI）。</>
+              <>通过多维度匹配算法生成个性化推荐（在右上角「AI 设置」填入 Key 与接口信息后切换为真 AI）。</>
             )}
           </div>
         </div>
@@ -710,7 +733,7 @@ export default function SmartGuide() {
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                 <KeyRound className="w-5 h-5 text-primary-500" />
-                DeepSeek API 设置
+                AI 接口设置
               </h3>
               <button
                 onClick={() => setShowSettings(false)}
@@ -720,32 +743,76 @@ export default function SmartGuide() {
               </button>
             </div>
             <p className="text-xs text-gray-500 leading-relaxed">
-              密钥仅保存在你本机浏览器（localStorage），不会上传或写入代码。
-              前往{' '}
-              <a
-                href="https://platform.deepseek.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary-600 underline"
-              >
-                platform.deepseek.com
-              </a>{' '}
-              获取 API Key。
+              配置仅保存在你本机浏览器（localStorage），不会上传或写入代码。支持 DeepSeek、阿里云 MaaS 或任意 OpenAI 兼容接口。
             </p>
-            <input
-              type="password"
-              value={apiKeyInput}
-              onChange={(e) => setApiKeyInput(e.target.value)}
-              placeholder="sk-..."
-              className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-primary-300 font-mono"
-            />
+
+            {/* 服务商预设 */}
+            <div className="space-y-1">
+              <label className="text-xs text-gray-500">服务商</label>
+              <select
+                value={providerInput}
+                onChange={(e) => {
+                  const id = e.target.value as ProviderId
+                  setProviderInput(id)
+                  const p = PROVIDERS.find((x) => x.id === id)
+                  if (p && p.baseUrl) {
+                    setBaseUrlInput(p.baseUrl)
+                    setModelInput(p.defaultModel)
+                  }
+                }}
+                className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-primary-300 bg-white"
+              >
+                {PROVIDERS.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Base URL */}
+            <div className="space-y-1">
+              <label className="text-xs text-gray-500">API Base URL</label>
+              <input
+                type="text"
+                value={baseUrlInput}
+                onChange={(e) => setBaseUrlInput(e.target.value)}
+                placeholder="https://.../chat/completions"
+                className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-primary-300 font-mono"
+              />
+            </div>
+
+            {/* 模型名 */}
+            <div className="space-y-1">
+              <label className="text-xs text-gray-500">模型名</label>
+              <input
+                type="text"
+                value={modelInput}
+                onChange={(e) => setModelInput(e.target.value)}
+                placeholder="如 qwen-plus / deepseek-chat"
+                className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-primary-300 font-mono"
+              />
+            </div>
+
+            {/* Key */}
+            <div className="space-y-1">
+              <label className="text-xs text-gray-500">API Key</label>
+              <input
+                type="password"
+                value={apiKeyInput}
+                onChange={(e) => setApiKeyInput(e.target.value)}
+                placeholder="sk-..."
+                className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-primary-300 font-mono"
+              />
+            </div>
+
             <div className="flex items-center gap-2">
               <button
                 onClick={handleSaveKey}
                 className="flex-1 flex items-center justify-center gap-1 bg-primary-500 text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-primary-600 transition cursor-pointer border-none"
               >
                 <CheckCircle2 className="w-4 h-4" />
-                保存 Key
+                保存配置
               </button>
               <button
                 onClick={handleTestKey}
@@ -758,6 +825,10 @@ export default function SmartGuide() {
                 onClick={() => {
                   setApiKey('')
                   setApiKeyInput('')
+                  setBaseUrl('')
+                  setBaseUrlInput('')
+                  setModel('')
+                  setModelInput('')
                 }}
                 className="px-4 py-2.5 rounded-xl text-sm border border-gray-200 text-gray-500 hover:border-red-300 hover:text-red-500 transition cursor-pointer bg-white"
               >

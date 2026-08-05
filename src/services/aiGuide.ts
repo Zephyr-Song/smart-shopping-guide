@@ -1,18 +1,56 @@
 // ============================================================
-// BFC AI 导购服务层
-// 调用 DeepSeek Chat API 生成真实个性化推荐与追问对话。
-// - API Key 仅存于浏览器 localStorage，不进入代码/仓库
-// - 浏览器直连 DeepSeek（已验证支持 CORS），纯前端可跑于 GitHub Pages
-// - 任何失败（无 Key / 网络 / 401）由调用方回退到规则推荐
+// BFC AI 导购服务层（可配置大模型）
+// 支持任意 OpenAI 兼容接口：DeepSeek / 阿里云 MaaS / 自定义。
+// - API Key / Base URL / 模型名 仅存浏览器 localStorage，不进入代码/仓库
+// - 浏览器直连（已验证 DeepSeek 与阿里云 MaaS 均支持 CORS），纯前端可跑于 GitHub Pages
+// - 任何失败（无 Key / 网络 / 401 / 解析失败）由调用方回退到规则推荐
 // ============================================================
 
 import type { Store, UserProfile } from '../data/mockData'
 
-const API_URL = 'https://api.deepseek.com/chat/completions'
-const MODEL = 'deepseek-chat'
-const KEY_STORAGE = 'bfc_deepseek_key'
+const KEY_STORAGE = 'bfc_ai_key'
+const BASEURL_STORAGE = 'bfc_ai_baseurl'
+const MODEL_STORAGE = 'bfc_ai_model'
 
-// ---------- Key 管理 ----------
+export type ProviderId = 'deepseek' | 'alibaba' | 'custom'
+
+export interface ProviderPreset {
+  id: ProviderId
+  label: string
+  baseUrl: string
+  defaultModel: string
+  docUrl?: string
+  docLabel?: string
+}
+
+// 预设服务商（选择后自动填入 Base URL 与默认模型，字段仍可手改）
+export const PROVIDERS: ProviderPreset[] = [
+  {
+    id: 'deepseek',
+    label: 'DeepSeek',
+    baseUrl: 'https://api.deepseek.com/chat/completions',
+    defaultModel: 'deepseek-chat',
+    docUrl: 'https://platform.deepseek.com',
+    docLabel: 'platform.deepseek.com',
+  },
+  {
+    id: 'alibaba',
+    label: '阿里云 MaaS（DashScope 兼容）',
+    baseUrl:
+      'https://ws-rpz6r7sem6fuiceu.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/chat/completions',
+    defaultModel: 'qwen-plus',
+    docUrl: 'https://help.aliyun.com/zh/model-studio',
+    docLabel: '阿里云百炼',
+  },
+  {
+    id: 'custom',
+    label: '自定义 OpenAI 兼容',
+    baseUrl: '',
+    defaultModel: '',
+  },
+]
+
+// ---------- 配置读写 ----------
 export function getApiKey(): string {
   try {
     return localStorage.getItem(KEY_STORAGE) || ''
@@ -25,11 +63,49 @@ export function setApiKey(key: string): void {
     if (key && key.trim()) localStorage.setItem(KEY_STORAGE, key.trim())
     else localStorage.removeItem(KEY_STORAGE)
   } catch {
-    /* localStorage 不可用时忽略 */
+    /* ignore */
   }
 }
+
+export function getBaseUrl(): string {
+  try {
+    return localStorage.getItem(BASEURL_STORAGE) || ''
+  } catch {
+    return ''
+  }
+}
+export function setBaseUrl(url: string): void {
+  try {
+    if (url && url.trim()) localStorage.setItem(BASEURL_STORAGE, url.trim())
+    else localStorage.removeItem(BASEURL_STORAGE)
+  } catch {
+    /* ignore */
+  }
+}
+
+export function getModel(): string {
+  try {
+    return localStorage.getItem(MODEL_STORAGE) || ''
+  } catch {
+    return ''
+  }
+}
+export function setModel(model: string): void {
+  try {
+    if (model && model.trim()) localStorage.setItem(MODEL_STORAGE, model.trim())
+    else localStorage.removeItem(MODEL_STORAGE)
+  } catch {
+    /* ignore */
+  }
+}
+
 export function hasApiKey(): boolean {
   return getApiKey().length > 0
+}
+
+// 是否已具备调用条件（Key + Base URL + 模型名）
+export function isAiReady(): boolean {
+  return getApiKey().length > 0 && getBaseUrl().length > 0 && getModel().length > 0
 }
 
 // ---------- 类型 ----------
@@ -48,12 +124,17 @@ export interface AiMessage {
 }
 
 // ---------- 底层调用 ----------
-async function callDeepSeek(messages: AiMessage[], jsonMode: boolean): Promise<string> {
+async function callAI(messages: AiMessage[], jsonMode: boolean): Promise<string> {
   const key = getApiKey()
-  if (!key) throw new Error('未配置 DeepSeek API Key')
+  const baseUrl = getBaseUrl()
+  const model = getModel()
+
+  if (!key) throw new Error('未配置 API Key')
+  if (!baseUrl) throw new Error('未配置 API Base URL')
+  if (!model) throw new Error('未配置模型名')
 
   const body: Record<string, unknown> = {
-    model: MODEL,
+    model,
     messages,
     temperature: jsonMode ? 0.8 : 0.9,
     stream: false,
@@ -62,7 +143,7 @@ async function callDeepSeek(messages: AiMessage[], jsonMode: boolean): Promise<s
 
   let res: Response
   try {
-    res = await fetch(API_URL, {
+    res = await fetch(baseUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -75,7 +156,7 @@ async function callDeepSeek(messages: AiMessage[], jsonMode: boolean): Promise<s
   }
 
   if (!res.ok) {
-    let msg = `DeepSeek API ${res.status}`
+    let msg = `API ${res.status}`
     try {
       const err = (await res.json()) as { error?: { message?: string } }
       if (err?.error?.message) msg = err.error.message
@@ -83,6 +164,7 @@ async function callDeepSeek(messages: AiMessage[], jsonMode: boolean): Promise<s
       /* ignore parse error */
     }
     if (res.status === 401) msg = 'API Key 无效或已过期'
+    if (res.status === 404) msg = '模型名或接口地址不正确（404）'
     throw new Error(msg)
   }
 
@@ -92,6 +174,29 @@ async function callDeepSeek(messages: AiMessage[], jsonMode: boolean): Promise<s
   const content = json?.choices?.[0]?.message?.content
   if (!content) throw new Error('AI 返回内容为空')
   return content
+}
+
+// 容错解析：先直接解析，失败则剥离 ```json 代码块围栏与首尾非 JSON 字符
+function parseJsonSafe<T>(raw: string): T {
+  try {
+    return JSON.parse(raw) as T
+  } catch {
+    /* fall through */
+  }
+  let txt = raw.trim()
+  // 去掉 ```json ... ``` 围栏
+  const fence = txt.match(/```(?:json)?\s*([\s\S]*?)```/i)
+  if (fence) txt = fence[1].trim()
+  const start = txt.indexOf('{')
+  const end = txt.lastIndexOf('}')
+  if (start !== -1 && end !== -1 && end > start) {
+    try {
+      return JSON.parse(txt.slice(start, end + 1)) as T
+    } catch {
+      /* ignore */
+    }
+  }
+  throw new Error('AI 返回格式异常，无法解析')
 }
 
 // ---------- 生成推荐 ----------
@@ -130,7 +235,7 @@ ${JSON.stringify(catalog)}
 请返回如下结构：
 {"narrative":"...","picks":[{"storeId":"s035","reason":"...","score":9.2}]}`
 
-  const raw = await callDeepSeek(
+  const raw = await callAI(
     [
       { role: 'system', content: system },
       { role: 'user', content: user },
@@ -138,12 +243,7 @@ ${JSON.stringify(catalog)}
     true
   )
 
-  let parsed: AiRecommendationResult
-  try {
-    parsed = JSON.parse(raw) as AiRecommendationResult
-  } catch {
-    throw new Error('AI 返回格式异常，无法解析')
-  }
+  const parsed = parseJsonSafe<AiRecommendationResult>(raw)
 
   const validIds = new Set(stores.map((s) => s.id))
   parsed.picks = (parsed.picks || [])
@@ -157,7 +257,7 @@ ${JSON.stringify(catalog)}
 
 // ---------- 追问对话 ----------
 export async function askFollowUp(messages: AiMessage[]): Promise<string> {
-  return callDeepSeek(messages, false)
+  return callAI(messages, false)
 }
 
 // 构建追问的系统上下文（含当次画像与已推荐店铺，便于 AI 基于真实情况回答）
