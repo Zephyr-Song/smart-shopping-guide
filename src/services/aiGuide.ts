@@ -12,6 +12,15 @@ const KEY_STORAGE = 'bfc_ai_key'
 const BASEURL_STORAGE = 'bfc_ai_baseurl'
 const MODEL_STORAGE = 'bfc_ai_model'
 
+// ⚠️ 内嵌默认配置（localStorage 为空时回退使用，使部署后开箱即用）
+// 注意：该 Key 会随前端代码公开发布到 GitHub Pages，任何访客均可通过浏览器开发者工具读取。
+// 仅适用于个人演示 / 课程项目。正式对外服务请改为「用户在设置中自行填入 Key」，或移除以下默认值。
+const DEFAULT_KEY =
+  'sk-ws-H.ELXRHHI.6qXq.MEUCIATVU2C7ObOYK_z30DOPdQ9I8RwzXESallXCTiC3Adi9AiEAlsfSxVIXUwzJLOwLh0O_76H1R269JWbaWehrWoVwpfU'
+const DEFAULT_BASEURL =
+  'https://ws-rpz6r7sem6fuiceu.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/chat/completions'
+const DEFAULT_MODEL = 'qwen-plus'
+
 export type ProviderId = 'deepseek' | 'alibaba' | 'custom'
 
 export interface ProviderPreset {
@@ -53,10 +62,12 @@ export const PROVIDERS: ProviderPreset[] = [
 // ---------- 配置读写 ----------
 export function getApiKey(): string {
   try {
-    return localStorage.getItem(KEY_STORAGE) || ''
+    const v = localStorage.getItem(KEY_STORAGE)
+    if (v !== null) return v
   } catch {
-    return ''
+    /* ignore */
   }
+  return DEFAULT_KEY
 }
 export function setApiKey(key: string): void {
   try {
@@ -69,10 +80,12 @@ export function setApiKey(key: string): void {
 
 export function getBaseUrl(): string {
   try {
-    return localStorage.getItem(BASEURL_STORAGE) || ''
+    const v = localStorage.getItem(BASEURL_STORAGE)
+    if (v !== null) return v
   } catch {
-    return ''
+    /* ignore */
   }
+  return DEFAULT_BASEURL
 }
 export function setBaseUrl(url: string): void {
   try {
@@ -85,10 +98,12 @@ export function setBaseUrl(url: string): void {
 
 export function getModel(): string {
   try {
-    return localStorage.getItem(MODEL_STORAGE) || ''
+    const v = localStorage.getItem(MODEL_STORAGE)
+    if (v !== null) return v
   } catch {
-    return ''
+    /* ignore */
   }
+  return DEFAULT_MODEL
 }
 export function setModel(model: string): void {
   try {

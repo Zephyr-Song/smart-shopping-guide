@@ -743,7 +743,7 @@ export default function SmartGuide() {
               </button>
             </div>
             <p className="text-xs text-gray-500 leading-relaxed">
-              配置仅保存在你本机浏览器（localStorage），不会上传或写入代码。支持 DeepSeek、阿里云 MaaS 或任意 OpenAI 兼容接口。
+              已内嵌阿里云 MaaS 默认配置，开箱即用；如需更换服务商、模型或撤销默认 Key，在下方修改或清除即可。自定义配置仅存于本机浏览器（localStorage），不会上传。
             </p>
 
             {/* 服务商预设 */}
