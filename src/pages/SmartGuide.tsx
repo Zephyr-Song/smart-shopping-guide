@@ -789,7 +789,7 @@ export default function SmartGuide() {
                 type="text"
                 value={modelInput}
                 onChange={(e) => setModelInput(e.target.value)}
-                placeholder="如 qwen-plus / deepseek-chat"
+                placeholder="如 qwen3.5-ocr / deepseek-chat"
                 className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-primary-300 font-mono"
               />
             </div>

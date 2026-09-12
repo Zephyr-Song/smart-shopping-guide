@@ -19,7 +19,7 @@ const DEFAULT_KEY =
   'sk-ws-H.ELXRHHI.6qXq.MEUCIATVU2C7ObOYK_z30DOPdQ9I8RwzXESallXCTiC3Adi9AiEAlsfSxVIXUwzJLOwLh0O_76H1R269JWbaWehrWoVwpfU'
 const DEFAULT_BASEURL =
   'https://ws-rpz6r7sem6fuiceu.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/chat/completions'
-const DEFAULT_MODEL = 'qwen-plus'
+const DEFAULT_MODEL = 'qwen3.5-ocr'
 
 export type ProviderId = 'deepseek' | 'alibaba' | 'custom'
 
@@ -47,7 +47,7 @@ export const PROVIDERS: ProviderPreset[] = [
     label: '阿里云 MaaS（DashScope 兼容）',
     baseUrl:
       'https://ws-rpz6r7sem6fuiceu.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/chat/completions',
-    defaultModel: 'qwen-plus',
+    defaultModel: 'qwen3.5-ocr',
     docUrl: 'https://help.aliyun.com/zh/model-studio',
     docLabel: '阿里云百炼',
   },
