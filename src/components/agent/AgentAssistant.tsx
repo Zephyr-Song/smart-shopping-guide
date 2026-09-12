@@ -4,10 +4,10 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { MessageCircle, X, Send, Sparkles, Star, MapPin, Wallet, Flame, RotateCcw } from 'lucide-react'
+import { MessageCircle, X, Send, Sparkles, Star, MapPin, Wallet, Flame, RotateCcw, ImagePlus } from 'lucide-react'
 import type { AgentCard, AgentContext, AgentMessage } from './agentTypes'
 import { runAgent } from './agentEngine'
-import { callAgent, AGENT_API_URL } from './agentClient'
+import { callAgent } from './agentClient'
 import { SUGGESTIONS, WELCOME_TEXT } from './suggestions'
 
 function uid(): string {
@@ -22,6 +22,8 @@ export default function AgentAssistant() {
   const [input, setInput] = useState('')
   const [thinking, setThinking] = useState(false)
   const [ctx, setCtx] = useState<AgentContext>({})
+  const [pendingImage, setPendingImage] = useState<string | null>(null)
+  const fileRef = useRef<HTMLInputElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
 
@@ -31,28 +33,22 @@ export default function AgentAssistant() {
     }
   }, [messages, thinking, open])
 
-  const send = async (raw: string) => {
+  const send = async (raw: string, image?: string) => {
     const text = raw.trim()
-    if (!text || thinking) return
-    const userMsg: AgentMessage = { id: uid(), role: 'user', text }
+    if ((!text && !image) || thinking) return
+    const userMsg: AgentMessage = { id: uid(), role: 'user', text: text || '（图片）', image }
     const history = [...messages, userMsg]
     setMessages(history)
     setInput('')
+    setPendingImage(null)
     setThinking(true)
     try {
-      if (AGENT_API_URL) {
-        // 真·LLM agent（RAG + 工具调用），由 Cloudflare Worker 托管
-        const { answer, cards } = await callAgent(history)
-        setMessages(prev => [...prev, { id: uid(), role: 'assistant', text: answer, cards }])
-      } else {
-        // 未配置后端 → 离线规则引擎兜底
-        await new Promise(r => setTimeout(r, 450))
-        const { reply, newCtx } = runAgent(text, ctx)
-        setCtx(newCtx)
-        setMessages(prev => [...prev, reply])
-      }
+      // 前端直连大模型：图片先由 qwen3.5-ocr 识别文字，再由 qwen3.7-flash 理解回答
+      const { answer, cards } = await callAgent(history, { imageDataUrl: image })
+      setMessages(prev => [...prev, { id: uid(), role: 'assistant', text: answer, cards }])
     } catch {
-      // 真 agent 异常（网络/超时/密钥缺失）→ 回退规则引擎，保证可用
+      // 大模型调用异常 → 回退本地规则引擎，保证可用
+      await new Promise(r => setTimeout(r, 450))
       const { reply, newCtx } = runAgent(text, ctx)
       setCtx(newCtx)
       setMessages(prev => [...prev, reply])
@@ -64,6 +60,7 @@ export default function AgentAssistant() {
   const reset = () => {
     setMessages([{ id: 'welcome', role: 'assistant', text: WELCOME_TEXT }])
     setCtx({})
+    setPendingImage(null)
   }
 
   const onAction = (card: Extract<AgentCard, { type: 'action' }>) => {
@@ -165,13 +162,56 @@ export default function AgentAssistant() {
           </div>
 
           {/* 输入区 */}
+          {/* 图片预览（发送后由 qwen3.5-ocr 识别） */}
+          {pendingImage && (
+            <div className="px-3 pt-2 flex items-center gap-2 bg-white">
+              <img
+                src={pendingImage}
+                alt="待识别图片"
+                className="w-14 h-14 object-cover rounded-lg border border-gray-200"
+              />
+              <span className="text-[11px] text-gray-400 flex-1">图片将由 qwen3.5-ocr 识别文字</span>
+              <button
+                type="button"
+                onClick={() => setPendingImage(null)}
+                className="text-xs text-gray-500 hover:text-red-500 px-2 py-1 rounded-lg bg-gray-100 hover:bg-red-50 transition cursor-pointer border-none"
+              >
+                移除
+              </button>
+            </div>
+          )}
           <form
             onSubmit={e => {
               e.preventDefault()
-              send(input)
+              send(input, pendingImage ?? undefined)
             }}
             className="p-3 flex items-center gap-2 bg-white border-t border-gray-100"
           >
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={e => {
+                const f = e.target.files?.[0]
+                if (f) {
+                  const reader = new FileReader()
+                  reader.onload = () => setPendingImage(String(reader.result))
+                  reader.readAsDataURL(f)
+                }
+                e.target.value = ''
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => fileRef.current?.click()}
+              disabled={thinking}
+              className="w-10 h-10 rounded-xl bg-gray-100 text-gray-500 hover:text-primary-600 hover:bg-primary-50 flex items-center justify-center disabled:opacity-40 transition cursor-pointer border-none flex-shrink-0"
+              aria-label="上传图片识别"
+              title="上传图片（菜单/价签/海报）识别文字"
+            >
+              <ImagePlus className="w-4 h-4" />
+            </button>
             <input
               value={input}
               onChange={e => setInput(e.target.value)}
@@ -180,7 +220,7 @@ export default function AgentAssistant() {
             />
             <button
               type="submit"
-              disabled={!input.trim() || thinking}
+              disabled={(!input.trim() && !pendingImage) || thinking}
               className="w-10 h-10 rounded-xl bg-primary-500 text-white flex items-center justify-center disabled:opacity-40 hover:bg-primary-600 transition cursor-pointer border-none flex-shrink-0"
               aria-label="发送"
             >
@@ -221,10 +261,21 @@ function MessageBubble({
   if (msg.role === 'user') {
     return (
       <div className="agent-msg flex justify-end">
-        <div
-          className="max-w-[80%] bg-primary-500 text-white text-sm rounded-2xl rounded-tr-sm px-3.5 py-2.5 whitespace-pre-wrap break-words"
-          dangerouslySetInnerHTML={{ __html: renderRich(msg.text ?? '') }}
-        />
+        <div className="max-w-[80%] flex flex-col items-end gap-1.5">
+          {msg.image && (
+            <img
+              src={msg.image}
+              alt="用户图片"
+              className="w-44 rounded-2xl border border-gray-200 shadow-sm object-cover"
+            />
+          )}
+          {msg.text && msg.text !== '（图片）' && (
+            <div
+              className="bg-primary-500 text-white text-sm rounded-2xl rounded-tr-sm px-3.5 py-2.5 whitespace-pre-wrap break-words"
+              dangerouslySetInnerHTML={{ __html: renderRich(msg.text ?? '') }}
+            />
+          )}
+        </div>
       </div>
     )
   }

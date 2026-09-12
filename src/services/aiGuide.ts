@@ -19,7 +19,9 @@ const DEFAULT_KEY =
   'sk-ws-H.ELXRHHI.6qXq.MEUCIATVU2C7ObOYK_z30DOPdQ9I8RwzXESallXCTiC3Adi9AiEAlsfSxVIXUwzJLOwLh0O_76H1R269JWbaWehrWoVwpfU'
 const DEFAULT_BASEURL =
   'https://ws-rpz6r7sem6fuiceu.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/chat/completions'
-const DEFAULT_MODEL = 'qwen3.5-ocr'
+const DEFAULT_MODEL = 'qwen3.7-flash'
+// OCR 模型：图片识别专用（识别结果交给对话模型理解回答）
+const DEFAULT_OCR_MODEL = 'qwen3.5-ocr'
 
 export type ProviderId = 'deepseek' | 'alibaba' | 'custom'
 
@@ -47,7 +49,7 @@ export const PROVIDERS: ProviderPreset[] = [
     label: '阿里云 MaaS（DashScope 兼容）',
     baseUrl:
       'https://ws-rpz6r7sem6fuiceu.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/chat/completions',
-    defaultModel: 'qwen3.5-ocr',
+    defaultModel: 'qwen3.7-flash',
     docUrl: 'https://help.aliyun.com/zh/model-studio',
     docLabel: '阿里云百炼',
   },
@@ -212,6 +214,64 @@ function parseJsonSafe<T>(raw: string): T {
     }
   }
   throw new Error('AI 返回格式异常，无法解析')
+}
+
+// ---------- OCR 图片识别 ----------
+/**
+ * 图片 → 文字：调用 qwen3.5-ocr 识别图片中的文字（多模态内容格式）。
+ * 识别出的文字会交给对话模型（qwen3.7-flash）理解并回答。
+ */
+export async function ocrImage(dataUrl: string, signal?: AbortSignal): Promise<string> {
+  const key = getApiKey()
+  const baseUrl = getBaseUrl()
+  if (!key) throw new Error('未配置 API Key')
+  if (!baseUrl) throw new Error('未配置 API Base URL')
+
+  const body = {
+    model: DEFAULT_OCR_MODEL,
+    messages: [
+      {
+        role: 'user',
+        content: [
+          { type: 'text', text: '请识别图片中的全部文字，按原文顺序逐行输出，不要额外解释。' },
+          { type: 'image_url', image_url: { url: dataUrl } },
+        ],
+      },
+    ],
+    stream: false,
+  }
+
+  let res: Response
+  try {
+    res = await fetch(baseUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}` },
+      body: JSON.stringify(body),
+      signal,
+    })
+  } catch (e) {
+    if ((e as Error).name === 'AbortError') throw new Error('图片识别超时')
+    throw new Error('图片识别网络失败')
+  }
+
+  if (!res.ok) {
+    let msg = `API ${res.status}`
+    try {
+      const err = (await res.json()) as { error?: { message?: string } }
+      if (err?.error?.message) msg = err.error.message
+    } catch {
+      /* ignore parse error */
+    }
+    throw new Error(msg)
+  }
+
+  const json = (await res.json()) as {
+    choices?: { message?: { content?: string; ocr_result?: { processed_text?: string } } }[]
+  }
+  const msg = json?.choices?.[0]?.message
+  const text = msg?.content || msg?.ocr_result?.processed_text || ''
+  if (!text.trim()) throw new Error('图片未识别到文字')
+  return text.trim()
 }
 
 // ---------- 生成推荐 ----------

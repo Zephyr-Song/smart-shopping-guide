@@ -65,6 +65,8 @@ export interface AgentMessage {
   id: string
   role: 'user' | 'assistant'
   text?: string
+  /** 用户上传的图片（base64 data URL），显示缩略图并交由 OCR 识别 */
+  image?: string
   cards?: AgentCard[]
 }
 
