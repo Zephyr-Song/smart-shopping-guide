@@ -12,6 +12,12 @@ export interface AgentReplyData {
   cards?: AgentCard[]
 }
 
+// 工具调用是否可用（部分 Key/模型未开通 function calling，实测会返回 403）。
+// 首次失败后置为 false，后续消息直接走纯对话，避免每条消息都白跑一次失败请求。
+let toolsSupported = true
+const MAX_TOKENS_TOOL = 300
+const MAX_TOKENS_ANSWER = 600
+
 /** 清洗模型偶发混入的非预期外文（如西里尔字母/俄文），保留中文、拉丁字母、数字与 emoji */
 function sanitizeAnswer(text: string): string {
   return text.replace(/[\u0400-\u04FF\u0500-\u052F\uA640-\uA69F]/g, '')
@@ -38,6 +44,7 @@ async function llmChat(
     messages,
     temperature: 0.3,
     stream: false,
+    max_tokens: opts.withTools ? MAX_TOKENS_TOOL : MAX_TOKENS_ANSWER,
   }
   if (opts.withTools) {
     body.tools = TOOL_DEFS
@@ -78,8 +85,17 @@ async function runAgentLoop(
 ): Promise<{ answer: string; cards: AgentCard[] }> {
   const cards: AgentCard[] = []
   const msgs = initialMessages.map(m => ({ ...(m as object) }))
+
+  // 该 Key/模型未开通 function calling 时（实测 403），直接走纯对话，避免无效失败请求
+  if (!toolsSupported) {
+    const data = await llmChat(initialMessages, { withTools: false }, signal)
+    const msg = data?.choices?.[0]?.message
+    if (!msg?.content) throw new Error('模型无返回')
+    return { answer: sanitizeAnswer(msg.content), cards: [] }
+  }
+
   try {
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 3; i++) {
       const data = await llmChat(msgs, { withTools: true }, signal)
       const msg = data?.choices?.[0]?.message
       if (!msg) throw new Error('模型无返回')
@@ -102,7 +118,8 @@ async function runAgentLoop(
       }
     }
   } catch (e) {
-    // 带工具调用失败（如模型未开通 function calling）→ 降级为纯对话再试一次
+    // 带工具调用失败（如模型未开通 function calling）→ 记住并降级为纯对话再试一次
+    toolsSupported = false
     const data = await llmChat(initialMessages, { withTools: false }, signal)
     const msg = data?.choices?.[0]?.message
     if (msg?.content) return { answer: sanitizeAnswer(msg.content), cards: [] }
@@ -137,7 +154,7 @@ export async function callAgent(
     }
   }
 
-  const kbContext = retrieve(userContent, 6)
+  const kbContext = retrieve(userContent, 4)
   const system = buildSystemPrompt(kbContext)
   const chatMessages = [
     { role: 'system', content: system },

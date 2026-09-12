@@ -141,7 +141,7 @@ export interface AiMessage {
 }
 
 // ---------- 底层调用 ----------
-async function callAI(messages: AiMessage[], jsonMode: boolean): Promise<string> {
+async function callAI(messages: AiMessage[], jsonMode: boolean, maxTokens?: number): Promise<string> {
   const key = getApiKey()
   const baseUrl = getBaseUrl()
   const model = getModel()
@@ -156,6 +156,7 @@ async function callAI(messages: AiMessage[], jsonMode: boolean): Promise<string>
     temperature: jsonMode ? 0.8 : 0.9,
     stream: false,
   }
+  if (maxTokens) body.max_tokens = maxTokens
   if (jsonMode) body.response_format = { type: 'json_object' }
 
   let res: Response
@@ -332,7 +333,7 @@ ${JSON.stringify(catalog)}
 
 // ---------- 追问对话 ----------
 export async function askFollowUp(messages: AiMessage[]): Promise<string> {
-  return callAI(messages, false)
+  return callAI(messages, false, 600)
 }
 
 // 构建追问的系统上下文（含当次画像与已推荐店铺，便于 AI 基于真实情况回答）
