@@ -1,5 +1,7 @@
 name: Agent Smoke Test
 
+# 架构：Cloudflare Pages 一体化（前端 + /api 同域）
+# 部署后手工触发，验证真实 agent 端到端可用。
 on:
   workflow_dispatch:
 
@@ -7,11 +9,24 @@ jobs:
   smoke:
     runs-on: ubuntu-latest
     steps:
-      - name: POST to worker (real agent end-to-end)
+      - name: POST /api/agent (real agent end-to-end)
         run: |
-          echo "=== POST /chat ==="
+          echo "=== health ==="
+          curl -s -w "\n[HTTP %{http_code}]\n" \
+            "https://bfc-shopping-guide.pages.dev/api/health" --max-time 30
+
+          echo ""
+          echo "=== 楼层 / 知识类 ==="
           curl -s -w "\n[HTTP %{http_code}] t=%{time_total}s\n" \
-            -X POST "https://bfc-agent.zephyr-song.workers.dev/chat" \
+            -X POST "https://bfc-shopping-guide.pages.dev/api/agent" \
             -H "Content-Type: application/json" \
-            -d '{"messages":[{"role":"user","content":"我想喝奶茶有推荐吗"}]}' \
-            --max-time 90 | head -c 4000
+            -d '{"messages":[{"role":"user","content":"博悦汇影城在几楼？"}]}' \
+            --max-time 90 | head -c 2000
+
+          echo ""
+          echo "=== 预算 + 人数（工具调用 / 卡片） ==="
+          curl -s -w "\n[HTTP %{http_code}] t=%{time_total}s\n" \
+            -X POST "https://bfc-shopping-guide.pages.dev/api/agent" \
+            -H "Content-Type: application/json" \
+            -d '{"messages":[{"role":"user","content":"预算500两个人吃什么？"}]}' \
+            --max-time 90 | head -c 3000

@@ -1,0 +1,324 @@
+[
+  {
+    "brand": "老吉堂",
+    "action": "精确店铺页",
+    "before": "https://www.dianping.com/search/keyword/2/0_%E8%80%81%E5%90%89%E5%A0%82",
+    "after": "https://m.dianping.com/shopshare/716589225"
+  },
+  {
+    "brand": "满愿家",
+    "action": "改为上海+BFC搜索兜底",
+    "before": "https://www.dianping.com/review/64218312",
+    "after": "https://www.dianping.com/search/keyword/1/0_BFC%E5%A4%96%E6%BB%A9%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%20%E6%BB%A1%E6%84%BF%E5%AE%B6"
+  },
+  {
+    "brand": "菁禧荟",
+    "action": "精确店铺页",
+    "before": "https://m.dianping.com/discovery/624420022",
+    "after": "https://m.dianping.com/shop/126943324"
+  },
+  {
+    "brand": "泰珍荟",
+    "action": "已是精确店铺页",
+    "before": "https://m.dianping.com/shop/1779231777",
+    "after": "https://m.dianping.com/shop/1779231777"
+  },
+  {
+    "brand": "高桌牛排馆",
+    "action": "精确店铺页",
+    "before": "https://m.dianping.com/ugcdetail/476587745",
+    "after": "https://m.dianping.com/shopshare/k7a4kh4DdobE8Exa"
+  },
+  {
+    "brand": "晴空",
+    "action": "精确店铺页",
+    "before": "https://www.dianping.com/search/keyword/2/0_%E6%99%B4%E7%A9%BA",
+    "after": "https://m.dianping.com/shop/1242086453"
+  },
+  {
+    "brand": "MOON'N'BACK 农场餐馆",
+    "action": "已是精确店铺页",
+    "before": "https://m.dianping.com/shopshare/G6tKsJc8B2aO7Z7q",
+    "after": "https://m.dianping.com/shopshare/G6tKsJc8B2aO7Z7q"
+  },
+  {
+    "brand": "DIM SUM MARVEL",
+    "action": "北京搜索→上海+BFC搜索",
+    "before": "https://www.dianping.com/search/keyword/2/0_DIM%20SUM%20MARVEL",
+    "after": "https://www.dianping.com/search/keyword/1/0_BFC%E5%A4%96%E6%BB%A9%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%20DIM%20SUM%20MARVEL"
+  },
+  {
+    "brand": "MEET THE BUND",
+    "action": "删除(与遇外滩重复)"
+  },
+  {
+    "brand": "Wolford",
+    "action": "改为上海+BFC搜索兜底",
+    "before": "https://m.dianping.com/ugcdetail/223590502",
+    "after": "https://www.dianping.com/search/keyword/1/0_BFC%E5%A4%96%E6%BB%A9%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%20Wolford"
+  },
+  {
+    "brand": "星巴克臻选",
+    "action": "北京搜索→上海+BFC搜索",
+    "before": "https://www.dianping.com/search/keyword/2/0_Starbucks",
+    "after": "https://www.dianping.com/search/keyword/1/0_BFC%E5%A4%96%E6%BB%A9%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%20%E6%98%9F%E5%B7%B4%E5%85%8B%E8%87%BB%E9%80%89"
+  },
+  {
+    "brand": "Tuna Maki",
+    "action": "改为上海+BFC搜索兜底",
+    "before": "https://www.dianping.com/review/838897109",
+    "after": "https://www.dianping.com/search/keyword/1/0_BFC%E5%A4%96%E6%BB%A9%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%20Tuna%20Maki"
+  },
+  {
+    "brand": "超级猩猩",
+    "action": "北京搜索→上海+BFC搜索",
+    "before": "https://www.dianping.com/search/keyword/2/0_%E8%B6%85%E7%BA%A7%E7%8C%A9%E7%8C%B4",
+    "after": "https://www.dianping.com/search/keyword/1/0_BFC%E5%A4%96%E6%BB%A9%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%20%E8%B6%85%E7%BA%A7%E7%8C%A9%E7%8C%A9"
+  },
+  {
+    "brand": "丽拉瓦迪 LILAWADI",
+    "action": "精确店铺页",
+    "before": "https://www.dianping.com/search/keyword/2/0_%E4%B8%BD%E6%8B%89%E7%93%A6%E8%BF%AA%E6%B3%B0%E5%BC%8FSPA",
+    "after": "https://m.dianping.com/shop/975074902"
+  },
+  {
+    "brand": "周大福",
+    "action": "北京搜索→上海+BFC搜索",
+    "before": "https://www.dianping.com/search/keyword/2/0_%E5%91%A8%E5%A4%A7%E7%A6%8F",
+    "after": "https://www.dianping.com/search/keyword/1/0_BFC%E5%A4%96%E6%BB%A9%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%20%E5%91%A8%E5%A4%A7%E7%A6%8F"
+  },
+  {
+    "brand": "阿不就台湾食堂",
+    "action": "已是精确店铺页",
+    "before": "https://m.dianping.com/shop/1358825383",
+    "after": "https://m.dianping.com/shop/1358825383"
+  },
+  {
+    "brand": "莆田餐厅",
+    "action": "已是精确店铺页",
+    "before": "https://m.dianping.com/shop/110696685?msource=applemaps",
+    "after": "https://m.dianping.com/shop/110696685?msource=applemaps"
+  },
+  {
+    "brand": "喜茶 HEYTEA",
+    "action": "精确店铺页",
+    "before": "https://www.dianping.com/search/keyword/2/0_%E5%96%9C%E8%8C%B6",
+    "after": "https://m.dianping.com/shop/H9PMR5bnXyPMX4Wb"
+  },
+  {
+    "brand": "小米",
+    "action": "已是精确店铺页",
+    "before": "https://m.dianping.com/shop/G6Y3ieStBunwaE1I",
+    "after": "https://m.dianping.com/shop/G6Y3ieStBunwaE1I"
+  },
+  {
+    "brand": "宠物愿望 PET WISH",
+    "action": "精确店铺页",
+    "before": "https://www.dianping.com/search/keyword/2/0_PET%20WISH",
+    "after": "https://m.dianping.com/shop/G1gvnkOlHueelTye"
+  },
+  {
+    "brand": "PonyStar",
+    "action": "改为上海+BFC搜索兜底",
+    "before": "https://m.dianping.com/ugcdetail/249651098",
+    "after": "https://www.dianping.com/search/keyword/1/0_BFC%E5%A4%96%E6%BB%A9%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%20PonyStar"
+  },
+  {
+    "brand": "上海滩",
+    "action": "精确店铺页",
+    "before": "https://www.dianping.com/review/430859423",
+    "after": "https://m.dianping.com/shop/93196174"
+  },
+  {
+    "brand": "新荣记",
+    "action": "已是精确店铺页",
+    "before": "https://m.dianping.com/shop/102133464?msource=applemaps",
+    "after": "https://m.dianping.com/shop/102133464?msource=applemaps"
+  },
+  {
+    "brand": "DA VITTORIO SHANGHAI",
+    "action": "改为上海+BFC搜索兜底",
+    "before": "https://www.dianping.com/review/783661046",
+    "after": "https://www.dianping.com/search/keyword/1/0_BFC%E5%A4%96%E6%BB%A9%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%20DA%20VITTORIO%20SHANGHAI"
+  },
+  {
+    "brand": "柴门荟",
+    "action": "北京搜索→上海+BFC搜索",
+    "before": "https://www.dianping.com/search/keyword/2/0_%E6%9F%B4%E9%97%A8%E8%8D%BB",
+    "after": "https://www.dianping.com/search/keyword/1/0_BFC%E5%A4%96%E6%BB%A9%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%20%E6%9F%B4%E9%97%A8%E8%8D%9F"
+  },
+  {
+    "brand": "LA PRAIRIE",
+    "action": "已是精确店铺页",
+    "before": "https://m.dianping.com/shop/884690798",
+    "after": "https://m.dianping.com/shop/884690798"
+  },
+  {
+    "brand": "隐溪茶馆",
+    "action": "已是精确店铺页",
+    "before": "https://m.dianping.com/shop/807677119?msource=applemaps",
+    "after": "https://m.dianping.com/shop/807677119?msource=applemaps"
+  },
+  {
+    "brand": "白茸",
+    "action": "精确店铺页",
+    "before": "https://m.dianping.com/shopinfo/k2iWGEiVS1w7B7WZ?cityid=1&isoversea=0&msource=Appshare2021&shopcategoryid=26483&shoptype=10",
+    "after": "https://m.dianping.com/shop/1929628529"
+  },
+  {
+    "brand": "复兴面王深夜食堂",
+    "action": "已是精确店铺页",
+    "before": "https://m.dianping.com/shop/1757895924?msource=applemaps",
+    "after": "https://m.dianping.com/shop/1757895924?msource=applemaps"
+  },
+  {
+    "brand": "PHANTACI",
+    "action": "精确店铺页",
+    "before": "https://m.dianping.com/ugcdetail/207947928",
+    "after": "https://m.dianping.com/shop/la5pfNDjJMaA0lj3"
+  },
+  {
+    "brand": "橘焱胡同烧肉夜食",
+    "action": "改为上海+BFC搜索兜底",
+    "before": "https://m.dianping.com/shopinfo/k29ZtRuQ2qAqlsZd?cityid=1&isoversea=0&msource=Appshare2021&shopcategoryid=225&shoptype=10",
+    "after": "https://www.dianping.com/search/keyword/1/0_BFC%E5%A4%96%E6%BB%A9%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%20%E6%A9%98%E7%84%B1%E8%83%A1%E5%90%8C%E7%83%A7%E8%82%89%E5%A4%9C%E9%A3%9F"
+  },
+  {
+    "brand": "哥哥的深夜食堂",
+    "action": "北京搜索→上海+BFC搜索",
+    "before": "https://www.dianping.com/search/keyword/2/0_%E5%93%A5%E5%93%A5%E7%9A%84%E6%B7%B1%E5%A4%9C%E9%A3%9F%E5%A0%82",
+    "after": "https://www.dianping.com/search/keyword/1/0_BFC%E5%A4%96%E6%BB%A9%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%20%E5%93%A5%E5%93%A5%E7%9A%84%E6%B7%B1%E5%A4%9C%E9%A3%9F%E5%A0%82"
+  },
+  {
+    "brand": "PEANUT BUTTER 花生酱",
+    "action": "改为上海+BFC搜索兜底",
+    "before": "https://m.dianping.com/shopinfo/G2OaGjhX5jG2d1LS",
+    "after": "https://www.dianping.com/search/keyword/1/0_BFC%E5%A4%96%E6%BB%A9%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%20PEANUT%20BUTTER%20%E8%8A%B1%E7%94%9F%E9%85%B1"
+  },
+  {
+    "brand": "满堂 by Bar Choice",
+    "action": "北京搜索→上海+BFC搜索",
+    "before": "https://www.dianping.com/search/keyword/2/0_%E6%BB%A1%E5%A0%82%20by%20Bar%20Choice",
+    "after": "https://www.dianping.com/search/keyword/1/0_BFC%E5%A4%96%E6%BB%A9%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%20%E6%BB%A1%E5%A0%82%20by%20Bar%20Choice"
+  },
+  {
+    "brand": "NUMATASOU 沼田双",
+    "action": "精确店铺页",
+    "before": "https://www.dianping.com/search/keyword/2/0_%E6%B2%BC%E7%94%B0%E5%8F%8C",
+    "after": "https://m.dianping.com/shop/1794476520"
+  },
+  {
+    "brand": "不入川豆花馆",
+    "action": "已是精确店铺页",
+    "before": "https://m.dianping.com/shop/1623101157",
+    "after": "https://m.dianping.com/shop/1623101157"
+  },
+  {
+    "brand": "MANNER Coffee",
+    "action": "已是精确店铺页",
+    "before": "https://m.dianping.com/shop/112293956",
+    "after": "https://m.dianping.com/shop/112293956"
+  },
+  {
+    "brand": "陈香贵·兰州牛肉面",
+    "action": "北京搜索→上海+BFC搜索",
+    "before": "https://www.dianping.com/search/keyword/2/0_%E9%99%88%E9%A6%99%E8%B4%B5",
+    "after": "https://www.dianping.com/search/keyword/1/0_BFC%E5%A4%96%E6%BB%A9%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%20%E9%99%88%E9%A6%99%E8%B4%B5%C2%B7%E5%85%B0%E5%B7%9E%E7%89%9B%E8%82%89%E9%9D%A2"
+  },
+  {
+    "brand": "MARSMART 火星宠物超市",
+    "action": "改为上海+BFC搜索兜底",
+    "before": "https://m.dianping.com/ugcdetail/389218464?sceneType=0&bizType=29&msource=baiduappugc",
+    "after": "https://www.dianping.com/search/keyword/1/0_BFC%E5%A4%96%E6%BB%A9%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%20MARSMART%20%E7%81%AB%E6%98%9F%E5%AE%A0%E7%89%A9%E8%B6%85%E5%B8%82"
+  },
+  {
+    "brand": "AIRPARK 人类友好公园",
+    "action": "北京搜索→上海+BFC搜索",
+    "before": "https://www.dianping.com/search/keyword/2/0_AirPark",
+    "after": "https://www.dianping.com/search/keyword/1/0_BFC%E5%A4%96%E6%BB%A9%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%20AIRPARK%20%E4%BA%BA%E7%B1%BB%E5%8F%8B%E5%A5%BD%E5%85%AC%E5%9B%AD"
+  },
+  {
+    "brand": "阿飞和巴弟 PET MART",
+    "action": "北京搜索→上海+BFC搜索",
+    "before": "https://www.dianping.com/search/keyword/2/0_PET%20MART",
+    "after": "https://www.dianping.com/search/keyword/1/0_BFC%E5%A4%96%E6%BB%A9%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%20%E9%98%BF%E9%A3%9E%E5%92%8C%E5%B7%B4%E5%BC%9F%20PET%20MART"
+  },
+  {
+    "brand": "东发道茶冰厅",
+    "action": "改为上海+BFC搜索兜底",
+    "before": "https://m.dianping.com/discovery/2127919222",
+    "after": "https://www.dianping.com/search/keyword/1/0_BFC%E5%A4%96%E6%BB%A9%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%20%E4%B8%9C%E5%8F%91%E9%81%93%E8%8C%B6%E5%86%B0%E5%8E%85"
+  },
+  {
+    "brand": "一点点",
+    "action": "改为上海+BFC搜索兜底",
+    "before": "https://www.dianping.com/review/500764722",
+    "after": "https://www.dianping.com/search/keyword/1/0_BFC%E5%A4%96%E6%BB%A9%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%20%E4%B8%80%E7%82%B9%E7%82%B9"
+  },
+  {
+    "brand": "遇外滩",
+    "action": "精确店铺页",
+    "before": "https://www.dianping.com/search/keyword/2/0_%E9%81%87%E5%A4%96%E6%BB%A9",
+    "after": "https://m.dianping.com/shop/H4lIT1pVYp0WprHz"
+  },
+  {
+    "brand": "M Stand",
+    "action": "精确店铺页",
+    "before": "https://www.dianping.com/search/keyword/2/0_M%20Stand",
+    "after": "https://m.dianping.com/shop/G7OQhPJBAh3s16ah"
+  },
+  {
+    "brand": "Baker&Spice",
+    "action": "精确店铺页",
+    "before": "https://www.dianping.com/search/keyword/2/0_Baker%26Spice",
+    "after": "https://m.dianping.com/shop/k6eyxwFZu48KyCf6"
+  },
+  {
+    "brand": "松鹤楼苏式汤面",
+    "action": "北京搜索→上海+BFC搜索",
+    "before": "https://www.dianping.com/search/keyword/2/0_%E6%9D%BE%E9%B9%A4%E6%A5%BC%E8%8B%8F%E5%BC%8F%E6%B1%A4%E9%9D%A2",
+    "after": "https://www.dianping.com/search/keyword/1/0_BFC%E5%A4%96%E6%BB%A9%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%20%E6%9D%BE%E9%B9%A4%E6%A5%BC%E8%8B%8F%E5%BC%8F%E6%B1%A4%E9%9D%A2"
+  },
+  {
+    "brand": "蝶园海鲜酒馆",
+    "action": "精确店铺页",
+    "before": "https://www.dianping.com/search/keyword/2/0_%E8%9D%B6%E5%9B%AD%E6%B5%B7%E9%B2%9C%E9%85%92%E9%A6%86",
+    "after": "https://m.dianping.com/shop/126620480"
+  },
+  {
+    "brand": "巴黎蜜语",
+    "action": "精确店铺页",
+    "before": "https://www.dianping.com/search/keyword/2/0_%E5%B7%B4%E9%BB%8E%E8%9C%9C%E8%AF%AD",
+    "after": "https://m.dianping.com/shop/122554901"
+  },
+  {
+    "brand": "Whites",
+    "action": "精确店铺页",
+    "before": "https://www.dianping.com/search/keyword/2/0_Whites%20BFC",
+    "after": "https://m.dianping.com/shop/ka4AZ0EFSvf33cGo"
+  },
+  {
+    "brand": "Le Jardin de JR",
+    "action": "精确店铺页",
+    "before": "https://www.dianping.com/search/keyword/2/0_Le%20Jardin%20de%20JR",
+    "after": "https://m.dianping.com/shop/G545TRnKCMFt6tNk"
+  },
+  {
+    "brand": "AHAVA SPA",
+    "action": "已是精确店铺页",
+    "before": "https://m.dianping.com/shop/128556008",
+    "after": "https://m.dianping.com/shop/128556008"
+  },
+  {
+    "brand": "京都之家",
+    "action": "已是精确店铺页",
+    "before": "https://m.dianping.com/shop/H2W8aJ79EuTMAtaQ",
+    "after": "https://m.dianping.com/shop/H2W8aJ79EuTMAtaQ"
+  },
+  {
+    "brand": "美丽田园",
+    "action": "北京搜索→上海+BFC搜索",
+    "before": "https://www.dianping.com/search/keyword/2/0_%E7%BE%8E%E4%B8%BD%E7%94%B0%E5%9B%AD%20BFC",
+    "after": "https://www.dianping.com/search/keyword/1/0_BFC%E5%A4%96%E6%BB%A9%E9%87%91%E8%9E%8D%E4%B8%AD%E5%BF%83%20%E7%BE%8E%E4%B8%BD%E7%94%B0%E5%9B%AD"
+  }
+]

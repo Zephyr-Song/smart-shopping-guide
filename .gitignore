@@ -33,3 +33,7 @@ worker/.wrangler/
 *.sln
 *.sw?
 .trash-dist-*/
+
+
+# Local model / extension downloads (18MB binaries)
+.dl/

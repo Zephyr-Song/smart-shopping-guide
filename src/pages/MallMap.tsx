@@ -35,14 +35,14 @@ const NORTH_FLOORS: FloorInfo[] = [
 const ZONE_COLORS: Record<string, string> = {
   '精致餐饮': '#c9a96e',
   '国际精品': '#ec4899',
-  '潮流品牌': '#6366f1',
+  '潮流品牌': '#a16207',
   '运动时尚': '#10b981',
   '品质中餐': '#d97706',
   '网红餐饮': '#f97316',
   '快餐轻食': '#f59e0b',
   '咖啡茶饮': '#8b5cf6',
   '茶馆SPA': '#14b8a6',
-  '汽车体验': '#3b82f6',
+  '汽车体验': '#0f766e',
   '珠宝配饰': '#eab308',
   '美容美发': '#ec4899',
   '运动健身': '#22c55e',
@@ -199,8 +199,8 @@ export default function MallMap() {
               </text>
 
               {/* Entrance */}
-              <rect x="42" y="96" width="16" height="3.5" rx="1" fill="#6366f1" opacity="0.3" />
-              <text x="50" y="99.2" textAnchor="middle" fontSize="2.2" fill="#6366f1" fontWeight="600">主入口</text>
+              <rect x="42" y="96" width="16" height="3.5" rx="1" fill="#c9a96e" opacity="0.3" />
+              <text x="50" y="99.2" textAnchor="middle" fontSize="2.2" fill="#a98d56" fontWeight="600">主入口</text>
 
               {/* Elevator */}
               <rect x="47" y="45" width="6" height="6" rx="1" fill="#d1d5db" />

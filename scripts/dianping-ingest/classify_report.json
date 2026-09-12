@@ -1,0 +1,266 @@
+{
+  "placeholder": [
+    {
+      "brand": "炙焰炉子炉馆",
+      "frontend": "炙焰炉子炉馆"
+    },
+    {
+      "brand": "A&M CROWNED SALON",
+      "frontend": "A&M CROWNED SALON"
+    },
+    {
+      "brand": "MOMODA",
+      "frontend": "MOMODA"
+    },
+    {
+      "brand": "OUTCICS",
+      "frontend": "OUTCICS"
+    },
+    {
+      "brand": "ON/OFF",
+      "frontend": "ON/OFF"
+    },
+    {
+      "brand": "J.Lindeberg",
+      "frontend": "J.Lindeberg"
+    },
+    {
+      "brand": "PIU",
+      "frontend": "PIU"
+    },
+    {
+      "brand": "gudgood",
+      "frontend": "gudgood"
+    },
+    {
+      "brand": "Alexander Wang",
+      "frontend": "Alexander Wang"
+    },
+    {
+      "brand": "I.T",
+      "frontend": "I.T"
+    },
+    {
+      "brand": "NEITH",
+      "frontend": "NEITH"
+    },
+    {
+      "brand": "Paul Smith",
+      "frontend": "Paul Smith"
+    },
+    {
+      "brand": "华为",
+      "frontend": "华为"
+    },
+    {
+      "brand": "BALLY",
+      "frontend": "BALLY"
+    },
+    {
+      "brand": "Jimmy Choo",
+      "frontend": "Jimmy Choo"
+    },
+    {
+      "brand": "Versace",
+      "frontend": "Versace"
+    },
+    {
+      "brand": "Lanvin",
+      "frontend": "Lanvin"
+    },
+    {
+      "brand": "Luminox",
+      "frontend": "Luminox"
+    },
+    {
+      "brand": "THE ATELIER",
+      "frontend": "THE ATELIER"
+    },
+    {
+      "brand": "尊界 MAEXTRO",
+      "frontend": "尊界 MAEXTRO"
+    },
+    {
+      "brand": "Knatify",
+      "frontend": "Knatify"
+    },
+    {
+      "brand": "DJULA",
+      "frontend": "DJULA"
+    },
+    {
+      "brand": "Maison Kitsune",
+      "frontend": "Maison Kitsune"
+    },
+    {
+      "brand": "b3 Coffee",
+      "frontend": "b3 Coffee"
+    },
+    {
+      "brand": "永璞",
+      "frontend": "永璞"
+    },
+    {
+      "brand": "麦当劳",
+      "frontend": "麦当劳"
+    },
+    {
+      "brand": "SUBWAY",
+      "frontend": "SUBWAY"
+    },
+    {
+      "brand": "么蛮",
+      "frontend": "么蛮"
+    },
+    {
+      "brand": "混果汁",
+      "frontend": "混果汁"
+    },
+    {
+      "brand": "charfon bijun",
+      "frontend": "charfon bijun"
+    },
+    {
+      "brand": "BRANEW",
+      "frontend": "BRANEW"
+    },
+    {
+      "brand": "丝域养发",
+      "frontend": "丝域养发"
+    },
+    {
+      "brand": "美妆灵感空间",
+      "frontend": "美妆灵感空间"
+    },
+    {
+      "brand": "FIVE DOCTORS",
+      "frontend": "FIVE DOCTORS"
+    },
+    {
+      "brand": "小爱同学",
+      "frontend": "小爱同学"
+    },
+    {
+      "brand": "哈曼卡顿",
+      "frontend": "哈曼卡顿"
+    },
+    {
+      "brand": "全家",
+      "frontend": "全家"
+    },
+    {
+      "brand": "GALAXY AUTO STUDIO",
+      "frontend": "GALAXY AUTO STUDIO"
+    },
+    {
+      "brand": "BFC FITNESS健身会馆",
+      "frontend": "BFC FITNESS健身会馆"
+    },
+    {
+      "brand": "陆家居",
+      "frontend": "陆家居"
+    },
+    {
+      "brand": "梅赛德斯-迈巴赫",
+      "frontend": "梅赛德斯-迈巴赫"
+    },
+    {
+      "brand": "米崎",
+      "frontend": "米崎"
+    },
+    {
+      "brand": "沄南云海肴",
+      "frontend": "沄南云海肴"
+    },
+    {
+      "brand": "林里柠檬茶",
+      "frontend": "林里柠檬茶"
+    },
+    {
+      "brand": "小吃堂",
+      "frontend": "小吃堂"
+    },
+    {
+      "brand": "大丰和风食堂",
+      "frontend": "大丰和风食堂"
+    },
+    {
+      "brand": "茶姬",
+      "frontend": "茶姬"
+    },
+    {
+      "brand": "湖南饭店",
+      "frontend": "湖南饭店"
+    },
+    {
+      "brand": "丘大叔米粉",
+      "frontend": "丘大叔米粉"
+    },
+    {
+      "brand": "九木杂物社",
+      "frontend": "九木杂物社"
+    },
+    {
+      "brand": "多抓鱼",
+      "frontend": "多抓鱼"
+    },
+    {
+      "brand": "READ&SOCIAL",
+      "frontend": "READ&SOCIAL"
+    },
+    {
+      "brand": "CLAWGALLERY",
+      "frontend": "CLAWGALLERY"
+    },
+    {
+      "brand": "Sir Rudy's Pro Shop",
+      "frontend": "Sir Rudy's Pro Shop"
+    },
+    {
+      "brand": "B'S Brows",
+      "frontend": "B'S Brows"
+    }
+  ],
+  "realNoRating": [
+    {
+      "brand": "菁禧荟",
+      "frontend": "青鹤荟",
+      "avgPrice": 885
+    },
+    {
+      "brand": "高桌牛排馆",
+      "frontend": "高桌",
+      "avgPrice": 600
+    },
+    {
+      "brand": "Wolford",
+      "frontend": "Wolford",
+      "avgPrice": null
+    },
+    {
+      "brand": "上海滩",
+      "frontend": "上海滩餐厅",
+      "avgPrice": 580
+    },
+    {
+      "brand": "PHANTACI",
+      "frontend": "PHANTACI",
+      "avgPrice": 620
+    },
+    {
+      "brand": "MARSMART 火星宠物超市",
+      "frontend": "火星宠物超市",
+      "avgPrice": null
+    },
+    {
+      "brand": "AIRPARK 人类友好公园",
+      "frontend": "AirPark",
+      "avgPrice": null
+    },
+    {
+      "brand": "阿飞和巴弟 PET MART",
+      "frontend": "PET MART",
+      "avgPrice": null
+    }
+  ]
+}

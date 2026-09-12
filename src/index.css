@@ -1,33 +1,61 @@
-@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap");
 @import "tailwindcss";
 
 @theme {
-  --color-primary-50: #eef2ff;
-  --color-primary-100: #e0e7ff;
-  --color-primary-200: #c7d2fe;
-  --color-primary-300: #a5b4fc;
-  --color-primary-400: #818cf8;
-  --color-primary-500: #6366f1;
-  --color-primary-600: #4f46e5;
-  --color-primary-700: #4338ca;
-  --color-primary-800: #3730a3;
-  --color-primary-900: #312e81;
+  /* primary 色阶已整体切换为 BFC 品牌金（原 indigo 蓝）。
+     所有 bg-primary-* / text-primary-* / border-primary-* 引用自动变金色，无需改 className。 */
+  --color-primary-50: #fbf8f2;
+  --color-primary-100: #f5efe5;
+  --color-primary-200: #ebe0d0;
+  --color-primary-300: #dec9ad;
+  --color-primary-400: #cfae84;
+  --color-primary-500: #c9a96e;
+  --color-primary-600: #a98d56;
+  --color-primary-700: #856d42;
+  --color-primary-800: #5e4c2f;
+  --color-primary-900: #3a2f1d;
 
   --color-ink: #1a1a2e;
   --color-champagne: #c9a96e;
   --color-champagne-soft: #f3ecdd;
 
+  /* BFC 品牌色扩展 */
+  --color-bfc-gold: #c9a96e;
+  --color-bfc-gold-50: #fbf8f2;
+  --color-bfc-gold-100: #f5efe5;
+  --color-bfc-gold-200: #ebe0d0;
+  --color-bfc-gold-300: #dec9ad;
+  --color-bfc-gold-400: #cfae84;
+  --color-bfc-gold-500: #c9a96e;
+  --color-bfc-gold-600: #a98d56;
+  --color-bfc-gold-700: #856d42;
+  --color-bfc-gold-800: #5e4c2f;
+  --color-bfc-gold-900: #3a2f1d;
+
+  --color-bfc-cream: #f8f5ef;
+  --color-bfc-cream-deep: #f0ebe1;
+  --color-bfc-charcoal: #1c1c1e;
+  --color-bfc-warm-gray: #8a8278;
+
   --color-rose-glow: #e8b4b8;
   --color-jade: #5f8d77;
 
-  --font-display: "Noto Serif SC", serif;
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  /* 不使用 Google Fonts：国内网络会 ERR_CONNECTION_TIMED_OUT，且 @import 阻塞首屏渲染。
+     改用系统字体栈，中文优先 PingFang SC / 微软雅黑，标题用宋体系列保持衬线质感。 */
+  --font-display: "Songti SC", "STSong", "SimSun", "Noto Serif CJK SC",
+    "Source Han Serif SC", Georgia, serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
 
   --shadow-soft: 0 1px 2px rgba(26, 26, 46, 0.04),
     0 8px 24px -8px rgba(26, 26, 46, 0.12);
   --shadow-lift: 0 4px 12px -4px rgba(26, 26, 46, 0.1),
-    0 24px 48px -16px rgba(79, 70, 229, 0.22);
+    0 24px 48px -16px rgba(201, 169, 110, 0.24);
+
+  /* BFC 专属阴影：更暖、更柔和 */
+  --shadow-bfc: 0 1px 2px rgba(28, 28, 30, 0.04),
+    0 12px 32px -10px rgba(28, 28, 30, 0.1);
+  --shadow-bfc-lift: 0 8px 24px -8px rgba(28, 28, 30, 0.08),
+    0 32px 64px -24px rgba(201, 169, 110, 0.18);
 }
 
 html {
@@ -41,7 +69,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   color: var(--color-ink);
   background:
-    radial-gradient(1200px 600px at 85% -10%, rgba(99, 102, 241, 0.06), transparent 60%),
+    radial-gradient(1200px 600px at 85% -10%, rgba(201, 169, 110, 0.07), transparent 60%),
     radial-gradient(900px 500px at 5% 0%, rgba(201, 169, 110, 0.05), transparent 55%),
     #fafaf9;
 }
@@ -56,7 +84,7 @@ body {
 }
 
 .text-gradient {
-  background: linear-gradient(120deg, #1a1a2e 0%, #4f46e5 55%, #3730a3 100%);
+  background: linear-gradient(120deg, #3a2f1d 0%, #a98d56 55%, #5e4c2f 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -140,7 +168,7 @@ body {
 .card-hover:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-lift);
-  border-color: rgba(99, 102, 241, 0.35);
+  border-color: rgba(201, 169, 110, 0.45);
 }
 
 @media (prefers-reduced-motion: reduce) {

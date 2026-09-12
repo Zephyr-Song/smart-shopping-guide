@@ -1,0 +1,124 @@
+
+ ⛅️ wrangler 4.114.0 (update available 4.131.1)
+───────────────────────────────────────────────
+Resource location: remote 
+
+🌀 Executing on remote database bfc-agent-db (161e29a9-5cfe-492d-ae9a-d5f649c20b94):
+🌀 To execute on your local development database, remove the --remote flag from your wrangler command.
+🚣 Executed 1 command in 0.46ms
+[
+  {
+    "results": [
+      {
+        "brand": "AHAVA SPA",
+        "c": 20
+      },
+      {
+        "brand": "BALLY",
+        "c": 20
+      },
+      {
+        "brand": "DA VITTORIO SHANGHAI",
+        "c": 20
+      },
+      {
+        "brand": "I.T",
+        "c": 20
+      },
+      {
+        "brand": "L.J Nail Salon",
+        "c": 20
+      },
+      {
+        "brand": "LA PRAIRIE",
+        "c": 20
+      },
+      {
+        "brand": "LANVIN",
+        "c": 20
+      },
+      {
+        "brand": "Maison Kitsuné",
+        "c": 20
+      },
+      {
+        "brand": "Nail Soul",
+        "c": 20
+      },
+      {
+        "brand": "PHANTACI",
+        "c": 20
+      },
+      {
+        "brand": "Paul Smith",
+        "c": 20
+      },
+      {
+        "brand": "Sandriver",
+        "c": 20
+      },
+      {
+        "brand": "VERSACE",
+        "c": 20
+      },
+      {
+        "brand": "Wolford",
+        "c": 20
+      },
+      {
+        "brand": "alexanderwang",
+        "c": 20
+      },
+      {
+        "brand": "喜茶",
+        "c": 20
+      },
+      {
+        "brand": "新荣记",
+        "c": 20
+      },
+      {
+        "brand": "美丽田园",
+        "c": 20
+      },
+      {
+        "brand": "老吉堂",
+        "c": 20
+      },
+      {
+        "brand": "遇外滩",
+        "c": 20
+      },
+      {
+        "brand": "Jimmy Choo",
+        "c": 19
+      },
+      {
+        "brand": "泰珍荟",
+        "c": 14
+      },
+      {
+        "brand": "Carr Barbershop",
+        "c": 7
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "HKG",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.459
+      },
+      "duration": 0.459,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 696320,
+      "rows_read": 463,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

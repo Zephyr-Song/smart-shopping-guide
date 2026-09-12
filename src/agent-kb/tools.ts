@@ -5,6 +5,7 @@ import type { AgentCard } from '../components/agent/agentTypes'
 import { FACILITIES } from './facilities'
 import { SERVICES } from './services'
 import { FAQ } from './faq'
+import { searchKb } from './index'
 
 type StoreCardData = Extract<AgentCard, { type: 'store' }>
 
@@ -118,10 +119,10 @@ export const TOOL_DEFS = [
     type: 'function',
     function: {
       name: 'get_store_detail',
-      description: '获取某家店铺的详细信息（楼层、人均、评分、简介）。',
+      description: '获取某家店铺的准确详细信息，包括楼层、人均、评分、简介。回答"XX在几楼""XX在哪里"这类问题时优先使用本工具。',
       parameters: {
         type: 'object',
-        properties: { name: { type: 'string', description: '店铺名称，可部分匹配' } },
+        properties: { name: { type: 'string', description: '店铺名称，可部分匹配，如"博悦汇影城"' } },
         required: ['name'],
       },
     },
@@ -186,6 +187,18 @@ export const TOOL_DEFS = [
         type: 'object',
         properties: { store_name: { type: 'string', description: '可选，指定店铺名时给出该店热度' } },
         required: [],
+      },
+    },
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'search_kb',
+      description: '检索 BFC 商圈知识库：品牌/场馆的位置楼层介绍、娱乐业态（影城、Livehouse、艺术中心、酒吧）、展览、活动、政策等，返回最相关知识条目。',
+      parameters: {
+        type: 'object',
+        properties: { query: { type: 'string', description: '知识问题关键词，如“博悦汇影城 楼层”“复星艺术中心 展览”' } },
+        required: ['query'],
       },
     },
   },
@@ -269,6 +282,12 @@ export function executeTool(name: string, args: Record<string, any>, userText?: 
         : ''
       const text = `${line}BFC 全天客流通常 ${peak.hour} 最旺、${quiet.hour} 相对清静。想避开人潮建议 ${quiet.hour} 前后前往，想热闹则 ${peak.hour} 来。`
       return { kind: 'info', data: { title: '客流冷热', text } }
+    }
+    case 'search_kb': {
+      const hits = searchKb(String(args.query ?? ''), 2)
+      if (!hits.length) return { kind: 'none', data: null }
+      const h = hits[0].item
+      return { kind: 'info', data: { title: h.title, text: h.content } }
     }
     default:
       return { kind: 'none', data: null }

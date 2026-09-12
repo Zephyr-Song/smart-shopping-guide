@@ -1,9 +1,9 @@
 import { useState, useMemo } from 'react'
+import StoreDrawer from '../components/StoreDrawer'
 import {
   Search,
   Filter,
   MapPin,
-  Sparkles,
   X,
   ExternalLink,
 } from 'lucide-react'
@@ -403,6 +403,7 @@ export default function BrandExplore() {
   const [search, setSearch] = useState('')
   const [activeCat, setActiveCat] = useState<BrandCategory | 'all'>('all')
   const [zoneFilter, setZoneFilter] = useState('all')
+  const [active, setActive] = useState<Brand | null>(null)
 
   const filtered = useMemo(() => {
     let list = BRANDS
@@ -440,7 +441,7 @@ export default function BrandExplore() {
       <div>
         <h1 className="text-2xl font-bold text-gray-900">品牌探索</h1>
         <p className="text-sm text-gray-500 mt-1">
-          数据来源：腾讯新闻、搜狐、知乎市调 · 共计 {stats.total} 个品牌
+          BFC 外滩金融中心 · 共收录 {stats.total} 个品牌
         </p>
       </div>
 
@@ -547,14 +548,15 @@ export default function BrandExplore() {
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {filtered.map(brand => {
-            const zoneColor = brand.zone === 'S' ? 'text-amber-600 bg-amber-50' : 'text-blue-600 bg-blue-50'
+            const zoneColor = brand.zone === 'S' ? 'text-amber-600 bg-amber-50' : 'text-stone-600 bg-stone-100'
             const zoneLabel = brand.zone === 'S' ? '南区' : '北区'
             return (
               <div
                 key={brand.id}
-                className={`bg-white rounded-xl border p-4 hover:shadow-md transition-shadow ${
+                className={`bg-white rounded-xl border p-4 hover:shadow-md transition-shadow cursor-pointer ${
                   brand.highlight ? 'ring-1 ring-amber-200 border-amber-200' : 'border-gray-100'
                 }`}
+                onClick={() => setActive(brand)}
               >
                 {/* 顶部：emoji + 名称 + 徽章 */}
                 <div className="flex items-start gap-3 mb-3">
@@ -603,7 +605,7 @@ export default function BrandExplore() {
                         href={brand.website}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-[10px] text-blue-500 hover:text-blue-700 hover:bg-blue-50 px-1.5 py-0.5 rounded transition-colors font-medium"
+                        className="inline-flex items-center gap-1 text-[10px] text-amber-600 hover:text-amber-700 hover:bg-amber-50 px-1.5 py-0.5 rounded transition-colors font-medium"
                         title={`访问 ${brand.name} 官网`}
                       >
                         <ExternalLink className="w-3 h-3" />
@@ -618,18 +620,10 @@ export default function BrandExplore() {
         </div>
       )}
 
-      {/* 数据来源说明 */}
-      <div className="bg-blue-50 rounded-xl p-3.5 text-sm text-blue-700 flex gap-2 items-start">
-        <Sparkles className="w-4 h-4 flex-shrink-0 mt-0.5 text-blue-500" />
-        <div>
-          <p className="font-medium mb-0.5">数据来源与更新说明</p>
-          <p className="text-xs leading-relaxed">
-            品牌数据整理自腾讯新闻2025年10月《BFC时尚潮流矩阵再升级》专题报道、搜狐2025年7月《BFC人宠友好空间》专题、知乎市调日记、复星集团2025年公告。
-            部分品牌可能因商场业态调整发生变化，以商场实际运营为准。
-            BFC共有42个商业面积约 96,000m²，分为南区 (S) 和北区 (N) 两大区域，涵盖 S-B3 至 S1-5F、N-1F 至 N-4F 共 10 层商业空间。
-          </p>
-        </div>
-      </div>
+      <StoreDrawer
+        store={active ? { name: active.name, emoji: active.emoji, floor: active.floor, zone: active.zone, desc: active.desc, category: CATEGORY_LABELS[active.category] } : null}
+        onClose={() => setActive(null)}
+      />
     </div>
   )
 }

@@ -1,93 +1,144 @@
-# 小助手 · 真 Agent 部署指南
+# 小助手 · 部署与架构指南（Cloudflare Pages 一体化）
 
-把「小助手」从一个纯前端规则脚本，升级为 **RAG + 工具调用的真 agent**。
-架构分两层，互不依赖、可独立部署：
+「小助手」已从"GitHub Pages 静态前端 + 独立 Worker"两套部署，**重构为 Cloudflare Pages 一体化**：
+前端与智能层同域，不再需要跨域、`AGENT_URL` 密钥。
+
+## 架构
 
 ```
-┌─────────────────────┐         POST /chat          ┌──────────────────────────┐
-│  前端 (GitHub Pages) │ ─────────────────────────▶ │  Cloudflare Worker        │
-│  React + AgentAssistant│◀─────────────────────────│  · 检索「商场知识库」      │
-│  - 有后端: 调 agent  │    { answer, cards } JSON   │  · 调 LLM(OpenAI兼容)     │
-│  - 无后端: 规则兜底  │                             │  · agent loop + 工具执行  │
-└─────────────────────┘                             └──────────────────────────┘
-                                                          │
-                                                          ▼
-                                                  你的 LLM（DeepSeek / OpenAI / 通义 / Kimi…）
-                                                 密钥只存在 Worker 环境变量，不进浏览器
+┌──────────────────────────────────────────────────────────┐
+│  Cloudflare Pages（同域）                                 │
+│                                                           │
+│   静态前端（dist）          Functions（/api/*）            │
+│   React 19 + Vite      ───▶  agent.ts / health.ts         │
+│                                │                          │
+└────────────────────────────────┼──────────────────────────┘
+                                 ▼
+                    共享内核 agent-core/agent.ts
+                    · 闸门(Origin + 限流)
+                    · D1 会话记忆装配
+                    · decider 意图决策 → 四路分流
+                    · TOOL_REGISTRY 工具链（链步 ≤3）
+                    · replyGuard 复读守卫
+                    · waitUntil 异步落库
+                                 │
+              ┌──────────────────┼──────────────────┐
+              ▼                  ▼                  ▼
+        本地知识库 KB        D1 SQLite         LLM（OpenAI 兼容）
+        src/agent-kb/      会话/消息/记忆      qwen3.7-flash
 ```
 
-- **知识库**：`src/agent-kb/`（真实店铺 `mockData` + 设施/服务/FAQ/政策），前端与 Worker 共用。
-- **工具**：`src/agent-kb/tools.ts`（search_stores / get_store_detail / compare_stores / get_facility / get_service / get_faq / get_traffic）。
-- **系统提示词**：`src/agent-kb/prompt.ts`。
-- **前端客户端**：`src/agent/agentClient.ts`。
-- **Worker**：`worker/`。
+**设计原则：共享内核 + 薄适配层**
+
+| 目录 | 职责 |
+|---|---|
+| `agent-core/agent.ts` | 智能层共享内核，全部业务逻辑在此 |
+| `functions/api/*.ts` | Pages Functions 薄封装（主部署方式） |
+| `worker/index.ts` | 独立 Worker 薄封装（可选，单独部署时用） |
+| `src/agent-kb/` | 知识库、工具定义、系统提示词（前端与服务端共用） |
+| `migrations/` | D1 表结构 |
+| `wrangler.toml` | Pages 配置（根目录） |
 
 ---
 
-## 一、部署 Cloudflare Worker（agent 大脑）
+## 一、本地开发
 
-> 需要：Node.js、`wrangler`、一个 OpenAI 兼容的 LLM API Key。
+需要两个终端（前端热更新 + Functions 同域）：
 
 ```bash
-cd worker
+# 终端 1：Functions（含 D1，默认 8788）
+npm run build
+npx wrangler pages dev dist
 
-# 1. 登录 Cloudflare（首次需浏览器授权）
-npx wrangler login
-
-# 2. 选定厂商，编辑 worker/wrangler.toml 的 LLM_BASE_URL / LLM_MODEL
-#    ✅ 百炼 / 通义千问（本仓库已默认配好）：
-#         BASE=https://dashscope.aliyuncs.com/compatible-mode/v1  MODEL=qwen3.7-flash
-#        （模型广场还有 qwen-max 更强、qwen-turbo 更便宜；deepseek/kimi 等也都在百炼上可用）
-#    DeepSeek：       BASE=https://api.deepseek.com/v1  MODEL=deepseek-chat
-#    OpenAI：         BASE=https://api.openai.com/v1     MODEL=gpt-4o-mini
-#    月之暗面 Kimi：  BASE=https://api.moonshot.cn/v1    MODEL=moonshot-v1-8k
-
-# 3. 设置密钥（只走 secret，不会进代码库）
-npx wrangler secret put LLM_API_KEY      # 粘贴你的 API Key
-
-# 4. 部署
-npx wrangler deploy
-# 终端会输出类似 https://bfc-agent.<subdomain>.workers.dev 的地址
-```
-
-记下这个 Worker 地址，下一步要用。
-
----
-
-## 二、把 Worker 地址接到前端
-
-### 方式 A：GitHub Pages（推荐，自动化）
-仓库已配置 Pages 工作流。只需在仓库 **Settings → Secrets and variables → Actions** 加一个仓库密钥：
-
-- Name: `AGENT_API_URL`
-- Value: 你的 Worker 地址（如 `https://bfc-agent.xxx.workers.dev`）
-
-工作流构建时会把它注入 `VITE_AGENT_API_URL`（见 `.github/workflows/deploy.yml`）。
-之后任意一次 push 到 `main` 都会重新部署前端并启用真 agent。
-
-### 方式 B：本地开发
-```bash
-cp .env.example .env.local
-# 编辑 .env.local，填入 VITE_AGENT_API_URL=https://...workers.dev
+# 终端 2：前端热更新（5173，/api 已配置代理到 8788）
 npm run dev
 ```
 
-> 不设置 `VITE_AGENT_API_URL` 时，前端自动回退到「离线规则引擎」，网站照常可用。
+打开 <http://localhost:5173>，右下角「小助手」即可对话。
+也可以只用 `npx wrangler pages dev dist`，前端与 `/api` 都在 8788（无热更新）。
+
+首次使用需建本地表：
+
+```bash
+npx wrangler d1 migrations apply bfc-agent-db --local
+```
+
+密钥放根目录 `.dev.vars`（已 gitignore）：
+
+```
+LLM_BASE_URL=https://.../compatible-mode/v1
+LLM_MODEL=qwen3.7-flash
+LLM_API_KEY=sk-xxx
+```
+
+---
+
+## 二、部署到 Cloudflare Pages
+
+```bash
+# 1. 登录
+npx wrangler login
+
+# 2. 建 D1 数据库，把返回的 database_id 填进 wrangler.toml
+npx wrangler d1 create bfc-agent-db
+
+# 3. 建表
+npx wrangler d1 migrations apply bfc-agent-db --remote
+
+# 4. 部署（前端 + Functions 一起）
+npm run pages:deploy
+```
+
+生产环境变量在 **Cloudflare Pages 控制台 → Settings → Environment variables** 设置：
+
+| 变量 | 说明 |
+|---|---|
+| `LLM_API_KEY` | **必须**，密钥，不要写进仓库 |
+| `LLM_BASE_URL` | 已在 `wrangler.toml` 明文配置 |
+| `LLM_MODEL` | 默认 `qwen3.7-flash` |
+
+> 也可在 Cloudflare 控制台把仓库连到 Pages，**push 即自动构建部署**（构建命令 `npm run build`，输出目录 `dist`）。
 
 ---
 
 ## 三、验证
 
-1. 打开站点，右下角「小助手」气泡。
-2. 问它：「约会去哪吃」「BFC 停车怎么收费」「带狗能进吗」「老吉堂在几楼」「A 和 B 哪个好」。
-3. 真 agent 模式下，回答由 LLM 生成并基于知识库，店铺/对比会渲染成卡片；规则模式下则走原来的关键词引擎。
+```bash
+curl https://bfc-shopping-guide.pages.dev/api/health
+curl -X POST https://bfc-shopping-guide.pages.dev/api/agent \
+  -H "Content-Type: application/json" \
+  -d '{"messages":[{"role":"user","content":"预算500两个人吃什么？"}]}'
+```
+
+或在 GitHub 上手动触发 **Agent Smoke Test** 工作流（`.github/workflows/agent-smoke.yml`）。
 
 ---
 
-## 四、常见问题
+## 四、模型说明
 
-- **CORS 报错**：Worker 已返回 `Access-Control-Allow-Origin: *`，若仍报错请确认前端调用的地址与 Worker 部署地址一致。
-- **返回「连不上」**：检查 Worker 的 `LLM_API_KEY` secret 是否已设置、`LLM_BASE_URL` 是否含 `/v1` 且不要带尾斜杠。
-- **想换模型**：改 `worker/wrangler.toml` 的 `LLM_MODEL` 后重新 `wrangler deploy`。
-- **知识库要扩内容**：直接在 `src/agent-kb/*.ts` 增删条目，前端与 Worker 同时生效。
-- **更强检索**：当前是关键词/二元组检索；若店铺很多，可换成 embedding + 向量库（在 Worker 内做）。
+- **主模型 `qwen3.7-flash`**：具备对话能力，真正走 decider → 工具调用 / RAG。
+- **`qwen3.5-ocr` 是纯 OCR 模型，不能对话**：给它 system prompt 只会原样复读，已不再作为主模型。
+  它的正确用途是"图片转文字"（如拍照识别楼层导视牌/菜单），将来要做图片上传功能时可单独调用。
+- 备用通道 `LLM_MODEL_FALLBACK` 在主模型 403/429 时自动切换。
+
+---
+
+## 五、数据准确性原则（重要）
+
+**严禁让模型编造数据。** 知识库 `src/agent-kb/` 里没有的楼层/价格，模型必须如实说明"资料中未标注"，
+不能凭空生成。系统提示词 `src/agent-kb/prompt.ts` 已写入该约束。
+
+> 已知数据缺口：`博悦汇影城` 只在娱乐知识库（`entertainment.ts`）中，且未记录具体楼层，
+> 因此"博悦汇影城在几楼"会如实回答"未标注具体楼层"。如需精确楼层，把真实楼层补进知识库即可，
+> 不需要改任何代码。
+
+---
+
+## 六、常见问题
+
+- **本地 500 / 限流报错**：先跑 `npx wrangler d1 migrations apply bfc-agent-db --local` 建表。
+- **改了 `agent-core/` 没生效**：重启 `wrangler pages dev`（该目录不在 vite 监听范围）。
+- **想换模型**：改 `wrangler.toml` 的 `LLM_MODEL` 后重新部署。
+- **前端没走大模型**：确认 `VITE_AGENT_API_URL` 未设置时会默认同域 `/api/agent`；
+  若 `/api` 不可用，前端会自动回退离线规则引擎（网站照常可用）。
+- **扩展知识库**：直接改 `src/agent-kb/*.ts`，前端与服务端同时生效。

@@ -69,14 +69,24 @@ export function searchKb(query: string, k = 6): { item: KbItem; score: number }[
 }
 
 /**
+ * 轻量检索：返回与查询最相关的 k 条知识，拼接为喂给大模型的上下文文本，
+ * 并给出最高命中分 topScore（用于判断"这个问题到底跟 BFC 有没有关系"）。
+ * 经验分布：无关问题（天气/写诗）topScore=0；相关问题 topScore ≥ 3.5。
+ */
+export function retrieveWithScore(query: string, k = 6): { context: string; topScore: number } {
+  const top = searchKb(query, k)
+  return {
+    context: top.map(s => `[${s.item.category}] ${s.item.title}\n${s.item.content}`).join('\n\n---\n\n'),
+    topScore: top[0]?.score ?? 0,
+  }
+}
+
+/**
  * 轻量检索：返回与查询最相关的 k 条知识，拼接为喂给大模型的上下文文本。
  * 即使全部命中分为 0 也返回前 k 条，避免完全无上下文。
  */
 export function retrieve(query: string, k = 6): string {
-  const top = searchKb(query, k)
-  return top
-    .map(s => `[${s.item.category}] ${s.item.title}\n${s.item.content}`)
-    .join('\n\n---\n\n')
+  return retrieveWithScore(query, k).context
 }
 
 export { CATEGORIES }

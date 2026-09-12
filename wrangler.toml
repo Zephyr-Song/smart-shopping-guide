@@ -1,0 +1,51 @@
+# =============================================================================
+# Cloudflare Pages 一体化配置
+#   静态前端（dist）+ 智能层（functions/api/*）同域部署
+#   架构：共享内核 agent-core/ + 薄适配层 functions/ 与 worker/
+# =============================================================================
+name = "bfc-shopping-guide"
+pages_build_output_dir = "dist"
+compatibility_date = "2024-09-23"
+
+# LLM 配置（OpenAI 兼容接口）
+# 下面几个是明文变量（可提交）；密钥 LLM_API_KEY 请走 Pages 环境变量/机密，不要写进文件。
+[vars]
+LLM_BASE_URL = "https://note3-prev-api.askdiandian.com/v1"
+# 主模型：dots3-note-prev（dots.ai，已实测支持 tool_calls）。
+# ⚠️ 这是推理型模型：会先输出 reasoning_content 再输出 content。
+#    max_tokens 给太小会被思考过程吃光、content 返回空串（decider/摘要已相应放大上限）。
+LLM_MODEL = "dots3-note-prev"
+# 备用模型通道：主模型 403/429 时自动切换。备用必须使用同一服务商的 key，
+# 当前只有 dots.ai 一个 key 且未知其它模型 ID，故留空（留空 = 关闭降级）
+LLM_MODEL_FALLBACK = ""
+# 智能层开关：decider 置信度低于该值时走 fallback 引导链
+DECIDER_MIN_CONFIDENCE = "0.55"
+# 会话记忆：每累计 N 轮触发一次 LLM 滚动摘要
+MEMORY_SUMMARY_EVERY = "8"
+# 限流：每 session 每分钟最大请求数
+RATE_LIMIT_PER_MIN = "20"
+
+# D1（= 托管 SQLite）：会话记忆 / 审计 / 限流
+# 部署前创建：npx wrangler d1 create bfc-agent-db
+# 然后把返回的 database_id 填到下面，并执行：
+#   npx wrangler d1 migrations apply bfc-agent-db --remote
+[[d1_databases]]
+binding = "DB"
+database_name = "bfc-agent-db"
+database_id = "161e29a9-5cfe-492d-ae9a-d5f649c20b94"
+migrations_dir = "migrations"
+
+# -----------------------------------------------------------------------------
+# 本地开发（前端 + Functions 一体）：
+#   npm run build
+#   npx wrangler pages dev dist          # 默认 8788，前端与 /api 同域
+#   或：npm run dev（vite 5173，/api 已配置代理到 8788）
+#
+# 部署：
+#   npx wrangler d1 create bfc-agent-db  → 填 database_id
+#   npx wrangler d1 migrations apply bfc-agent-db --remote
+#   npx wrangler pages deploy dist
+#
+# 密钥（不要提交！本地写 .dev.vars，生产在 Pages 控制台设置）：
+#   LLM_API_KEY
+# -----------------------------------------------------------------------------

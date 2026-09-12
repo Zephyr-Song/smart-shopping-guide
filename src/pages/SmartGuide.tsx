@@ -17,29 +17,9 @@ import {
   Flame,
   Smartphone,
   HelpCircle,
-  Settings,
-  Send,
-  Loader2,
-  CheckCircle2,
-  KeyRound,
 } from 'lucide-react'
 import type { UserProfile, Recommendation } from '../data/mockData'
 import { STORES, CATEGORIES, BFC_SEGMENTS, generateRecommendations } from '../data/mockData'
-import {
-  generateAiRecommendation,
-  askFollowUp,
-  buildFollowUpSystem,
-  getApiKey,
-  setApiKey,
-  getBaseUrl,
-  setBaseUrl,
-  getModel,
-  setModel,
-  isAiReady,
-  PROVIDERS,
-  type ProviderId,
-  type AiMessage,
-} from '../services/aiGuide'
 
 const AGE_OPTIONS = ['18-24', '24-30', '30-38', '38+']
 
@@ -114,24 +94,6 @@ export default function SmartGuide() {
   })
   const [recommendations, setRecommendations] = useState<Recommendation[]>([])
 
-  // AI 相关状态
-  const [loading, setLoading] = useState(false)
-  const [aiError, setAiError] = useState('')
-  const [narrative, setNarrative] = useState('')
-  const [showSettings, setShowSettings] = useState(false)
-  const [apiKeyInput, setApiKeyInput] = useState('')
-  const [providerInput, setProviderInput] = useState<ProviderId>('deepseek')
-  const [baseUrlInput, setBaseUrlInput] = useState('')
-  const [modelInput, setModelInput] = useState('')
-  const [keySaved, setKeySaved] = useState(false)
-  const [keyTesting, setKeyTesting] = useState(false)
-  const [keyTestMsg, setKeyTestMsg] = useState('')
-
-  // 追问对话状态
-  const [chat, setChat] = useState<AiMessage[]>([])
-  const [chatInput, setChatInput] = useState('')
-  const [chatLoading, setChatLoading] = useState(false)
-
   const handleSelect = (key: string, value: string) => {
     setProfile(prev => ({ ...prev, [key]: value }))
     if (step < PROFILE_QUESTIONS.length) {
@@ -151,7 +113,7 @@ export default function SmartGuide() {
     })
   }
 
-  const generateResults = async () => {
+  const generateResults = () => {
     const fullProfile: UserProfile = {
       gender: '',
       age: profile.age || '24-30',
@@ -161,105 +123,15 @@ export default function SmartGuide() {
       interests: profile.interests?.length ? profile.interests : ['精致餐饮', '咖啡茶饮'],
       budgetStyle: profile.budgetStyle || '适中消费',
     }
-
+    const recs = generateRecommendations(fullProfile)
+    setRecommendations(recs)
     setStep(PROFILE_QUESTIONS.length + 1)
-    setLoading(true)
-    setAiError('')
-    setNarrative('')
-    setChat([])
-
-    // 未完整配置 → 直接走规则推荐
-    if (!isAiReady()) {
-      setRecommendations(generateRecommendations(fullProfile))
-      setLoading(false)
-      return
-    }
-
-    // 有 Key → 调真 AI，失败回退规则推荐
-    try {
-      const result = await generateAiRecommendation(fullProfile, STORES)
-      setNarrative(result.narrative)
-      setRecommendations(
-        result.picks.map((p) => ({
-          storeId: p.storeId,
-          score: p.score,
-          reason: p.reason,
-        }))
-      )
-    } catch (e) {
-      setRecommendations(generateRecommendations(fullProfile))
-      setAiError((e as Error).message || 'AI 生成失败，已使用规则推荐')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleAsk = async () => {
-    const q = chatInput.trim()
-    if (!q || chatLoading || !isAiReady()) return
-    const chosenNames = recommendations
-      .map((r) => STORES.find((s) => s.id === r.storeId)?.name)
-      .filter(Boolean) as string[]
-    const messages: AiMessage[] = [
-      { role: 'system', content: buildFollowUpSystem(profile as UserProfile, chosenNames) },
-      ...chat,
-      { role: 'user', content: q },
-    ]
-    setChat((prev) => [...prev, { role: 'user', content: q }])
-    setChatInput('')
-    setChatLoading(true)
-    try {
-      const answer = await askFollowUp(messages)
-      setChat((prev) => [...prev, { role: 'assistant', content: answer }])
-    } catch (e) {
-      setChat((prev) => [
-        ...prev,
-        { role: 'assistant', content: `⚠️ ${(e as Error).message || '回答失败'}` },
-      ])
-    } finally {
-      setChatLoading(false)
-    }
-  }
-
-  const handleSaveKey = () => {
-    setApiKey(apiKeyInput)
-    setBaseUrl(baseUrlInput)
-    setModel(modelInput)
-    setKeySaved(true)
-    setTimeout(() => setKeySaved(false), 2000)
-  }
-
-  const handleTestKey = async () => {
-    setKeyTesting(true)
-    setKeyTestMsg('')
-    const prevKey = getApiKey()
-    const prevUrl = getBaseUrl()
-    const prevModel = getModel()
-    // 临时用输入框的值测试（测试完若未保存则恢复原值）
-    setApiKey(apiKeyInput.trim())
-    setBaseUrl(baseUrlInput.trim())
-    setModel(modelInput.trim())
-    try {
-      const r = await askFollowUp([{ role: 'user', content: '回复 ok 两个字即可' }])
-      setKeyTestMsg(r ? '✅ 配置有效，可正常调用' : '⚠️ 返回为空')
-    } catch (e) {
-      setKeyTestMsg(`❌ ${(e as Error).message}`)
-    } finally {
-      if (!prevKey && !apiKeyInput.trim()) setApiKey('')
-      if (!prevUrl && !baseUrlInput.trim()) setBaseUrl('')
-      if (!prevModel && !modelInput.trim()) setModel('')
-      setKeyTesting(false)
-    }
   }
 
   const reset = () => {
     setStep(0)
     setProfile({ interests: [] })
     setRecommendations([])
-    setNarrative('')
-    setAiError('')
-    setChat([])
-    setChatInput('')
   }
 
   const isInterestStep = step === PROFILE_QUESTIONS.length
@@ -271,39 +143,14 @@ export default function SmartGuide() {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       {/* Header */}
-      <div className="flex items-start justify-between gap-3">
-        <div className="text-center flex-1">
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center justify-center gap-2">
-            <Sparkles className="w-6 h-6 text-primary-500" />
-            AI 智能导购
-          </h1>
-          <p className="text-gray-500 mt-1 text-sm">
-            基于BFC客群画像与可配置大模型，获取个性化店铺推荐
-          </p>
-        </div>
-        <button
-          onClick={() => {
-            const savedUrl = getBaseUrl()
-            const matched = PROVIDERS.find(
-              (p) => p.id !== 'custom' && p.baseUrl === savedUrl
-            )
-            setProviderInput(matched ? matched.id : 'custom')
-            setApiKeyInput(getApiKey())
-            setBaseUrlInput(savedUrl)
-            setModelInput(getModel())
-            setShowSettings(true)
-          }}
-          className="mt-1 flex items-center gap-1.5 px-3 py-2 rounded-xl border border-gray-200 text-gray-600 hover:border-primary-300 hover:text-primary-600 transition cursor-pointer bg-white"
-          title="配置 AI 接口（服务商 / Key / 模型）"
-        >
-          <Settings className="w-4 h-4" />
-          <span className="text-xs">AI 设置</span>
-          {isAiReady() ? (
-            <span className="w-2 h-2 rounded-full bg-green-500" title="已接入真 AI" />
-          ) : (
-            <span className="w-2 h-2 rounded-full bg-gray-300" title="未完整配置，使用规则推荐" />
-          )}
-        </button>
+      <div className="text-center">
+        <h1 className="text-2xl font-bold text-gray-900 flex items-center justify-center gap-2">
+          <Sparkles className="w-6 h-6 text-primary-500" />
+          AI 智能导购
+        </h1>
+        <p className="text-gray-500 mt-1 text-sm">
+          基于BFC六大客群画像，获取个性化店铺推荐
+        </p>
       </div>
 
       {/* Progress bar */}
@@ -570,39 +417,6 @@ export default function SmartGuide() {
             </div>
           </div>
 
-          {/* 加载态 */}
-          {loading && (
-            <div className="bg-white rounded-xl border border-gray-100 p-8 flex flex-col items-center justify-center gap-3 text-gray-400">
-              <Loader2 className="w-6 h-6 animate-spin text-primary-500" />
-              <span className="text-sm">AI 正在为你生成专属推荐…</span>
-            </div>
-          )}
-
-          {/* AI 导购语 */}
-          {!loading && narrative && (
-            <div className="bg-gradient-to-r from-primary-50 to-primary-100/60 rounded-xl p-4 border border-primary-100">
-              <div className="flex items-start gap-2">
-                <Sparkles className="w-4 h-4 text-primary-500 mt-0.5 flex-shrink-0" />
-                <p className="text-sm text-primary-800 leading-relaxed">{narrative}</p>
-              </div>
-            </div>
-          )}
-
-          {/* AI 失败提示 */}
-          {!loading && aiError && (
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-700">
-              ⚠️ {aiError}（可在右上角「AI 设置」中检查 Key）
-            </div>
-          )}
-
-          {/* 未配置提示 */}
-          {!loading && !isAiReady() && (
-            <div className="bg-gray-50 border border-gray-200 rounded-xl p-3 text-xs text-gray-500 flex items-center gap-2">
-              <KeyRound className="w-3.5 h-3.5" />
-              当前使用规则推荐。点击右上角「AI 设置」填入 Key 与接口信息，即可切换为真 AI 个性化导购。
-            </div>
-          )}
-
           <div className="space-y-3">
             {recommendations.map((rec, idx) => {
               const store = STORES.find(s => s.id === rec.storeId)!
@@ -654,193 +468,10 @@ export default function SmartGuide() {
             })}
           </div>
 
-          {/* 追问对话 */}
-          {isAiReady() && !loading && (
-            <div className="bg-white rounded-xl border border-gray-100 p-4 space-y-3">
-              <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
-                <Sparkles className="w-4 h-4 text-primary-500" />
-                继续问 AI 导购
-              </div>
-              <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
-                {chat.length === 0 && (
-                  <p className="text-xs text-gray-400">
-                    例如：「带小孩去哪家安静点？」「有没有人均 200 以内的咖啡？」「这些店今天营业到几点？」
-                  </p>
-                )}
-                {chat.map((m, i) => (
-                  <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                    <div
-                      className={`max-w-[85%] text-sm px-3 py-2 rounded-xl whitespace-pre-wrap ${
-                        m.role === 'user' ? 'bg-primary-500 text-white' : 'bg-gray-100 text-gray-700'
-                      }`}
-                    >
-                      {m.content}
-                    </div>
-                  </div>
-                ))}
-                {chatLoading && (
-                  <div className="flex justify-start">
-                    <div className="bg-gray-100 text-gray-400 text-sm px-3 py-2 rounded-xl flex items-center gap-2">
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" /> 思考中…
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className="flex gap-2">
-                <input
-                  value={chatInput}
-                  onChange={(e) => setChatInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') handleAsk()
-                  }}
-                  placeholder="追问你的导购需求…"
-                  className="flex-1 px-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-primary-300"
-                />
-                <button
-                  onClick={handleAsk}
-                  disabled={chatLoading || !chatInput.trim()}
-                  className="flex items-center gap-1 bg-primary-500 text-white px-4 py-2 rounded-xl text-sm hover:bg-primary-600 disabled:opacity-40 transition cursor-pointer border-none"
-                >
-                  <Send className="w-3.5 h-3.5" />
-                  发送
-                </button>
-              </div>
-            </div>
-          )}
-
           <div className="bg-primary-50 rounded-xl p-4 text-sm text-primary-700">
-            <strong>推荐说明：</strong>基于你选择的 BFC 客群画像（{profile.persona}），
-            消费优先级（{profile.priority}）、预算风格（{profile.budgetStyle}）及兴趣标签，
-            {isAiReady() ? (
-              <>由 <strong>大模型实时推理</strong> 生成个性化推荐与推荐理由，可继续追问细化。</>
-            ) : (
-              <>通过多维度匹配算法生成个性化推荐（在右上角「AI 设置」填入 Key 与接口信息后切换为真 AI）。</>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* AI 设置弹窗 */}
-      {showSettings && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
-          onClick={() => setShowSettings(false)}
-        >
-          <div
-            className="bg-white rounded-2xl w-full max-w-md p-6 space-y-4 shadow-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                <KeyRound className="w-5 h-5 text-primary-500" />
-                AI 接口设置
-              </h3>
-              <button
-                onClick={() => setShowSettings(false)}
-                className="text-gray-400 hover:text-gray-600 text-2xl leading-none bg-transparent border-none cursor-pointer"
-              >
-                ×
-              </button>
-            </div>
-            <p className="text-xs text-gray-500 leading-relaxed">
-              已内嵌阿里云 MaaS 默认配置，开箱即用；如需更换服务商、模型或撤销默认 Key，在下方修改或清除即可。自定义配置仅存于本机浏览器（localStorage），不会上传。
-            </p>
-
-            {/* 服务商预设 */}
-            <div className="space-y-1">
-              <label className="text-xs text-gray-500">服务商</label>
-              <select
-                value={providerInput}
-                onChange={(e) => {
-                  const id = e.target.value as ProviderId
-                  setProviderInput(id)
-                  const p = PROVIDERS.find((x) => x.id === id)
-                  if (p && p.baseUrl) {
-                    setBaseUrlInput(p.baseUrl)
-                    setModelInput(p.defaultModel)
-                  }
-                }}
-                className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-primary-300 bg-white"
-              >
-                {PROVIDERS.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Base URL */}
-            <div className="space-y-1">
-              <label className="text-xs text-gray-500">API Base URL</label>
-              <input
-                type="text"
-                value={baseUrlInput}
-                onChange={(e) => setBaseUrlInput(e.target.value)}
-                placeholder="https://.../chat/completions"
-                className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-primary-300 font-mono"
-              />
-            </div>
-
-            {/* 模型名 */}
-            <div className="space-y-1">
-              <label className="text-xs text-gray-500">模型名</label>
-              <input
-                type="text"
-                value={modelInput}
-                onChange={(e) => setModelInput(e.target.value)}
-                placeholder="如 qwen3.7-flash / deepseek-chat"
-                className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-primary-300 font-mono"
-              />
-            </div>
-
-            {/* Key */}
-            <div className="space-y-1">
-              <label className="text-xs text-gray-500">API Key</label>
-              <input
-                type="password"
-                value={apiKeyInput}
-                onChange={(e) => setApiKeyInput(e.target.value)}
-                placeholder="sk-..."
-                className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-primary-300 font-mono"
-              />
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleSaveKey}
-                className="flex-1 flex items-center justify-center gap-1 bg-primary-500 text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-primary-600 transition cursor-pointer border-none"
-              >
-                <CheckCircle2 className="w-4 h-4" />
-                保存配置
-              </button>
-              <button
-                onClick={handleTestKey}
-                disabled={keyTesting}
-                className="flex items-center justify-center gap-1 px-4 py-2.5 rounded-xl text-sm border border-gray-200 text-gray-600 hover:border-primary-300 transition cursor-pointer bg-white disabled:opacity-40"
-              >
-                {keyTesting ? <Loader2 className="w-4 h-4 animate-spin" /> : '测试'}
-              </button>
-              <button
-                onClick={() => {
-                  setApiKey('')
-                  setApiKeyInput('')
-                  setBaseUrl('')
-                  setBaseUrlInput('')
-                  setModel('')
-                  setModelInput('')
-                }}
-                className="px-4 py-2.5 rounded-xl text-sm border border-gray-200 text-gray-500 hover:border-red-300 hover:text-red-500 transition cursor-pointer bg-white"
-              >
-                清除
-              </button>
-            </div>
-            {keySaved && (
-              <p className="text-xs text-green-600 flex items-center gap-1">
-                <CheckCircle2 className="w-3.5 h-3.5" /> 已保存
-              </p>
-            )}
-            {keyTestMsg && <p className="text-xs text-gray-600">{keyTestMsg}</p>}
+            <strong>推荐说明：</strong>基于你选择的BFC客群画像（{profile.persona}），
+            系统结合消费优先级（{profile.priority}）、预算风格（{profile.budgetStyle}）及兴趣标签，
+            通过多维度匹配算法生成个性化推荐。实际研究中，推荐引擎将接入用户行为数据与协同过滤模型。
           </div>
         </div>
       )}

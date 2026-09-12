@@ -1,0 +1,152 @@
+{
+  "老吉堂": {
+    "ok": false,
+    "reason": "未找到候选"
+  },
+  "晴空": {
+    "ok": true,
+    "url": "https://m.dianping.com/shop/1242086453",
+    "shopName": "晴空·日本料理(BFC外滩金融中心店)",
+    "reason": ""
+  },
+  "DIM SUM MARVEL": {
+    "ok": false,
+    "url": "https://m.dianping.com/shop/32688922",
+    "shopName": "BFC外滩金融中心",
+    "reason": "店名不符"
+  },
+  "MEET THE BUND": {
+    "ok": false,
+    "url": "https://www.dianping.com/shop/H4lIT1pVYp0WprHz",
+    "shopName": "登录",
+    "reason": "店名不符"
+  },
+  "星巴克臻选": {
+    "ok": true,
+    "url": "https://m.dianping.com/shop/3498634",
+    "shopName": "星巴克臻选(外滩中心店)",
+    "reason": ""
+  },
+  "超级猩猩": {
+    "ok": false,
+    "url": "https://m.dianping.com/shop/32688922",
+    "shopName": "BFC外滩金融中心",
+    "reason": "店名不符"
+  },
+  "丽拉瓦迪 LILAWADI": {
+    "ok": false,
+    "url": "https://m.dianping.com/shop/975074902",
+    "shopName": "LILAWADI丽·拉瓦迪泰式按摩spa(BFC外滩金融中心店)",
+    "reason": "店名不符"
+  },
+  "周大福": {
+    "ok": false,
+    "url": "https://m.dianping.com/shop/32688922",
+    "shopName": "BFC外滩金融中心",
+    "reason": "店名不符"
+  },
+  "喜茶 HEYTEA": {
+    "ok": false,
+    "url": "https://www.dianping.com/shop/H9PMR5bnXyPMX4Wb",
+    "shopName": "登录",
+    "reason": "店名不符"
+  },
+  "宠物愿望 PET WISH": {
+    "ok": false,
+    "url": "https://www.dianping.com/shop/G1gvnkOlHueelTye",
+    "shopName": "登录",
+    "reason": "店名不符"
+  },
+  "柴门荟": {
+    "ok": false,
+    "url": "https://m.dianping.com/shop/32688922",
+    "shopName": "BFC外滩金融中心",
+    "reason": "店名不符"
+  },
+  "哥哥的深夜食堂": {
+    "ok": false,
+    "url": "https://m.dianping.com/shop/32688922",
+    "shopName": "BFC外滩金融中心",
+    "reason": "店名不符"
+  },
+  "满堂 by Bar Choice": {
+    "ok": false,
+    "url": "https://m.dianping.com/shop/32688922",
+    "shopName": "BFC外滩金融中心",
+    "reason": "店名不符"
+  },
+  "NUMATASOU 沼田双": {
+    "ok": false,
+    "url": "https://m.dianping.com/shop/1794476520",
+    "shopName": "沼田双天妇罗",
+    "reason": "店名不符"
+  },
+  "陈香贵·兰州牛肉面": {
+    "ok": false,
+    "reason": "未找到候选"
+  },
+  "AIRPARK 人类友好公园": {
+    "ok": false,
+    "url": "https://m.dianping.com/shop/32688922",
+    "shopName": "BFC外滩金融中心",
+    "reason": "店名不符"
+  },
+  "阿飞和巴弟 PET MART": {
+    "ok": false,
+    "reason": "未找到候选"
+  },
+  "遇外滩": {
+    "ok": true,
+    "url": "https://m.dianping.com/shop/H4lIT1pVYp0WprHz",
+    "shopName": "遇外滩(BFC外滩金融中心店)",
+    "reason": ""
+  },
+  "M Stand": {
+    "ok": false,
+    "url": "https://m.dianping.com/shop/93196174",
+    "shopName": "上海滩餐厅(BFC外滩金融中心店)",
+    "reason": "店名不符"
+  },
+  "Baker&Spice": {
+    "ok": false,
+    "url": "https://www.dianping.com/shop/k6eyxwFZu48KyCf6",
+    "shopName": "登录",
+    "reason": "店名不符"
+  },
+  "松鹤楼苏式汤面": {
+    "ok": false,
+    "url": "https://www.dianping.com/shop/k278gLvTlD1urAls",
+    "shopName": "登录",
+    "reason": "店名不符"
+  },
+  "蝶园海鲜酒馆": {
+    "ok": false,
+    "url": "https://m.dianping.com/shop/126620480",
+    "shopName": "蝶园·装修中(BFC外滩金融中心店)",
+    "reason": "店名不符"
+  },
+  "巴黎蜜语": {
+    "ok": false,
+    "url": "https://www.dianping.com/shop/122554901",
+    "shopName": "登录",
+    "reason": "店名不符"
+  },
+  "Whites": {
+    "ok": true,
+    "url": "https://m.dianping.com/shop/ka4AZ0EFSvf33cGo",
+    "shopName": "Whites(BFC外滩金融中心店)",
+    "reason": ""
+  },
+  "Le Jardin de JR": {
+    "ok": false,
+    "url": "https://m.dianping.com/shop/G545TRnKCMFt6tNk",
+    "shopName": "LE JARDIN de Joel Robuchon(BFC外滩金融中心店)",
+    "reason": "店名不符"
+  },
+  "美丽田园": {
+    "ok": false,
+    "url": "https://m.dianping.com/shop/32688922",
+    "shopName": "BFC外滩金融中心",
+    "reason": "店名不符"
+  }
+}

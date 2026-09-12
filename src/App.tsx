@@ -5,9 +5,10 @@ import SmartGuide from './pages/SmartGuide'
 import MallMap from './pages/MallMap'
 import MarketingCalendar from './pages/MarketingCalendar'
 import Analytics from './pages/Analytics'
-import Experiment from './pages/Experiment'
 import BrandExplore from './pages/BrandExplore'
+import Offers from './pages/Offers'
 import About from './pages/About'
+import Architecture from './pages/Architecture'
 
 function App() {
   return (
@@ -17,9 +18,10 @@ function App() {
         <Route path="guide" element={<SmartGuide />} />
         <Route path="map" element={<MallMap />} />
         <Route path="calendar" element={<MarketingCalendar />} />
-        <Route path="analytics" element={<Analytics />} />
-        <Route path="experiment" element={<Experiment />} />
-        <Route path="brands" element={<BrandExplore />} />
+      <Route path="analytics" element={<Analytics />} />
+      <Route path="brands" element={<BrandExplore />} />
+      <Route path="offers" element={<Offers />} />
+        <Route path="architecture" element={<Architecture />} />
         <Route path="about" element={<About />} />
       </Route>
     </Routes>

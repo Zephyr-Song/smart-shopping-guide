@@ -1,17 +1,34 @@
-// 小助手 Agent —— 全局浮动对话助手组件
-// 挂在 Layout 里即可在所有页面右下角出现一个「小助手」气泡，点击展开对话面板。
-// 纯前端、基于真实数据（mockData）的离线推理，无需任何后端或 API key。
-
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { MessageCircle, X, Send, Sparkles, Star, MapPin, Wallet, Flame, RotateCcw, ImagePlus } from 'lucide-react'
+import {
+  X,
+  Send,
+  RotateCcw,
+  ChevronDown,
+  ChevronUp,
+  Sparkles,
+  MessageSquareText,
+} from 'lucide-react'
+import BFCLogo from '../BFCLogo'
 import type { AgentCard, AgentContext, AgentMessage } from './agentTypes'
 import { runAgent } from './agentEngine'
-import { callAgent } from './agentClient'
+import { callAgent, AGENT_API_URL } from './agentClient'
 import { SUGGESTIONS, WELCOME_TEXT } from './suggestions'
+
+function newSessionId(): string {
+  return `s-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`
+}
 
 function uid(): string {
   return `m-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`
+}
+
+const ROUTE_LABEL: Record<string, { label: string; desc: string }> = {
+  kb_rag: { label: '知识库检索', desc: '基于 BFC 商场知识库直接检索并生成回答' },
+  tool_call: { label: '工具调用', desc: '调用店铺搜索/对比等工具获取结构化数据' },
+  direct: { label: '直接回答', desc: '无需检索，直接由模型生成回答' },
+  fallback: { label: '兜底响应', desc: '模型判定问题超出范围，已转本地规则引擎' },
+  local_fallback: { label: '本地兜底', desc: '网络或服务异常，已切换到离线规则引擎' },
 }
 
 export default function AgentAssistant() {
@@ -22,8 +39,7 @@ export default function AgentAssistant() {
   const [input, setInput] = useState('')
   const [thinking, setThinking] = useState(false)
   const [ctx, setCtx] = useState<AgentContext>({})
-  const [pendingImage, setPendingImage] = useState<string | null>(null)
-  const fileRef = useRef<HTMLInputElement>(null)
+  const [sessionId, setSessionId] = useState(() => newSessionId())
   const scrollRef = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
 
@@ -33,25 +49,46 @@ export default function AgentAssistant() {
     }
   }, [messages, thinking, open])
 
-  const send = async (raw: string, image?: string) => {
+  const send = async (raw: string) => {
     const text = raw.trim()
-    if ((!text && !image) || thinking) return
-    const userMsg: AgentMessage = { id: uid(), role: 'user', text: text || '（图片）', image }
+    if (!text || thinking) return
+    const userMsg: AgentMessage = { id: uid(), role: 'user', text }
     const history = [...messages, userMsg]
     setMessages(history)
     setInput('')
-    setPendingImage(null)
     setThinking(true)
     try {
-      // 前端直连大模型：图片先由 qwen3.5-ocr 识别文字，再由 qwen3.7-flash 理解回答
-      const { answer, cards } = await callAgent(history, { imageDataUrl: image })
-      setMessages(prev => [...prev, { id: uid(), role: 'assistant', text: answer, cards }])
+      if (AGENT_API_URL) {
+        const { answer, cards, route } = await callAgent(history, { sessionId })
+        if (route === 'fallback') {
+          const local = runAgent(text, ctx)
+          setCtx(local.newCtx)
+          setMessages(prev => [
+            ...prev,
+            { id: uid(), role: 'assistant', text: local.reply.text, cards: local.reply.cards, route: 'local_fallback' },
+          ])
+          return
+        }
+        setMessages(prev => [
+          ...prev,
+          { id: uid(), role: 'assistant', text: answer, cards, route },
+        ])
+      } else {
+        await new Promise(r => setTimeout(r, 450))
+        const { reply, newCtx } = runAgent(text, ctx)
+        setCtx(newCtx)
+        setMessages(prev => [
+          ...prev,
+          { id: uid(), role: 'assistant', text: reply.text, cards: reply.cards, route: 'local_fallback' },
+        ])
+      }
     } catch {
-      // 大模型调用异常 → 回退本地规则引擎，保证可用
-      await new Promise(r => setTimeout(r, 450))
       const { reply, newCtx } = runAgent(text, ctx)
       setCtx(newCtx)
-      setMessages(prev => [...prev, reply])
+      setMessages(prev => [
+        ...prev,
+        { id: uid(), role: 'assistant', text: reply.text, cards: reply.cards, route: 'local_fallback' },
+      ])
     } finally {
       setThinking(false)
     }
@@ -60,7 +97,7 @@ export default function AgentAssistant() {
   const reset = () => {
     setMessages([{ id: 'welcome', role: 'assistant', text: WELCOME_TEXT }])
     setCtx({})
-    setPendingImage(null)
+    setSessionId(newSessionId())
   }
 
   const onAction = (card: Extract<AgentCard, { type: 'action' }>) => {
@@ -73,16 +110,16 @@ export default function AgentAssistant() {
   return (
     <>
       <style>{`
-        @keyframes agent-pop { 0%{transform:scale(.6);opacity:0} 100%{transform:scale(1);opacity:1} }
-        @keyframes agent-rise { 0%{transform:translateY(16px);opacity:0} 100%{transform:translateY(0);opacity:1} }
-        @keyframes agent-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(99,102,241,.45)} 50%{box-shadow:0 0 0 12px rgba(168,85,247,0)} }
-        @keyframes agent-typing { 0%,60%,100%{transform:translateY(0);opacity:.4} 30%{transform:translateY(-4px);opacity:1} }
-        .agent-bubble-btn{ animation: agent-pulse 2.4s infinite; }
-        .agent-panel{ animation: agent-rise .22s ease-out; }
-        .agent-msg{ animation: agent-pop .2s ease-out; }
-        .agent-dot{ animation: agent-typing 1.2s infinite; }
-        .agent-scroll::-webkit-scrollbar{ width:6px }
-        .agent-scroll::-webkit-scrollbar-thumb{ background:rgba(99,102,241,.25); border-radius:9999px }
+        @keyframes bfc-pop { 0%{transform:scale(.85);opacity:0} 100%{transform:scale(1);opacity:1} }
+        @keyframes bfc-rise { 0%{transform:translateY(16px);opacity:0} 100%{transform:translateY(0);opacity:1} }
+        @keyframes bfc-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(201,169,110,.35)} 50%{box-shadow:0 0 0 14px rgba(201,169,110,0)} }
+        @keyframes bfc-typing { 0%,60%,100%{transform:translateY(0);opacity:.35} 30%{transform:translateY(-4px);opacity:1} }
+        .bfc-bubble-btn{ animation: bfc-pulse 2.8s infinite; }
+        .bfc-panel{ animation: bfc-rise .24s cubic-bezier(.22,1,.36,1); }
+        .bfc-msg{ animation: bfc-pop .2s cubic-bezier(.22,1,.36,1); }
+        .bfc-dot{ animation: bfc-typing 1.3s infinite; }
+        .bfc-scroll::-webkit-scrollbar{ width:5px }
+        .bfc-scroll::-webkit-scrollbar-thumb{ background:rgba(201,169,110,.35); border-radius:9999px }
       `}</style>
 
       {/* 浮动气泡 */}
@@ -90,33 +127,34 @@ export default function AgentAssistant() {
         <button
           onClick={() => setOpen(true)}
           aria-label="打开 BFC 导购助手"
-          className="agent-bubble-btn fixed bottom-5 right-5 z-[60] w-14 h-14 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 text-white shadow-lift flex items-center justify-center cursor-pointer hover:from-primary-600 hover:to-primary-800 transition-colors"
+          className="bfc-bubble-btn fixed bottom-5 right-5 z-[60] w-14 h-14 rounded-full bg-white border border-bfc-gold-200 shadow-bfc-lift flex items-center justify-center cursor-pointer hover:scale-105 transition-transform"
         >
-          <MessageCircle className="w-6 h-6" />
-          <span className="absolute -top-1 -right-1 bg-amber-400 text-[10px] font-bold text-white px-1.5 py-0.5 rounded-full">
-            导购助手
-          </span>
+          <BFCLogo size={30} showText={false} variant="gold" />
         </button>
       )}
 
       {/* 对话面板 */}
       {open && (
-        <div className="agent-panel fixed bottom-5 right-5 z-[60] w-[min(92vw,400px)] h-[min(78vh,620px)] glass rounded-3xl shadow-lift flex flex-col overflow-hidden border border-black/5">
+        <div className="bfc-panel fixed bottom-5 right-5 z-[60] w-[min(92vw,420px)] h-[min(80vh,680px)] bg-bfc-cream border border-bfc-gold-200/70 rounded-[1.75rem] shadow-bfc-lift flex flex-col overflow-hidden">
           {/* 头部 */}
-          <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-primary-600 to-primary-700 text-white">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-                <Sparkles className="w-4 h-4" />
+          <div className="flex items-center justify-between px-4 py-3.5 bg-white/80 border-b border-bfc-gold-200/50">
+            <div className="flex items-center gap-3">
+              <div className="relative w-9 h-9 rounded-full bg-bfc-gold-100 flex items-center justify-center">
+                <BFCLogo size={24} showText={false} variant="gold" />
               </div>
               <div className="leading-tight">
-                <div className="text-sm font-semibold">BFC 导购助手</div>
+                <div className="text-sm font-semibold text-bfc-charcoal">BFC 导购助手</div>
+                <div className="flex items-center gap-1.5 text-[11px] text-bfc-warm-gray">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                  在线
+                </div>
               </div>
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-0.5">
               <button
                 onClick={reset}
                 aria-label="重新对话"
-                className="p-1.5 rounded-lg hover:bg-white/15 transition cursor-pointer text-white/90 border-none bg-transparent"
+                className="p-2 rounded-lg hover:bg-bfc-gold-100 transition cursor-pointer text-bfc-warm-gray border-none bg-transparent"
                 title="重新对话"
               >
                 <RotateCcw className="w-4 h-4" />
@@ -124,7 +162,7 @@ export default function AgentAssistant() {
               <button
                 onClick={() => setOpen(false)}
                 aria-label="关闭"
-                className="p-1.5 rounded-lg hover:bg-white/15 transition cursor-pointer text-white border-none bg-transparent"
+                className="p-2 rounded-lg hover:bg-bfc-gold-100 transition cursor-pointer text-bfc-charcoal border-none bg-transparent"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -132,29 +170,29 @@ export default function AgentAssistant() {
           </div>
 
           {/* 消息区 */}
-          <div ref={scrollRef} className="agent-scroll flex-1 overflow-y-auto px-3 py-4 space-y-3 bg-gray-50/70/70/70">
+          <div ref={scrollRef} className="bfc-scroll flex-1 overflow-y-auto px-3.5 py-4 space-y-4 bg-bfc-cream/70">
             {messages.map(m => (
               <MessageBubble key={m.id} msg={m} onAction={onAction} />
             ))}
             {thinking && (
-              <div className="agent-msg flex items-center gap-2">
+              <div className="bfc-msg flex items-start gap-2.5">
                 <Avatar />
-                <div className="bg-white border border-gray-100 rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-1">
-                  <span className="agent-dot w-1.5 h-1.5 bg-gray-400 rounded-full" />
-                  <span className="agent-dot w-1.5 h-1.5 bg-gray-400 rounded-full" style={{ animationDelay: '.2s' }} />
-                  <span className="agent-dot w-1.5 h-1.5 bg-gray-400 rounded-full" style={{ animationDelay: '.4s' }} />
+                <div className="bg-white border border-bfc-gold-200/60 rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-1.5 shadow-sm">
+                  <span className="bfc-dot w-1.5 h-1.5 bg-bfc-gold-400 rounded-full" />
+                  <span className="bfc-dot w-1.5 h-1.5 bg-bfc-gold-400 rounded-full" style={{ animationDelay: '.2s' }} />
+                  <span className="bfc-dot w-1.5 h-1.5 bg-bfc-gold-400 rounded-full" style={{ animationDelay: '.4s' }} />
                 </div>
               </div>
             )}
           </div>
 
           {/* 建议 chips */}
-          <div className="px-3 pb-1 flex flex-wrap gap-1.5 border-t border-gray-100 pt-2 bg-white">
-            {SUGGESTIONS.slice(0, 3).map(s => (
+          <div className="px-3.5 pb-2 flex flex-wrap gap-2 border-t border-bfc-gold-200/40 pt-3 bg-white/50">
+            {SUGGESTIONS.slice(0, 4).map(s => (
               <button
                 key={s}
                 onClick={() => send(s)}
-                className="text-[11px] text-primary-600 bg-primary-50 hover:bg-primary-100 rounded-full px-2.5 py-1 transition cursor-pointer border-none"
+                className="text-[11px] text-bfc-gold-700 bg-bfc-gold-50 hover:bg-bfc-gold-100 border border-bfc-gold-200 rounded-full px-3 py-1.5 transition cursor-pointer"
               >
                 {s}
               </button>
@@ -162,70 +200,29 @@ export default function AgentAssistant() {
           </div>
 
           {/* 输入区 */}
-          {/* 图片预览（发送后由 qwen3.5-ocr 识别） */}
-          {pendingImage && (
-            <div className="px-3 pt-2 flex items-center gap-2 bg-white">
-              <img
-                src={pendingImage}
-                alt="待识别图片"
-                className="w-14 h-14 object-cover rounded-lg border border-gray-200"
-              />
-              <span className="text-[11px] text-gray-400 flex-1">图片将由 qwen3.5-ocr 识别文字</span>
-              <button
-                type="button"
-                onClick={() => setPendingImage(null)}
-                className="text-xs text-gray-500 hover:text-red-500 px-2 py-1 rounded-lg bg-gray-100 hover:bg-red-50 transition cursor-pointer border-none"
-              >
-                移除
-              </button>
-            </div>
-          )}
           <form
             onSubmit={e => {
               e.preventDefault()
-              send(input, pendingImage ?? undefined)
+              send(input)
             }}
-            className="p-3 flex items-center gap-2 bg-white border-t border-gray-100"
+            className="p-3 bg-white border-t border-bfc-gold-200/50"
           >
-            <input
-              ref={fileRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={e => {
-                const f = e.target.files?.[0]
-                if (f) {
-                  const reader = new FileReader()
-                  reader.onload = () => setPendingImage(String(reader.result))
-                  reader.readAsDataURL(f)
-                }
-                e.target.value = ''
-              }}
-            />
-            <button
-              type="button"
-              onClick={() => fileRef.current?.click()}
-              disabled={thinking}
-              className="w-10 h-10 rounded-xl bg-gray-100 text-gray-500 hover:text-primary-600 hover:bg-primary-50 flex items-center justify-center disabled:opacity-40 transition cursor-pointer border-none flex-shrink-0"
-              aria-label="上传图片识别"
-              title="上传图片（菜单/价签/海报）识别文字"
-            >
-              <ImagePlus className="w-4 h-4" />
-            </button>
-            <input
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              placeholder="问问 BFC 导购助手：约会去哪吃？"
-              className="flex-1 text-sm px-3 py-2.5 rounded-xl bg-gray-100 border-none outline-none focus:ring-2 focus:ring-primary-300 text-gray-800 placeholder:text-gray-400"
-            />
-            <button
-              type="submit"
-              disabled={(!input.trim() && !pendingImage) || thinking}
-              className="w-10 h-10 rounded-xl bg-primary-500 text-white flex items-center justify-center disabled:opacity-40 hover:bg-primary-600 transition cursor-pointer border-none flex-shrink-0"
-              aria-label="发送"
-            >
-              <Send className="w-4 h-4" />
-            </button>
+            <div className="flex items-center gap-2">
+              <input
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                placeholder="随便问我点什么..."
+                className="flex-1 text-sm px-3.5 py-3 rounded-xl bg-bfc-cream border border-bfc-gold-200 outline-none focus:ring-2 focus:ring-bfc-gold-400/40 text-bfc-charcoal placeholder:text-bfc-warm-gray/60 transition"
+              />
+              <button
+                type="submit"
+                disabled={!input.trim() || thinking}
+                className="w-11 h-11 rounded-xl bg-bfc-gold text-white flex items-center justify-center disabled:opacity-40 hover:bg-bfc-gold-600 transition cursor-pointer border-none flex-shrink-0 shadow-bfc"
+                aria-label="发送"
+              >
+                <Send className="w-4 h-4" />
+              </button>
+            </div>
           </form>
         </div>
       )}
@@ -240,13 +237,15 @@ function renderRich(text: string): string {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-  return escaped.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+  return escaped
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n/g, '<br />')
 }
 
 function Avatar() {
   return (
-    <div className="w-7 h-7 rounded-full bg-primary-500 flex items-center justify-center flex-shrink-0">
-      <Sparkles className="w-4 h-4 text-white" />
+    <div className="w-7 h-7 rounded-full bg-bfc-gold-100 flex items-center justify-center flex-shrink-0 border border-bfc-gold-200/50">
+      <BFCLogo size={18} showText={false} variant="gold" />
     </div>
   )
 }
@@ -258,34 +257,44 @@ function MessageBubble({
   msg: AgentMessage
   onAction: (card: Extract<AgentCard, { type: 'action' }>) => void
 }) {
+  const [showReasoning, setShowReasoning] = useState(false)
+  const routeInfo = msg.route ? ROUTE_LABEL[msg.route] : null
+
   if (msg.role === 'user') {
     return (
-      <div className="agent-msg flex justify-end">
-        <div className="max-w-[80%] flex flex-col items-end gap-1.5">
-          {msg.image && (
-            <img
-              src={msg.image}
-              alt="用户图片"
-              className="w-44 rounded-2xl border border-gray-200 shadow-sm object-cover"
-            />
-          )}
-          {msg.text && msg.text !== '（图片）' && (
-            <div
-              className="bg-primary-500 text-white text-sm rounded-2xl rounded-tr-sm px-3.5 py-2.5 whitespace-pre-wrap break-words"
-              dangerouslySetInnerHTML={{ __html: renderRich(msg.text ?? '') }}
-            />
-          )}
-        </div>
+      <div className="bfc-msg flex justify-end">
+        <div
+          className="max-w-[82%] bg-bfc-gold text-white text-sm rounded-2xl rounded-tr-sm px-4 py-2.5 whitespace-pre-wrap break-words shadow-sm"
+          dangerouslySetInnerHTML={{ __html: renderRich(msg.text ?? '') }}
+        />
       </div>
     )
   }
+
   return (
-    <div className="agent-msg flex items-start gap-2">
+    <div className="bfc-msg flex items-start gap-2.5">
       <Avatar />
       <div className="max-w-[85%] space-y-2">
+        {routeInfo && (
+          <button
+            onClick={() => setShowReasoning(v => !v)}
+            className="flex items-center gap-1 text-[11px] text-bfc-warm-gray hover:text-bfc-gold-700 transition cursor-pointer border-none bg-transparent p-0"
+          >
+            <Sparkles className="w-3 h-3" />
+            <span>深度思考 · {routeInfo.label}</span>
+            {showReasoning ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+          </button>
+        )}
+
+        {showReasoning && routeInfo && (
+          <div className="bg-bfc-gold-50 border border-bfc-gold-200/60 rounded-xl px-3 py-2 text-xs text-bfc-warm-gray leading-relaxed">
+            {routeInfo.desc}
+          </div>
+        )}
+
         {msg.text && (
           <div
-            className="bg-white border border-gray-100 text-sm text-gray-700 rounded-2xl rounded-tl-sm px-3.5 py-2.5 whitespace-pre-wrap break-words"
+            className="bg-white border border-bfc-gold-200/60 text-sm text-bfc-charcoal rounded-2xl rounded-tl-sm px-4 py-3 whitespace-pre-wrap break-words shadow-sm"
             dangerouslySetInnerHTML={{ __html: renderRich(msg.text ?? '') }}
           />
         )}
@@ -311,15 +320,15 @@ function CardView({
       return <StoreCard card={card} />
     case 'category':
       return (
-        <div className="inline-flex items-center gap-2 bg-white border border-gray-100 rounded-xl px-3 py-2 text-sm">
+        <div className="inline-flex items-center gap-2 bg-white border border-bfc-gold-200/60 rounded-xl px-3 py-2 text-sm shadow-sm">
           <span className="text-lg">{card.icon}</span>
-          <span className="font-medium text-gray-800">{card.name}</span>
-          <span className="text-xs text-gray-400">· {card.count} 家</span>
+          <span className="font-medium text-bfc-charcoal">{card.name}</span>
+          <span className="text-xs text-bfc-warm-gray">· {card.count} 家</span>
         </div>
       )
     case 'info':
       return (
-        <div className="bg-primary-50 border border-primary-100 rounded-xl px-3 py-2 text-sm text-primary-700">
+        <div className="bg-bfc-gold-50 border border-bfc-gold-200/60 rounded-xl px-3 py-2 text-sm text-bfc-gold-800">
           {card.title && <div className="font-semibold mb-0.5">{card.title}</div>}
           <div className="whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: renderRich(card.text ?? '') }} />
         </div>
@@ -328,7 +337,7 @@ function CardView({
       return (
         <button
           onClick={() => onAction(card)}
-          className="w-full text-left bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium rounded-xl px-4 py-3 transition cursor-pointer border-none flex items-center justify-between"
+          className="w-full text-left bg-bfc-gold hover:bg-bfc-gold-600 text-white text-sm font-medium rounded-xl px-4 py-3 transition cursor-pointer border-none flex items-center justify-between shadow-bfc"
         >
           <span>{card.label}</span>
           <span className="text-white/80">→</span>
@@ -347,6 +356,8 @@ function CardView({
   }
 }
 
+import { Star, MapPin, Wallet, Flame } from 'lucide-react'
+
 function heatColor(h: number): string {
   if (h >= 0.8) return '#ef4444'
   if (h >= 0.5) return '#f59e0b'
@@ -354,9 +365,9 @@ function heatColor(h: number): string {
 }
 
 function StoreCard({ card, compact }: { card: Extract<AgentCard, { type: 'store' }>; compact?: boolean }) {
-  const color = card.color || '#8b5cf6'
+  const color = card.color || '#c9a96e'
   return (
-    <div className="bg-white border border-gray-100 rounded-xl p-3 shadow-sm">
+    <div className="bg-white border border-bfc-gold-200/60 rounded-xl p-3 shadow-sm">
       <div className="flex items-center gap-2 flex-wrap">
         <span
           className="text-xs px-2 py-0.5 rounded-full font-medium"
@@ -369,13 +380,13 @@ function StoreCard({ card, compact }: { card: Extract<AgentCard, { type: 'store'
           {card.rating}
         </span>
       </div>
-      <div className="mt-1.5 font-semibold text-gray-900 text-sm">{card.name}</div>
+      <div className="mt-1.5 font-semibold text-bfc-charcoal text-sm">{card.name}</div>
       {!compact && card.reason && (
-        <div className="mt-1 inline-flex items-center gap-1 bg-green-50 text-green-600 text-xs px-2 py-1 rounded-lg">
-          💡 {card.reason}
+        <div className="mt-1 inline-flex items-center gap-1 bg-bfc-gold-50 text-bfc-gold-700 text-xs px-2 py-1 rounded-lg">
+          <MessageSquareText className="w-3 h-3" /> {card.reason}
         </div>
       )}
-      <div className={`mt-2 flex items-center gap-3 text-xs text-gray-400 ${compact ? 'flex-col items-start gap-0.5' : ''}`}>
+      <div className={`mt-2 flex items-center gap-3 text-xs text-bfc-warm-gray ${compact ? 'flex-col items-start gap-0.5' : ''}`}>
         <span className="flex items-center gap-1">
           <MapPin className="w-3 h-3" />
           {card.floor}
@@ -393,9 +404,9 @@ function StoreCard({ card, compact }: { card: Extract<AgentCard, { type: 'store'
       </div>
       {!compact && card.matchPercent != null && (
         <div className="mt-2">
-          <div className="text-[11px] text-gray-400 mb-0.5">匹配度 {card.matchPercent}%</div>
-          <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-            <div className="h-full bg-primary-500 rounded-full" style={{ width: `${card.matchPercent}%` }} />
+          <div className="text-[11px] text-bfc-warm-gray mb-0.5">匹配度 {card.matchPercent}%</div>
+          <div className="h-1.5 bg-bfc-gold-100 rounded-full overflow-hidden">
+            <div className="h-full bg-bfc-gold rounded-full" style={{ width: `${card.matchPercent}%` }} />
           </div>
         </div>
       )}

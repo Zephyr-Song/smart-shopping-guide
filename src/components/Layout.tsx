@@ -1,27 +1,30 @@
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { useState } from 'react'
 import AgentAssistant from './agent/AgentAssistant'
+import BFCLogo from './BFCLogo'
 import {
   ShoppingBag,
   Map,
   BarChart3,
-  FlaskConical,
   Info,
   Menu,
   X,
-  Sparkles,
   Calendar,
   Store,
+  Compass,
+  Layers,
+  Ticket,
 } from 'lucide-react'
 
 const NAV_ITEMS = [
-  { path: '/', label: '首页', icon: Sparkles },
+  { path: '/', label: '首页', icon: Compass },
   { path: '/guide', label: '智能导购', icon: ShoppingBag },
   { path: '/map', label: '商场地图', icon: Map },
   { path: '/calendar', label: '营销日历', icon: Calendar },
   { path: '/brands', label: '品牌探索', icon: Store },
+  { path: '/offers', label: '限时优惠', icon: Ticket },
   { path: '/analytics', label: '商圈分析', icon: BarChart3 },
-  { path: '/experiment', label: '实验中心', icon: FlaskConical },
+  { path: '/architecture', label: '系统架构', icon: Layers },
   { path: '/about', label: '关于项目', icon: Info },
 ]
 
@@ -30,23 +33,25 @@ export default function Layout() {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex flex-col bg-bfc-cream">
       {/* Header */}
-      <header className="glass border-b border-black/5 sticky top-0 z-50 shadow-soft">
+      <header className="sticky top-0 z-50 border-b border-bfc-gold-200/60 bg-bfc-cream/90 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <Link to="/" className="flex items-center gap-2.5 no-underline group">
-              <div className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-lift">
-                <Sparkles className="w-5 h-5 text-white" />
-                <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-champagne ring-2 ring-white" />
+            <Link to="/" className="flex items-center gap-3 no-underline group">
+              <BFCLogo size={32} showText={false} variant="gold" />
+              <div className="flex flex-col leading-none">
+                <span className="text-[15px] font-semibold text-bfc-charcoal tracking-tight">
+                  BFC 智能导购
+                </span>
+                <span className="text-[10px] text-bfc-warm-gray tracking-widest mt-0.5">
+                  AI SHOPPING GUIDE
+                </span>
               </div>
-              <span className="text-lg font-bold text-ink font-display tracking-tight">
-                AI 智能导购
-              </span>
             </Link>
 
             {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center gap-1">
+            <nav className="hidden md:flex items-center gap-0.5">
               {NAV_ITEMS.map(item => {
                 const Icon = item.icon
                 const active = location.pathname === item.path
@@ -54,17 +59,14 @@ export default function Layout() {
                   <Link
                     key={item.path}
                     to={item.path}
-                    className={`relative flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium no-underline transition-colors ${
+                    className={`relative flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[13px] font-medium no-underline transition-all ${
                       active
-                        ? 'text-primary-600'
-                        : 'text-gray-500 hover:text-ink'
+                        ? 'text-bfc-gold-700 bg-bfc-gold-100'
+                        : 'text-bfc-warm-gray hover:text-bfc-charcoal hover:bg-bfc-gold-100/50'
                     }`}
                   >
-                    <Icon className="w-4 h-4" />
+                    <Icon className="w-3.5 h-3.5" />
                     {item.label}
-                    {active && (
-                      <span className="absolute left-3 right-3 -bottom-px h-0.5 rounded-full bg-gradient-to-r from-primary-500 to-primary-700" />
-                    )}
                   </Link>
                 )
               })}
@@ -72,21 +74,17 @@ export default function Layout() {
 
             {/* Mobile menu button */}
             <button
-              className="md:hidden p-2 rounded-lg hover:bg-gray-100 border-none bg-transparent cursor-pointer"
+              className="md:hidden p-2 rounded-lg hover:bg-bfc-gold-100 border-none bg-transparent cursor-pointer text-bfc-charcoal"
               onClick={() => setMobileOpen(!mobileOpen)}
             >
-              {mobileOpen ? (
-                <X className="w-5 h-5 text-gray-600" />
-              ) : (
-                <Menu className="w-5 h-5 text-gray-600" />
-              )}
+              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
 
         {/* Mobile Nav */}
         {mobileOpen && (
-          <div className="md:hidden border-t border-black/5 glass">
+          <div className="md:hidden border-t border-bfc-gold-200/60 bg-bfc-cream/95 backdrop-blur-xl">
             {NAV_ITEMS.map(item => {
               const Icon = item.icon
               const active = location.pathname === item.path
@@ -95,10 +93,10 @@ export default function Layout() {
                   key={item.path}
                   to={item.path}
                   onClick={() => setMobileOpen(false)}
-                  className={`flex items-center gap-2 px-4 py-3 text-sm font-medium no-underline border-b border-black/5 ${
+                  className={`flex items-center gap-3 px-4 py-3 text-sm font-medium no-underline border-b border-bfc-gold-200/40 ${
                     active
-                      ? 'bg-primary-50 text-primary-600'
-                      : 'text-gray-600 hover:bg-white/60'
+                      ? 'bg-bfc-gold-100 text-bfc-gold-800'
+                      : 'text-bfc-charcoal hover:bg-bfc-gold-100/40'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
@@ -111,27 +109,28 @@ export default function Layout() {
       </header>
 
       {/* Main */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
         <Outlet />
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-black/5 glass mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center">
-              <Sparkles className="w-3.5 h-3.5 text-white" />
+      <footer className="border-t border-bfc-gold-200/60 bg-bfc-cream/80 mt-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <BFCLogo size={24} showText={false} variant="gold" />
+              <div>
+                <div className="text-sm font-semibold text-bfc-charcoal">BFC 智能导购</div>
+                <div className="text-xs text-bfc-warm-gray">BFC 外滩金融中心 · 上海复星外滩商业有限公司</div>
+              </div>
             </div>
-            <span className="text-sm font-semibold text-ink font-display">AI 智能导购</span>
+            <p className="text-xs text-bfc-warm-gray/80">
+              基于真实商业数据的 AI 精准营销研究
+            </p>
           </div>
-          <p className="text-sm text-gray-500">BFC 外滩金融中心 · 上海复星外滩商业有限公司</p>
-          <p className="mt-1 text-xs text-gray-400">
-            基于真实商业数据的 AI 精准营销研究 · 西浦 #26054
-          </p>
         </div>
       </footer>
 
-      {/* 全局浮动导购助手「点点」 */}
       <AgentAssistant />
     </div>
   )
