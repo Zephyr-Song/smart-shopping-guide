@@ -227,23 +227,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Research Context */}
-      <section className="bg-white/70 border border-bfc-gold-200/50 rounded-2xl p-6 shadow-bfc card-hover">
-        <h2 className="font-display text-lg font-semibold text-bfc-charcoal mb-3">研究背景</h2>
-        <p className="text-sm text-bfc-warm-gray leading-relaxed">
-          线下商业综合体面临线上分流、传统营销低效等运营困境，AI 驱动的精准营销通过用户画像与个性化触达，成为实体商业激活客流、提升转化的核心抓手。本项目以 BFC 外滩金融中心等典型商业综合体为研究对象，采用实地实验与数据分析方法，探究 AI 精准营销在不同场景下对客流规模、消费转化与客群复购的影响机制。
-        </p>
-        <div className="grid sm:grid-cols-4 gap-4 mt-4">
-          {['文献综述与框架搭建', '线下调研与数据采集', '数据实证分析', '研究报告与优化方案'].map((step, i) => (
-            <div key={i} className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-full bg-bfc-gold text-white text-xs flex items-center justify-center font-semibold flex-shrink-0">
-                {i + 1}
-              </div>
-              <span className="text-xs text-bfc-charcoal/80">{step}</span>
-            </div>
-          ))}
-        </div>
-      </section>
     </div>
   )
 }

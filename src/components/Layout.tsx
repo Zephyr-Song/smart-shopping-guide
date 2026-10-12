@@ -6,7 +6,6 @@ import {
   ShoppingBag,
   Map,
   BarChart3,
-  Info,
   Menu,
   X,
   Calendar,
@@ -25,7 +24,6 @@ const NAV_ITEMS = [
   { path: '/offers', label: '限时优惠', icon: Ticket },
   { path: '/analytics', label: '商圈分析', icon: BarChart3 },
   { path: '/architecture', label: '系统架构', icon: Layers },
-  { path: '/about', label: '关于项目', icon: Info },
 ]
 
 export default function Layout() {
@@ -125,7 +123,7 @@ export default function Layout() {
               </div>
             </div>
             <p className="text-xs text-bfc-warm-gray/80">
-              基于真实商业数据的 AI 精准营销研究
+              AI 导购助手 · 让每一次逛街都更聪明
             </p>
           </div>
         </div>

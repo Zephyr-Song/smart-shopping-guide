@@ -7,7 +7,6 @@ import MarketingCalendar from './pages/MarketingCalendar'
 import Analytics from './pages/Analytics'
 import BrandExplore from './pages/BrandExplore'
 import Offers from './pages/Offers'
-import About from './pages/About'
 import Architecture from './pages/Architecture'
 
 function App() {
@@ -20,9 +19,8 @@ function App() {
         <Route path="calendar" element={<MarketingCalendar />} />
       <Route path="analytics" element={<Analytics />} />
       <Route path="brands" element={<BrandExplore />} />
-      <Route path="offers" element={<Offers />} />
+        <Route path="offers" element={<Offers />} />
         <Route path="architecture" element={<Architecture />} />
-        <Route path="about" element={<About />} />
       </Route>
     </Routes>
   )
