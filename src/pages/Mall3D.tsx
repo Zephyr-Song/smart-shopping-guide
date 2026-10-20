@@ -11,6 +11,7 @@ export default function Mall3D() {
   const [zone, setZone] = useState<ZoneFilter>('all')
   const [selected, setSelected] = useState<Store | null>(null)
   const [query, setQuery] = useState('')
+  const [resetSignal, setResetSignal] = useState(0)
 
   const visibleStores = useMemo(
     () => STORES.filter(s => zone === 'all' || (zone === 'south' ? s.id.startsWith('s') : s.id.startsWith('n'))),
@@ -23,11 +24,16 @@ export default function Mall3D() {
   }
 
   const focusByName = (name: string) => {
-    const hit = STORES.find(s => s.name === name)
-    if (hit) {
-      setSelected(hit)
-      setQuery(hit.name)
-    }
+    const q = name.trim()
+    if (!q) return
+    // 模糊匹配：店名包含关键词、或关键词包含店名（如输「喜」「茶」也能命中）、或品类匹配
+    const hits = STORES.filter(
+      s => s.name.includes(q) || q.includes(s.name) || s.category.includes(q),
+    )
+    if (!hits.length) return
+    hits.sort((a, b) => (a.name.startsWith(q) ? -1 : 0) - (b.name.startsWith(q) ? -1 : 0))
+    setSelected(hits[0])
+    setQuery(hits[0].name)
   }
 
   // 选中即驱动 MallScene3D 聚焦该店铺（按 id 变化触发）
@@ -89,6 +95,13 @@ export default function Mall3D() {
           </button>
         ))}
         <span className="text-xs text-bfc-warm-gray">当前显示 {visibleStores.length} 家店铺</span>
+        <button
+          onClick={() => setResetSignal(t => t + 1)}
+          className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium border border-bfc-gold-200 bg-white text-bfc-warm-gray hover:border-bfc-gold-300 cursor-pointer"
+        >
+          <Rotate3d className="w-4 h-4" />
+          重置视角
+        </button>
       </div>
 
       {/* 3D viewport */}
@@ -98,6 +111,7 @@ export default function Mall3D() {
           categories={CATEGORY_COLORS}
           zoneFilter={zone}
           focusStoreId={focusId}
+          resetSignal={resetSignal}
           onSelect={onSelectFromScene}
         />
 

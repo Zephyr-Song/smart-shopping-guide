@@ -321,14 +321,17 @@ export default function StoreDrawer({ store, onClose }: { store: DrawerStore | n
                   </p>
                 )}
                 {posts.crawledAt && (
-                  <p className="text-[10px] text-gray-300 mt-2">笔记采集于 {posts.crawledAt} · 点击卡片可跳转原笔记</p>
+                  <p className={`text-[10px] mt-2 ${posts.crawledAt && Date.now() - new Date(posts.crawledAt).getTime() > 30 * 86400000 ? 'text-amber-600' : 'text-gray-300'}`}>
+                    笔记采集于 {posts.crawledAt} · 点击卡片可跳转原笔记
+                    {posts.crawledAt && Date.now() - new Date(posts.crawledAt).getTime() > 30 * 86400000 ? '（数据较久，可能不是最新）' : ''}
+                  </p>
                 )}
               </>
             )}
             {posts.status === 'empty' && (
               <div className="bg-white rounded-xl border border-dashed border-gray-200 p-4 text-center">
                 <p className="text-xs text-gray-400">暂无该店铺的小红书笔记入库</p>
-                <p className="text-[10px] text-gray-300 mt-0.5">采集管线运行后会自动出现</p>
+                <p className="text-[10px] text-gray-300 mt-0.5">该品牌暂未被探店采集覆盖（属爬取范围问题，非页面故障），后续补爬后会自动出现</p>
               </div>
             )}
             {posts.status === 'error' && (
