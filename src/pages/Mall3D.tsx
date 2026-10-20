@@ -34,6 +34,7 @@ export default function Mall3D() {
   const [floor, setFloor] = useState<number | 'all'>('all')
   const [selected, setSelected] = useState<Store | null>(null)
   const [drawerStore, setDrawerStore] = useState<DrawerStore | null>(null)
+  const [focusId, setFocusId] = useState<string | null>(null)
   const [query, setQuery] = useState('')
   const [resetSignal, setResetSignal] = useState(0)
 
@@ -58,6 +59,7 @@ export default function Mall3D() {
   )
 
   const onSelectFromScene = (store: Store | null) => {
+    // 点击只选中 + 高亮，不动相机（定位交给「在 3D 中定位」按钮或搜索）
     setSelected(store)
     if (store) setQuery(store.name)
   }
@@ -73,10 +75,8 @@ export default function Mall3D() {
     hits.sort((a, b) => (a.name.startsWith(q) ? -1 : 0) - (b.name.startsWith(q) ? -1 : 0))
     setSelected(hits[0])
     setQuery(hits[0].name)
+    setFocusId(hits[0].id)
   }
-
-  // 选中即驱动 MallScene3D 聚焦该店铺（按 id 变化触发）
-  const focusId = selected?.id ?? null
 
   return (
     <div className="space-y-4">
@@ -221,6 +221,7 @@ export default function Mall3D() {
                 onClick={() => {
                   setSelected(null)
                   setQuery('')
+                  setFocusId(null)
                 }}
                 className="text-bfc-warm-gray hover:text-bfc-charcoal text-lg leading-none px-1 cursor-pointer"
                 aria-label="关闭"

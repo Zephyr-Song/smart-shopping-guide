@@ -337,6 +337,41 @@ export default function MallScene3D({
       }
     }
 
+    // —— BFC 外观致敬：南楼「金色竹幕」立面 + 双楼金色屋顶收边 ——
+    // 复星艺术中心标志性的黄铜「流苏/竹幕」是 BFC 最强视觉记忆点；
+    // 这里用程序化竖排黄铜圆柱在南楼临街两面复现这一意象（风格化致敬，非照片级还原）。
+    const bambooGeo = new THREE.CylinderGeometry(1.2, 1.2, buildingH + 4, 10)
+    const bambooMat = new THREE.MeshStandardMaterial({ color: 0xc9a227, metalness: 1.0, roughness: 0.32 })
+    const southCx = 50 * SCALE
+    const southCz = 50 * SCALE
+    const halfFoot = footprint / 2
+    const N = 24
+    const bambooOff = 3 // 竹幕外挂在玻璃立面之外
+    for (let i = 0; i <= N; i++) {
+      const t = i / N
+      const along = -halfFoot + t * footprint
+      // 临街正面（z 负侧）
+      const front = new THREE.Mesh(bambooGeo, bambooMat)
+      front.position.set(southCx + along, groundY + buildingH / 2, southCz - halfFoot - bambooOff)
+      southGroup.add(front)
+      // 西侧立面（x 负侧）
+      if (i > 0 && i < N) {
+        const side = new THREE.Mesh(bambooGeo, bambooMat)
+        side.position.set(southCx - halfFoot - bambooOff, groundY + buildingH / 2, southCz + along)
+        southGroup.add(side)
+      }
+    }
+
+    // 金色屋顶收边（双楼，呼应 BFC 暖金主调）
+    const goldBandMat = new THREE.MeshStandardMaterial({ color: 0xc9a227, metalness: 0.9, roughness: 0.35 })
+    for (const zone of ['south', 'north'] as const) {
+      const cx = zone === 'north' ? 50 * SCALE + NORTH_SHIFT : 50 * SCALE
+      const g = zone === 'south' ? southGroup : northGroup
+      const band = new THREE.Mesh(new THREE.BoxGeometry(footprint + 4, 1.6, footprint + 4), goldBandMat)
+      band.position.set(cx, roofY + 0.2, 50 * SCALE)
+      g.add(band)
+    }
+
     // —— 区名标牌 ——
     const topY = levelY(maxLevel) + 18
     const southLabel = makeZoneLabel('南区 South Retail')
