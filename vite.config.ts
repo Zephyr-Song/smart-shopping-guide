@@ -11,6 +11,9 @@ export default defineConfig({
   base,
   build: {
     target: 'es2020',
+    // 关闭 Vite 自带的 outDir 清理：该环境 WorkBuddy 回收站 shim(genie-trash) 会卡死，
+    // 改为构建前手动 rm -rf dist，避免触发该工具。
+    emptyOutDir: false,
     cssCodeSplit: true,
     // 拆包策略：把体积大、变更少、或只有个别路由用到的依赖分出独立 chunk。
     // 配合 App.tsx 的路由级 lazy，使首屏只承担 Layout + 首页 + react 运行时。
