@@ -18,6 +18,49 @@ export interface AgentReply {
   route?: string
 }
 
+// ---------------------------------------------------------------------------
+// 客户端请求体预校验（方案要求「请求体保护放在客户端和 Function 两层」）
+// 与服务端 limitsOf 的默认值保持一致；服务端仍会再校验一次，这里只负责提前拦截，
+// 让用户在发出去之前就知道要拆分，而不是等 413 回来。
+// ---------------------------------------------------------------------------
+export const CLIENT_LIMITS = {
+  bodyBytes: 32 * 1024,
+  messages: 24,
+  messageChars: 4000,
+  totalChars: 16000,
+} as const
+
+/** 返回 null 表示通过，返回字符串表示给用户看的提示文案 */
+export function precheckMessages(messages: AgentMessage[]): string | null {
+  const list = Array.isArray(messages) ? messages : []
+  if (!list.length) return '请先输入要问的内容～'
+  if (list.length > CLIENT_LIMITS.messages) {
+    return '这段对话有点长了，点右上角「重新对话」我们再接着聊～'
+  }
+  let total = 0
+  for (const m of list) {
+    const c = (m.text || '').trim()
+    if (c.length > CLIENT_LIMITS.messageChars) {
+      return '这条内容太长了，拆成几个问题我会答得更准～'
+    }
+    total += c.length
+  }
+  if (total > CLIENT_LIMITS.totalChars) {
+    return '对话内容积累得有点多，点右上角「重新对话」重新开始吧～'
+  }
+  try {
+    const bytes = new TextEncoder().encode(
+      JSON.stringify({ messages: list.map(m => ({ role: m.role, content: m.text })) }),
+    ).byteLength
+    if (bytes > CLIENT_LIMITS.bodyBytes) {
+      return '内容超出单次请求上限，拆成几次问吧～'
+    }
+  } catch {
+    // TextEncoder 不可用时交给服务端判定
+  }
+  return null
+}
+
 /** done 事件载荷：answer 是服务端最终清洗后的回答，前端以它覆盖流式原文 */
 export interface StreamDone {
   requestId?: string

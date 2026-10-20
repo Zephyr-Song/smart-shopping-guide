@@ -37,6 +37,11 @@ interface XhsPost {
   url: string | null
   time: string | null
   scope: 'store' | 'mall'
+  /** 内容治理字段：由 /api/store-posts 返回 */
+  freshness?: 'fresh' | 'aging' | 'stale'
+  stale?: boolean
+  updatedAt?: string | null
+  freshnessNote?: string | null
 }
 
 interface DianpingReview {
@@ -55,6 +60,8 @@ interface PostsState {
   posts: XhsPost[]
   crawledAt: string | null
   fallback: boolean
+  /** 'stale_only' 表示当前只剩过期内容，已在 UI 上标注 */
+  degraded?: string | null
 }
 
 interface ReviewsState {
@@ -101,6 +108,9 @@ function XhsCard({ p }: { p: XhsPost }) {
       )}
       <div className="p-3">
         <p className="text-xs font-medium text-bfc-charcoal leading-snug line-clamp-2 mb-1.5">{p.title || '小红书笔记'}</p>
+        {p.freshnessNote && (
+          <p className={`text-[10px] mb-1.5 ${p.stale ? 'text-amber-600' : 'text-gray-400'}`}>{p.freshnessNote}</p>
+        )}
         <div className="flex items-center justify-between text-[10px] text-gray-400">
           <span className="truncate max-w-[60%]">{p.author || '小红书用户'}</span>
           <span className="inline-flex items-center gap-0.5 flex-shrink-0">
@@ -185,16 +195,25 @@ export default function StoreDrawer({ store, onClose }: { store: DrawerStore | n
     setPosts({ status: 'loading', posts: [], crawledAt: null, fallback: false })
     fetch(`/api/store-posts?brand=${encodeURIComponent(store.name)}`, { cache: 'no-store' })
       .then(r => r.json())
-      .then((d: { source?: string; posts?: XhsPost[]; crawledAt?: string | null; fallback?: boolean }) => {
-        if (!alive) return
-        if (d.source === 'xhs' && d.posts && d.posts.length > 0) {
-          setPosts({ status: 'ok', posts: d.posts, crawledAt: d.crawledAt || null, fallback: !!d.fallback })
-        } else if (d.source === 'xhs') {
-          setPosts({ status: 'empty', posts: [], crawledAt: d.crawledAt || null, fallback: false })
-        } else {
-          setPosts({ status: 'error', posts: [], crawledAt: null, fallback: false })
-        }
-      })
+      .then(
+        (d: {
+          source?: string
+          posts?: XhsPost[]
+          crawledAt?: string | null
+          fallback?: boolean
+          degraded?: string | null
+        }) => {
+          if (!alive) return
+          const degraded = d.degraded || null
+          if (d.source === 'xhs' && d.posts && d.posts.length > 0) {
+            setPosts({ status: 'ok', posts: d.posts, crawledAt: d.crawledAt || null, fallback: !!d.fallback, degraded })
+          } else if (d.source === 'xhs') {
+            setPosts({ status: 'empty', posts: [], crawledAt: d.crawledAt || null, fallback: false, degraded })
+          } else {
+            setPosts({ status: 'error', posts: [], crawledAt: null, fallback: false })
+          }
+        },
+      )
       .catch(() => { if (alive) setPosts({ status: 'error', posts: [], crawledAt: null, fallback: false }) })
     return () => { alive = false }
   }, [store])
@@ -296,6 +315,11 @@ export default function StoreDrawer({ store, onClose }: { store: DrawerStore | n
                 <div className="grid grid-cols-2 gap-2.5">
                   {posts.posts.map(p => <XhsCard key={p.noteId} p={p} />)}
                 </div>
+                {posts.degraded === 'stale_only' && (
+                  <p className="text-[10px] text-amber-600 mt-2">
+                    该店铺近期没有新采集的笔记，以下为历史内容，价格与营业信息可能已变化
+                  </p>
+                )}
                 {posts.crawledAt && (
                   <p className="text-[10px] text-gray-300 mt-2">笔记采集于 {posts.crawledAt} · 点击卡片可跳转原笔记</p>
                 )}

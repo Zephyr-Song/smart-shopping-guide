@@ -28,6 +28,11 @@ DECIDER_TIMEOUT_MS = "4500"
 MEMORY_SUMMARY_EVERY = "8"
 # 限流：每 session 每分钟最大请求数
 RATE_LIMIT_PER_MIN = "20"
+# 请求体保护上限（与 agent-core limitsOf 的默认值一致；前端 precheckMessages 用同一套数值）
+MAX_BODY_BYTES = "32768"
+MAX_MESSAGES = "24"
+MAX_MESSAGE_CHARS = "4000"
+MAX_TOTAL_CHARS = "16000"
 
 # D1（= 托管 SQLite）：会话记忆 / 审计 / 限流
 # 部署前创建：npx wrangler d1 create bfc-agent-db

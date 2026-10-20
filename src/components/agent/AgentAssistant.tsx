@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import {
   X,
   Send,
+  Square,
   RotateCcw,
   ChevronDown,
   ChevronUp,
@@ -12,7 +13,7 @@ import {
 import BFCLogo from '../BFCLogo'
 import type { AgentCard, AgentContext, AgentMessage } from './agentTypes'
 import { runAgent } from './agentEngine'
-import { callAgent, streamAgent, AGENT_API_URL } from './agentClient'
+import { callAgent, streamAgent, precheckMessages, AGENT_API_URL } from './agentClient'
 import { SUGGESTIONS, WELCOME_TEXT } from './suggestions'
 
 function newSessionId(): string {
@@ -86,6 +87,13 @@ export default function AgentAssistant() {
     }
 
     try {
+      // 客户端第一层校验：超长/超轮次在发出去之前就提示，不等服务端 413
+      const blocked = precheckMessages(history)
+      if (blocked) {
+        patch({ text: blocked, route: 'fallback' })
+        return
+      }
+
       if (!AGENT_API_URL) throw new Error('agent api not configured')
 
       const done = await streamAgent(history, {
@@ -280,17 +288,29 @@ export default function AgentAssistant() {
               <input
                 value={input}
                 onChange={e => setInput(e.target.value)}
-                placeholder="随便问我点什么..."
+                placeholder={thinking ? '正在回答，点右侧停止…' : '随便问我点什么...'}
                 className="flex-1 text-sm px-3.5 py-3 rounded-xl bg-bfc-cream border border-bfc-gold-200 outline-none focus:ring-2 focus:ring-bfc-gold-400/40 text-bfc-charcoal placeholder:text-bfc-warm-gray/60 transition"
               />
-              <button
-                type="submit"
-                disabled={!input.trim() || thinking}
-                className="w-11 h-11 rounded-xl bg-bfc-gold text-white flex items-center justify-center disabled:opacity-40 hover:bg-bfc-gold-600 transition cursor-pointer border-none flex-shrink-0 shadow-bfc"
-                aria-label="发送"
-              >
-                <Send className="w-4 h-4" />
-              </button>
+              {thinking ? (
+                <button
+                  type="button"
+                  onClick={() => abortRef.current?.abort()}
+                  className="w-11 h-11 rounded-xl bg-bfc-charcoal/80 text-white flex items-center justify-center hover:bg-bfc-charcoal transition cursor-pointer border-none flex-shrink-0 shadow-bfc"
+                  aria-label="停止生成"
+                  title="停止生成"
+                >
+                  <Square className="w-3.5 h-3.5" />
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  disabled={!input.trim()}
+                  className="w-11 h-11 rounded-xl bg-bfc-gold text-white flex items-center justify-center disabled:opacity-40 hover:bg-bfc-gold-600 transition cursor-pointer border-none flex-shrink-0 shadow-bfc"
+                  aria-label="发送"
+                >
+                  <Send className="w-4 h-4" />
+                </button>
+              )}
             </div>
           </form>
         </div>
