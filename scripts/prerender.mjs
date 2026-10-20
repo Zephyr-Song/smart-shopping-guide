@@ -86,6 +86,14 @@ const ROUTES = [
     priority: '0.3',
     noindex: true,
   },
+  {
+    path: '/explore',
+    title: `3D 立体导览 · ${SITE}`,
+    description: 'BFC 大豫园 3D 立体导览：程序化生成的双区楼宇，按楼层与品类铺陈真实店铺，可旋转缩放并点击查看门店详情。',
+    h1: 'BFC 3D 立体导览',
+    lead: '程序化生成的双区楼宇，按楼层与品类铺陈真实店铺，可旋转缩放并点击查看。',
+    priority: '0.6',
+  },
 ]
 
 /** 静态骨架：React 挂载后被覆盖，只服务首屏感知与爬虫 */

@@ -47,6 +47,10 @@ const META: Record<string, Meta> = {
     title: `系统架构 · ${SITE_NAME}`,
     description: 'BFC 智能导购的技术架构说明：React SPA、Cloudflare Pages Functions 与 D1 会话记忆。',
   },
+  '/explore': {
+    title: `3D 立体导览 · ${SITE_NAME}`,
+    description: 'BFC 大豫园 3D 立体导览：程序化生成的双区楼宇，按楼层与品类铺陈真实店铺，可旋转缩放并点击查看门店详情。',
+  },
 }
 
 function upsertMeta(selector: string, attrs: Record<string, string>) {

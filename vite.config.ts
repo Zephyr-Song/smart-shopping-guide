@@ -20,6 +20,9 @@ export default defineConfig({
           if (!id.includes('node_modules')) return
           // chart.js 只被「商圈分析」使用，必须隔离，否则会被打进首屏
           if (id.includes('chart.js') || id.includes('react-chartjs-2')) return 'vendor-chart'
+          // three.js 只被 3D 导览页(/explore)使用，隔离成独立异步 chunk，
+          // 避免被首屏 vendor 拉起（首屏不加载 3D 引擎）。
+          if (id.includes('node_modules/three') || id.includes('three/')) return 'vendor-three'
           // lucide-react 图标库体积大且极少变更，独立 chunk 命中长期缓存
           if (id.includes('lucide-react')) return 'vendor-icons'
           // react / react-dom / scheduler / react-router 归入基础运行时

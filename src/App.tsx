@@ -13,6 +13,7 @@ const Analytics = lazy(() => import('./pages/Analytics'))
 const BrandExplore = lazy(() => import('./pages/BrandExplore'))
 const Offers = lazy(() => import('./pages/Offers'))
 const Architecture = lazy(() => import('./pages/Architecture'))
+const Mall3D = lazy(() => import('./pages/Mall3D'))
 
 /** 路由切换时的占位骨架：结构与真实页面接近，避免白屏跳动 */
 function RouteFallback() {
@@ -88,6 +89,14 @@ function App() {
           element={
             <Suspense fallback={<RouteFallback />}>
               <Architecture />
+            </Suspense>
+          }
+        />
+        <Route
+          path="explore"
+          element={
+            <Suspense fallback={<RouteFallback />}>
+              <Mall3D />
             </Suspense>
           }
         />

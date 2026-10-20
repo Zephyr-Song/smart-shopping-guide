@@ -14,6 +14,7 @@ import {
   Compass,
   Layers,
   Ticket,
+  Box,
 } from 'lucide-react'
 
 const NAV_ITEMS = [
@@ -25,6 +26,7 @@ const NAV_ITEMS = [
   { path: '/offers', label: '限时优惠', icon: Ticket },
   { path: '/analytics', label: '商圈分析', icon: BarChart3 },
   { path: '/architecture', label: '系统架构', icon: Layers },
+  { path: '/explore', label: '3D 导览', icon: Box },
 ]
 
 export default function Layout() {
