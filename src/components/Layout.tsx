@@ -1,6 +1,7 @@
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { useState } from 'react'
 import AgentAssistant from './agent/AgentAssistant'
+import RouteMeta from './RouteMeta'
 import BFCLogo from './BFCLogo'
 import {
   ShoppingBag,
@@ -32,6 +33,7 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen flex flex-col bg-bfc-cream">
+      <RouteMeta />
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-bfc-gold-200/60 bg-bfc-cream/90 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

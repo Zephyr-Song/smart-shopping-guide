@@ -1,0 +1,53 @@
+# =============================================================================
+# Cloudflare Pages 响应头配置（构建时由 public/_headers 复制到 dist/_headers）
+# 依据《BFC 大豫园 AI 导购站增量优化方案 v1.0》第一窗口要求：
+#   - 指纹资源一年 immutable，HTML 短缓存
+#   - 静态资源不再无差别 ACAO:*
+#   - 安全头先 Report-Only 收集违规，再切强制
+#
+# ⚠️ 实测结论（2026-10-20，wrangler pages dev 验证）：
+#   Pages 对同名响应头是「逗号拼接」而不是「后覆盖前」，
+#   所以通用规则里绝不能写 Cache-Control —— 否则会出现
+#   `max-age=0, must-revalidate, max-age=31536000, immutable` 这种自相矛盾的值，
+#   浏览器会按第一个 max-age 处理，资产照样不缓存。
+#   HTML 的短缓存交给 Pages 默认行为（public, max-age=0, must-revalidate）。
+# =============================================================================
+
+# ---------- 1. 全站默认：只放安全头，不碰 Cache-Control ----------
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Cross-Origin-Opener-Policy: same-origin
+  # 第一步 Report-Only：只上报不拦截。控制台观察 1~2 周无违规后，
+  # 把下面的 Content-Security-Policy-Report-Only 改名为 Content-Security-Policy 即进入强制模式。
+  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self'; media-src 'self' https:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'
+
+# ---------- 2. 构建产物：文件名带 hash，一年 immutable ----------
+# 同时摘掉 Pages 默认加的 Access-Control-Allow-Origin: *（脚本/样式不需要跨域可读）
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+  ! Access-Control-Allow-Origin
+
+# ---------- 3. 静态图标 / 清单 / 抓取文件：中短缓存 ----------
+/favicon.svg
+  Cache-Control: public, max-age=604800
+  Content-Type: image/svg+xml
+
+/manifest.webmanifest
+  Cache-Control: public, max-age=3600
+
+/robots.txt
+  Cache-Control: public, max-age=3600
+
+/sitemap.xml
+  Cache-Control: public, max-age=3600
+  Content-Type: application/xml; charset=utf-8
+
+# ---------- 4. 接口：不缓存 ----------
+# 注意：这里不要再写 Access-Control-Allow-Origin。
+#   函数本身会按 Origin 动态返回 ACAO，_headers 再补一个会变成两个值，浏览器直接判 CORS 失败。
+/api/*
+  Cache-Control: no-store

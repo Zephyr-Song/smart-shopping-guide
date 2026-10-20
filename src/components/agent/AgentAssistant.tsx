@@ -12,7 +12,7 @@ import {
 import BFCLogo from '../BFCLogo'
 import type { AgentCard, AgentContext, AgentMessage } from './agentTypes'
 import { runAgent } from './agentEngine'
-import { callAgent, AGENT_API_URL } from './agentClient'
+import { callAgent, streamAgent, AGENT_API_URL } from './agentClient'
 import { SUGGESTIONS, WELCOME_TEXT } from './suggestions'
 
 function newSessionId(): string {
@@ -38,16 +38,23 @@ export default function AgentAssistant() {
   ])
   const [input, setInput] = useState('')
   const [thinking, setThinking] = useState(false)
+  const [status, setStatus] = useState('')
+  const [streaming, setStreaming] = useState(false)
   const [ctx, setCtx] = useState<AgentContext>({})
   const [sessionId, setSessionId] = useState(() => newSessionId())
   const scrollRef = useRef<HTMLDivElement>(null)
+  const abortRef = useRef<AbortController | null>(null)
+  const streamingRef = useRef(false)
   const navigate = useNavigate()
 
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight
     }
-  }, [messages, thinking, open])
+  }, [messages, thinking, status, open])
+
+  // 组件卸载时中止进行中的请求，避免卸载后 setState 与请求泄漏
+  useEffect(() => () => abortRef.current?.abort(), [])
 
   const send = async (raw: string) => {
     const text = raw.trim()
@@ -57,47 +64,102 @@ export default function AgentAssistant() {
     setMessages(history)
     setInput('')
     setThinking(true)
+    setStatus('')
+    setStreaming(false)
+    streamingRef.current = false
+
+    abortRef.current?.abort()
+    const ctrl = new AbortController()
+    abortRef.current = ctrl
+
+    // 流式过程中持续更新同一条助手消息，而不是等整段返回后一次性插入
+    const assistantId = uid()
+    const streamedCards: AgentCard[] = []
+    const patch = (patchObj: Partial<AgentMessage>) => {
+      setMessages(prev => {
+        const idx = prev.findIndex(m => m.id === assistantId)
+        if (idx === -1) return [...prev, { id: assistantId, role: 'assistant', ...patchObj } as AgentMessage]
+        const next = prev.slice()
+        next[idx] = { ...next[idx], ...patchObj }
+        return next
+      })
+    }
+
     try {
-      if (AGENT_API_URL) {
+      if (!AGENT_API_URL) throw new Error('agent api not configured')
+
+      const done = await streamAgent(history, {
+        sessionId,
+        signal: ctrl.signal,
+        onState: t => setStatus(t),
+        onToken: (_delta, full) => {
+          if (!streamingRef.current) {
+            streamingRef.current = true
+            setStreaming(true)
+          }
+          setStatus(prev => (prev ? '' : prev))
+          patch({ text: full, cards: streamedCards.slice() })
+        },
+        onCard: c => {
+          streamedCards.push(c)
+          patch({ cards: streamedCards.slice() })
+        },
+      })
+
+      if (done.route === 'fallback') {
+        // 服务端判定超出范围 → 交给本地规则引擎，保证基础问题仍能回答
+        const local = runAgent(text, ctx)
+        setCtx(local.newCtx)
+        patch({ text: local.reply.text, cards: local.reply.cards, route: 'local_fallback' })
+        return
+      }
+      // 以 done.answer（服务端最终清洗版）覆盖流式原文，防止协议残留展示给用户
+      patch({
+        text: done.answer || '这次没有生成内容，请再问一次～',
+        cards: done.cards && done.cards.length ? done.cards : streamedCards,
+        route: done.route,
+      })
+    } catch (err: any) {
+      if (ctrl.signal.aborted) return
+
+      // 413 / 429 是明确的输入或频率问题，直接告诉用户，不静默降级
+      const httpStatus: number | undefined = err?.status
+      if (httpStatus === 413 || httpStatus === 429 || err?.code === 'payload_too_large' || err?.code === 'rate_limited') {
+        patch({ text: err?.message || '请求过于频繁或内容过长，请稍后重试～', route: 'fallback' })
+        return
+      }
+
+      // 流式通道不可用 → 回退非流式，再失败才用本地规则引擎
+      try {
         const { answer, cards, route } = await callAgent(history, { sessionId })
         if (route === 'fallback') {
           const local = runAgent(text, ctx)
           setCtx(local.newCtx)
-          setMessages(prev => [
-            ...prev,
-            { id: uid(), role: 'assistant', text: local.reply.text, cards: local.reply.cards, route: 'local_fallback' },
-          ])
+          patch({ text: local.reply.text, cards: local.reply.cards, route: 'local_fallback' })
           return
         }
-        setMessages(prev => [
-          ...prev,
-          { id: uid(), role: 'assistant', text: answer, cards, route },
-        ])
-      } else {
-        await new Promise(r => setTimeout(r, 450))
-        const { reply, newCtx } = runAgent(text, ctx)
-        setCtx(newCtx)
-        setMessages(prev => [
-          ...prev,
-          { id: uid(), role: 'assistant', text: reply.text, cards: reply.cards, route: 'local_fallback' },
-        ])
+        patch({ text: answer, cards, route })
+      } catch {
+        const local = runAgent(text, ctx)
+        setCtx(local.newCtx)
+        patch({ text: local.reply.text, cards: local.reply.cards, route: 'local_fallback' })
       }
-    } catch {
-      const { reply, newCtx } = runAgent(text, ctx)
-      setCtx(newCtx)
-      setMessages(prev => [
-        ...prev,
-        { id: uid(), role: 'assistant', text: reply.text, cards: reply.cards, route: 'local_fallback' },
-      ])
     } finally {
       setThinking(false)
+      setStatus('')
+      setStreaming(false)
+      streamingRef.current = false
     }
   }
 
   const reset = () => {
+    abortRef.current?.abort()
     setMessages([{ id: 'welcome', role: 'assistant', text: WELCOME_TEXT }])
     setCtx({})
     setSessionId(newSessionId())
+    setStatus('')
+    setStreaming(false)
+    streamingRef.current = false
   }
 
   const onAction = (card: Extract<AgentCard, { type: 'action' }>) => {
@@ -174,13 +236,20 @@ export default function AgentAssistant() {
             {messages.map(m => (
               <MessageBubble key={m.id} msg={m} onAction={onAction} />
             ))}
-            {thinking && (
+            {thinking && !streaming && (
               <div className="bfc-msg flex items-start gap-2.5">
                 <Avatar />
-                <div className="bg-white border border-bfc-gold-200/60 rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-1.5 shadow-sm">
+                <div
+                  className="bg-white border border-bfc-gold-200/60 rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-1.5 shadow-sm"
+                  role="status"
+                  aria-live="polite"
+                >
                   <span className="bfc-dot w-1.5 h-1.5 bg-bfc-gold-400 rounded-full" />
                   <span className="bfc-dot w-1.5 h-1.5 bg-bfc-gold-400 rounded-full" style={{ animationDelay: '.2s' }} />
                   <span className="bfc-dot w-1.5 h-1.5 bg-bfc-gold-400 rounded-full" style={{ animationDelay: '.4s' }} />
+                  {status && (
+                    <span className="ml-1.5 text-[11px] text-bfc-warm-gray">{status}</span>
+                  )}
                 </div>
               </div>
             )}

@@ -32,8 +32,15 @@ export interface Env {
   LLM_MODEL: string
   LLM_MODEL_FALLBACK?: string
   DECIDER_MIN_CONFIDENCE?: string
+  DECIDER_TIMEOUT_MS?: string
   MEMORY_SUMMARY_EVERY?: string
   RATE_LIMIT_PER_MIN?: string
+  KB_RESCUE_MIN_SCORE?: string
+  // 请求体保护上限（不设则用内置默认值，见 limitsOf）
+  MAX_BODY_BYTES?: string
+  MAX_MESSAGES?: string
+  MAX_MESSAGE_CHARS?: string
+  MAX_TOTAL_CHARS?: string
   DB?: DB
 }
 
@@ -41,9 +48,13 @@ export interface Ctx {
   waitUntil(p: Promise<unknown>): void
 }
 
-// 同域部署（Cloudflare Pages）下浏览器请求不带 Origin；
-// 本地 vite(5173) 经代理、或 wrangler pages dev(8788) 直连时需要放行。
+// 同域部署（Cloudflare Pages）下前端与 /api 同源，但仍必须把自己列入白名单：
+// 浏览器对所有 POST 请求都会带Origin 头（同源也一样，只有 GET/HEAD 例外），
+// 白名单里没有生产域名会让真实用户的每一次提问都撞上 403 origin_not_allowed。
+// （2026-10-16 修复：此前误以为"同域不带 Origin"，导致线上小助手完全不可用。）
 const CORS_ALLOWED_ORIGINS = [
+  'https://bfc-shopping-guide.pages.dev',
+  // GitHub Pages 上的静态镜像 / 演示页
   'https://zephyr-song.github.io',
   'http://localhost:5173',
   'http://127.0.0.1:5173',
@@ -261,6 +272,54 @@ async function decide(env: Env, recent: any[], lastUser: string): Promise<Decisi
 }
 
 // ---------------------------------------------------------------------------
+// 快速路由：decider 超时 / 失败时的启发式兜底
+//   推理型模型（dots3-note-prev）单次 decider 就要 8~12s，直接把首 token 预算吃光。
+//   超过 DECIDER_TIMEOUT_MS 仍不返回时不再干等，按关键词先选一个工具检索，
+//   让卡片和首 token 在几秒内出现；判错最多是「答得不够贴」，不会答非所问。
+//   DECIDER_TIMEOUT_MS=0 可关闭该超时，恢复「一直等 decider」的原行为。
+// ---------------------------------------------------------------------------
+const TOOL_RESULT_NOTE =
+  '以下是刚刚检索到的结构化结果（JSON）。请只基于它作答，信息不足就直说，不要编造不存在的门店、价格或活动：\n'
+
+function guessTool(text: string, facts: Record<string, any>): { name: string; args: Record<string, any> } {
+  const t = text || ''
+  if (/停车|车位|母婴|寄存|卫生间|洗手间|无障碍|充电宝|电梯|存包/.test(t)) {
+    return { name: 'get_facility', args: { type: t } }
+  }
+  if (/怎么去|地铁|公交|打车|交通|开车|自驾|导航|路线怎么走/.test(t)) {
+    return { name: 'get_traffic', args: {} }
+  }
+  if (/客服|会员|积分|退换|发票|服务台|失物/.test(t)) {
+    return { name: 'get_service', args: { type: t } }
+  }
+  if (/营业时间|几点开|几点关|关门|电话|地址|宠物|支付方式/.test(t)) {
+    return { name: 'get_faq', args: { topic: t } }
+  }
+  if (/品牌|楼层|几楼|介绍|展览|活动|影城|艺术中心|业态|场馆/.test(t) && !/吃|餐|咖啡|奶茶|喝|甜品/.test(t)) {
+    return { name: 'search_kb', args: { query: t } }
+  }
+  const args: Record<string, any> = { query: t }
+  if (typeof facts?.budget === 'number') args.budget_max = facts.budget
+  if (typeof facts?.people === 'number') args.people = facts.people
+  return { name: 'search_stores', args }
+}
+
+/** decider 带超时：超时返回 null，由调用方走 guessTool 快路径 */
+async function decideFast(env: Env, recent: any[], lastUser: string): Promise<Decision | null> {
+  const ms = Number(env.DECIDER_TIMEOUT_MS ?? 4500)
+  if (!Number.isFinite(ms) || ms <= 0) return decide(env, recent, lastUser)
+  let timer: any
+  const timeout = new Promise<null>(resolve => {
+    timer = setTimeout(() => resolve(null), ms)
+  })
+  try {
+    return await Promise.race([decide(env, recent, lastUser), timeout])
+  } finally {
+    clearTimeout(timer)
+  }
+}
+
+// ---------------------------------------------------------------------------
 // 会话记忆（D1）：装载 / 事实抽取 / 滚动摘要 / 落库
 // ---------------------------------------------------------------------------
 interface SessionMemory {
@@ -417,18 +476,161 @@ async function persistTurn(
 async function rateLimited(env: Env, sessionId: string): Promise<boolean> {
   const db = env.DB
   if (!db) return false
-  const now = Date.now()
-  const limit = Number(env.RATE_LIMIT_PER_MIN || 20)
-  const row = await db
-    .prepare('SELECT COUNT(*) AS c FROM rate_events WHERE session_id = ?1 AND ts > ?2')
-    .bind(sessionId, now - 60_000)
-    .first<D1Row>()
-  if (Number(row?.c ?? 0) >= limit) return true
-  await db.prepare('INSERT INTO rate_events (session_id, ts) VALUES (?1, ?2)').bind(sessionId, now).run()
-  if (Math.random() < 0.05) {
-    await db.prepare('DELETE FROM rate_events WHERE ts < ?1').bind(now - 3_600_000).run()
+  try {
+    const now = Date.now()
+    const limit = Number(env.RATE_LIMIT_PER_MIN || 20)
+    const row = await db
+      .prepare('SELECT COUNT(*) AS c FROM rate_events WHERE session_id = ?1 AND ts > ?2')
+      .bind(sessionId, now - 60_000)
+      .first<D1Row>()
+    if (Number(row?.c ?? 0) >= limit) return true
+    await db.prepare('INSERT INTO rate_events (session_id, ts) VALUES (?1, ?2)').bind(sessionId, now).run()
+    if (Math.random() < 0.05) {
+      await db.prepare('DELETE FROM rate_events WHERE ts < ?1').bind(now - 3_600_000).run()
+    }
+    return false
+  } catch {
+    // D1 未初始化 / 表缺失 / 查询失败 → 放行（可用性优先，限流失效好过导购整体不可用）
+    return false
   }
-  return false
+}
+
+// ---------------------------------------------------------------------------
+// 请求体保护：客户端与 Function 双层校验
+//   上限取「平台网关 / 模型服务 / 业务约束」三者最小值，可通过环境变量覆盖，
+//   不把同一份限制写死在多个位置。超限返回结构化 413，前端提示拆分后重试。
+// ---------------------------------------------------------------------------
+export interface Limits {
+  bodyBytes: number
+  messages: number
+  messageChars: number
+  totalChars: number
+}
+
+function limitsOf(env: Env): Limits {
+  const num = (v: string | undefined, d: number) => {
+    const x = Number(v)
+    return Number.isFinite(x) && x > 0 ? x : d
+  }
+  return {
+    bodyBytes: num(env.MAX_BODY_BYTES, 32 * 1024),
+    messages: num(env.MAX_MESSAGES, 24),
+    messageChars: num(env.MAX_MESSAGE_CHARS, 4000),
+    totalChars: num(env.MAX_TOTAL_CHARS, 16000),
+  }
+}
+
+export type BodyResult =
+  | { ok: true; body: any }
+  | { ok: false; status: number; payload: Record<string, any> }
+
+/** 统一读取并校验请求体：Content-Length 预检 → 实测字节 → JSON → 结构上限 */
+export async function readAgentBody(request: Request, env: Env): Promise<BodyResult> {
+  const lim = limitsOf(env)
+
+  // 1) Content-Length 预检：不必读流就能拒掉超大请求
+  const declared = Number(request.headers.get('Content-Length') || '0')
+  if (declared && declared > lim.bodyBytes) {
+    return {
+      ok: false,
+      status: 413,
+      payload: {
+        error: 'payload_too_large',
+        reason: 'body_bytes',
+        limit: lim.bodyBytes,
+        actual: declared,
+        message: '输入内容过长，请拆分后重试',
+      },
+    }
+  }
+
+  // 2) 实测字节数（Content-Length 可能缺失或被伪造，必须再量一次）
+  let raw = ''
+  try {
+    raw = await request.text()
+  } catch {
+    return { ok: false, status: 400, payload: { error: 'body_unreadable', message: '请求内容无法读取' } }
+  }
+  const bytes = new TextEncoder().encode(raw).byteLength
+  if (bytes > lim.bodyBytes) {
+    return {
+      ok: false,
+      status: 413,
+      payload: {
+        error: 'payload_too_large',
+        reason: 'body_bytes',
+        limit: lim.bodyBytes,
+        actual: bytes,
+        message: '输入内容过长，请拆分后重试',
+      },
+    }
+  }
+  if (!raw.trim()) {
+    return { ok: false, status: 400, payload: { error: 'body_empty', message: '请求内容为空' } }
+  }
+
+  // 3) JSON 解析
+  let body: any
+  try {
+    body = JSON.parse(raw)
+  } catch {
+    return { ok: false, status: 400, payload: { error: 'body_invalid_json', message: '请求格式错误' } }
+  }
+
+  // 4) 业务结构上限
+  const messages: any[] = Array.isArray(body?.messages) ? body.messages : []
+  if (!messages.length) {
+    return { ok: false, status: 400, payload: { error: 'messages_required', message: '缺少对话内容' } }
+  }
+  if (messages.length > lim.messages) {
+    return {
+      ok: false,
+      status: 413,
+      payload: {
+        error: 'payload_too_large',
+        reason: 'messages_count',
+        limit: lim.messages,
+        actual: messages.length,
+        message: '对话轮次过多，请点击「重新对话」后重试',
+      },
+    }
+  }
+  let total = 0
+  for (const m of messages) {
+    const c = typeof m?.content === 'string' ? m.content : ''
+    if (!c.trim()) {
+      return { ok: false, status: 400, payload: { error: 'message_content_required', message: '存在空消息' } }
+    }
+    if (c.length > lim.messageChars) {
+      return {
+        ok: false,
+        status: 413,
+        payload: {
+          error: 'payload_too_large',
+          reason: 'message_chars',
+          limit: lim.messageChars,
+          actual: c.length,
+          message: '单条消息过长，请拆分后重试',
+        },
+      }
+    }
+    total += c.length
+  }
+  if (total > lim.totalChars) {
+    return {
+      ok: false,
+      status: 413,
+      payload: {
+        error: 'payload_too_large',
+        reason: 'total_chars',
+        limit: lim.totalChars,
+        actual: total,
+        message: '对话内容总量过长，请点击「重新对话」后重试',
+      },
+    }
+  }
+
+  return { ok: true, body }
 }
 
 // ---------------------------------------------------------------------------
@@ -464,19 +666,15 @@ export async function handleAgent(request: Request, env: Env, ctx: Ctx): Promise
     })
   }
 
-  let body: any
-  try {
-    body = await request.json()
-  } catch {
-    return new Response('Bad Request', { status: 400, headers: cors })
-  }
-  const messages: { role: string; content: string }[] = Array.isArray(body?.messages) ? body.messages : []
-  if (!messages.length) {
-    return new Response(JSON.stringify({ error: 'messages_required' }), {
-      status: 400,
+  const parsed = await readAgentBody(request, env)
+  if (!parsed.ok) {
+    return new Response(JSON.stringify(parsed.payload), {
+      status: parsed.status,
       headers: { 'Content-Type': 'application/json', ...cors },
     })
   }
+  const body = parsed.body
+  const messages: { role: string; content: string }[] = body.messages
   const sessionId: string =
     typeof body?.sessionId === 'string' && body.sessionId.length <= 64
       ? body.sessionId
@@ -511,12 +709,26 @@ export async function handleAgent(request: Request, env: Env, ctx: Ctx): Promise
   const cards: AgentCard[] = []
   try {
     const minConf = Number(env.DECIDER_MIN_CONFIDENCE || 0.55)
-    const decision = await decide(env, messages, lastUser)
+    const decision = await decideFast(env, messages, lastUser)
 
     if (!decision) {
-      // 熔断：decider 失败 → 完整 agent loop
+      // 熔断：decider 超时/失败 → 启发式先检索，再基于检索结果生成（与流式端点同一套逻辑）
       route = 'tool_call'
-      answer = await runAgentLoop(chatMessages, env, r => collectCards(r, cards), lastUser, trace)
+      const guess = guessTool(lastUser, memory.facts)
+      const r = executeTool(guess.name, guess.args, lastUser)
+      trace.push({ name: guess.name, ok: true })
+      collectCards(r, cards)
+      if (cards.length === 0) {
+        // 启发式没检索到东西 → 回到完整 agent loop（慢一些但更灵活）
+        answer = await runAgentLoop(chatMessages, env, x => collectCards(x, cards), lastUser, trace)
+      } else {
+        const data = await llm(
+          env,
+          [...chatMessages, { role: 'system', content: TOOL_RESULT_NOTE + JSON.stringify(r).slice(0, 4000) }],
+          { tools: false, temperature: 0.5, maxTokens: 1200 },
+        )
+        answer = textOf(data)
+      }
     } else if (decision.route === 'fallback' || decision.confidence < minConf) {
       route = 'fallback'
       answer = FALLBACK_TEXT
@@ -601,5 +813,351 @@ export async function handleAgent(request: Request, env: Env, ctx: Ctx): Promise
 
   return new Response(JSON.stringify({ answer, cards, route, sessionId }), {
     headers: { 'Content-Type': 'application/json', ...cors },
+  })
+}
+
+// ===========================================================================
+// SSE 流式导购（POST /api/agent/stream）
+//   事件：state / token / card / done / error
+// 设计要点：
+//   1. 浏览器必须用 fetch + ReadableStream 消费（EventSource 无法携带 JSON 请求体）
+//   2. 先卡片后文本：decider 已给出 tool + args，据此先检索并推送 card，再流式生成回答
+//   3. done 事件携带「最终清洗后的 answer」，前端以它覆盖流式原文，
+//      避免逐 token 推送把函数调用协议残留（<dots_function_call> 等）漏给用户
+//   4. 20s 未出首 token → 发状态事件续命；45s 仍未出 → 用已检索卡片收尾并保留重试
+// ===========================================================================
+
+/** 逐 token 读取 OpenAI 兼容流；上游不支持流式时自动退化为整包 JSON */
+async function llmStream(
+  env: Env,
+  messages: any[],
+  opts: { temperature?: number; maxTokens?: number; signal?: AbortSignal },
+  onDelta: (t: string) => void,
+): Promise<string> {
+  const base = (env.LLM_BASE_URL || 'https://api.openai.com/v1').replace(/\/+$/, '')
+  const model = env.LLM_MODEL || 'deepseek-chat'
+  const body: any = {
+    model,
+    messages,
+    temperature: opts.temperature ?? 0.5,
+    stream: true,
+  }
+  if (opts.maxTokens) body.max_tokens = opts.maxTokens
+
+  const res = await fetch(`${base}/chat/completions`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${env.LLM_API_KEY}`,
+      Accept: 'text/event-stream',
+    },
+    body: JSON.stringify(body),
+    signal: opts.signal,
+  })
+  if (!res.ok) {
+    const t = await res.text().catch(() => '')
+    throw new Error(`LLM ${res.status}: ${t.slice(0, 200)}`)
+  }
+
+  const ctype = res.headers.get('Content-Type') || ''
+  // 上游（或中间代理）不支持流式：返回整包 JSON，仍按增量一次性吐出
+  if (!ctype.includes('text/event-stream') || !res.body) {
+    const data = await res.json().catch(() => null)
+    const text = textOf(data) || ''
+    if (text) onDelta(text)
+    return text
+  }
+
+  const reader = res.body.getReader()
+  const decoder = new TextDecoder()
+  let buf = ''
+  let full = ''
+  for (;;) {
+    const { done, value } = await reader.read()
+    if (done) break
+    buf += decoder.decode(value, { stream: true })
+    let nl: number
+    while ((nl = buf.indexOf('\n')) >= 0) {
+      const line = buf.slice(0, nl).trim()
+      buf = buf.slice(nl + 1)
+      if (!line || line.startsWith(':') || !line.startsWith('data:')) continue
+      const payload = line.slice(5).trim()
+      if (!payload || payload === '[DONE]') continue
+      try {
+        const j = JSON.parse(payload)
+        // dots3-note-prev 会先吐 reasoning_content 再吐 content，这里只转正文
+        const delta = j?.choices?.[0]?.delta ?? {}
+        const piece = typeof delta.content === 'string' ? delta.content : ''
+        if (piece) {
+          full += piece
+          onDelta(piece)
+        }
+      } catch {
+        // 不完整帧，等下一个 chunk 补齐
+      }
+    }
+  }
+  return full
+}
+
+export async function handleAgentStream(request: Request, env: Env, ctx: Ctx): Promise<Response> {
+  const origin = request.headers.get('Origin') || ''
+  const cors = {
+    'Access-Control-Allow-Origin': CORS_ALLOWED_ORIGINS.includes(origin) ? origin : CORS_ALLOWED_ORIGINS[0],
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    Vary: 'Origin',
+  }
+  const jsonError = (status: number, payload: Record<string, any>) =>
+    new Response(JSON.stringify(payload), { status, headers: { 'Content-Type': 'application/json', ...cors } })
+
+  if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors })
+  if (request.method !== 'POST') return new Response('Method Not Allowed', { status: 405, headers: cors })
+  if (origin && !CORS_ALLOWED_ORIGINS.includes(origin)) {
+    return jsonError(403, { error: 'origin_not_allowed' })
+  }
+
+  const parsed = await readAgentBody(request, env)
+  if (!parsed.ok) return jsonError(parsed.status, parsed.payload)
+
+  const body = parsed.body
+  const messages: { role: string; content: string }[] = body.messages
+  const sessionId: string =
+    typeof body?.sessionId === 'string' && body.sessionId.length <= 64
+      ? body.sessionId
+      : `s-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`
+  const lastUser = [...messages].reverse().find(m => m.role === 'user')?.content || ''
+
+  if (await rateLimited(env, sessionId)) {
+    return new Response(JSON.stringify({ error: 'rate_limited', sessionId }), {
+      status: 429,
+      headers: { 'Content-Type': 'application/json', 'Retry-After': '60', ...cors },
+    })
+  }
+
+  const encoder = new TextEncoder()
+  let cancelled = false
+
+  const stream = new ReadableStream<Uint8Array>({
+    async start(controller) {
+      let closed = false
+      const write = (chunk: string) => {
+        if (closed || cancelled) return
+        try {
+          controller.enqueue(encoder.encode(chunk))
+        } catch {
+          closed = true
+        }
+      }
+      const send = (event: string, data: any) => write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`)
+      const heartbeat = setInterval(() => write(': ping\n\n'), 15000)
+      const close = () => {
+        if (closed) return
+        closed = true
+        clearInterval(heartbeat)
+        try {
+          controller.close()
+        } catch {
+          // 连接已断开
+        }
+      }
+
+      const t0 = Date.now()
+      const requestId = `r-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`
+      const cards: AgentCard[] = []
+      const trace: { name: string; ok: boolean }[] = []
+      const emitCards = () => {
+        for (const c of cards) send('card', { card: c })
+      }
+      let answer = ''
+      let route: Route = 'tool_call'
+      let firstTokenMs: number | null = null
+      let gotToken = false
+
+      const genAbort = new AbortController()
+      // 推理型模型会先消耗 reasoning token 再吐正文，正文首 token 可能 10s 后才到。
+      // 每 8s 用状态事件续命，让用户知道系统还在工作，而不是盯着空白。
+      let slowTicks = 0
+      const softTimer = setInterval(() => {
+        if (gotToken) return
+        slowTicks++
+        send('state', {
+          stage: 'slow',
+          text: slowTicks === 1 ? '还在整理，请稍候…' : '内容较多，仍在生成…',
+        })
+      }, 8000)
+      const hardTimer = setTimeout(() => {
+        if (!gotToken) genAbort.abort()
+      }, 45000)
+
+      try {
+        send('state', { stage: 'understanding', text: '正在理解你的问题…' })
+
+        // 装配：RAG + 会话记忆
+        const { context: kbContext, topScore: kbTopScore } = retrieveWithScore(lastUser, 6)
+        let memory: SessionMemory = { facts: {}, summary: '', lastQuery: '', entities: [], turns: 0 }
+        if (env.DB) {
+          try {
+            memory = await loadMemory(env.DB, sessionId)
+          } catch {
+            // 记忆不可用 → 降级为无记忆
+          }
+        }
+        const system = buildSystemPrompt(kbContext) + memoryPrompt(memory)
+        const chatMessages = [{ role: 'system', content: system }, ...messages]
+
+        const streamOnce = async (msgs: any[], label: string) => {
+          send('state', { stage: 'generating', text: label })
+          return llmStream(env, msgs, { temperature: 0.5, maxTokens: 1200, signal: genAbort.signal }, piece => {
+            if (firstTokenMs === null) firstTokenMs = Date.now() - t0
+            gotToken = true
+            send('token', { text: piece })
+          })
+        }
+
+        // 非流式得到的整段文本 → 分片推送，前端仍可逐字渲染
+        const flushAsTokens = async (text: string) => {
+          const CHUNK = 24
+          for (let i = 0; i < text.length; i += CHUNK) {
+            if (genAbort.signal.aborted || cancelled) break
+            if (firstTokenMs === null) firstTokenMs = Date.now() - t0
+            gotToken = true
+            send('token', { text: text.slice(i, i + CHUNK) })
+            await new Promise(r => setTimeout(r, 24))
+          }
+          return text
+        }
+
+        const minConf = Number(env.DECIDER_MIN_CONFIDENCE || 0.55)
+        const decision = await decideFast(env, messages, lastUser)
+
+        if (decision && (decision.route === 'fallback' || decision.confidence < minConf)) {
+          // 兜底：KB 明确命中就基于知识库作答，否则给引导话术
+          const rescueMin = Number(env.KB_RESCUE_MIN_SCORE || 3)
+          if (kbTopScore >= rescueMin) {
+            route = 'kb_rag'
+            answer = await streamOnce(chatMessages, '正在整理 BFC 资料…')
+            if (!answer) answer = FALLBACK_TEXT
+          } else {
+            route = 'fallback'
+            answer = FALLBACK_TEXT
+            await flushAsTokens(answer)
+          }
+        } else if (!decision || decision.route === 'tool_call') {
+          // 工具路径（含 decider 超时/失败后的启发式快路径）：
+          // 先检索出卡片并立刻推送，再基于检索结果流式生成回答
+          route = 'tool_call'
+          const explicit =
+            decision?.tool && TOOL_REGISTRY.has(decision.tool)
+              ? { name: decision.tool, args: decision.args || {} }
+              : null
+          const guess = explicit || guessTool(lastUser, memory.facts)
+          send('state', { stage: 'retrieving', text: '正在检索 BFC 门店…' })
+          const r = executeTool(guess.name, guess.args, lastUser)
+          trace.push({ name: guess.name, ok: true })
+          collectCards(r, cards)
+          emitCards()
+          if (!explicit && cards.length === 0) {
+            // 启发式没检索到东西 → 回到完整 agent loop（慢一些但更灵活）
+            answer = await runAgentLoop(chatMessages, env, x => collectCards(x, cards), lastUser, trace)
+            emitCards()
+            await flushAsTokens(answer)
+          } else {
+            answer = await streamOnce(
+              [...chatMessages, { role: 'system', content: TOOL_RESULT_NOTE + JSON.stringify(r).slice(0, 4000) }],
+              '正在整理建议…',
+            )
+          }
+        } else {
+          // kb_rag / direct：知识库已在 system 中，直接流式生成
+          route = decision.route
+          answer = await streamOnce(chatMessages, '正在整理建议…')
+        }
+
+        // 统一清洗 + replyGuard（与 /api/agent 保持同一套规则）
+        const hadFnMarkup = containsFunctionCallMarkup(answer)
+        answer = sanitizeAnswer(answer)
+        const invalid = () => looksLikeEcho(answer, lastUser) || containsFunctionCallMarkup(answer)
+        if (invalid() && route !== 'fallback') {
+          try {
+            const nudge = hadFnMarkup
+              ? [
+                  {
+                    role: 'system',
+                    content:
+                      '严禁以任何 XML/标签形式输出函数调用（例如 <dots_function_call>、<invoke>、<parameter>）。' +
+                      '只输出面向用户的自然语言回答，不要包含任何尖括号标签。',
+                  },
+                ]
+              : []
+            const data = await llm(env, [...chatMessages, ...nudge], { tools: false, temperature: 0.5, maxTokens: 1200 })
+            answer = sanitizeAnswer(textOf(data))
+          } catch {
+            // 重试失败 → 走兜底
+          }
+          if (invalid()) {
+            answer = FALLBACK_TEXT
+            route = 'fallback'
+          }
+        }
+
+        if (env.DB) {
+          persistTurn(env, ctx, sessionId, request.headers.get('User-Agent') || '', lastUser, answer, route)
+        }
+
+        // done 携带最终答案，前端以它覆盖流式原文（防止协议残留漏出）
+        send('done', {
+          requestId,
+          reason: 'complete',
+          route,
+          answer,
+          cards,
+          sessionId,
+          firstTokenMs,
+          totalMs: Date.now() - t0,
+        })
+        close()
+      } catch (e: any) {
+        const aborted = genAbort.signal.aborted
+        if (aborted && cards.length) {
+          // 超时但已检索到卡片 → 用卡片收尾，保留重试入口
+          send('done', {
+            requestId,
+            reason: 'soft_timeout',
+            route,
+            answer: '回答生成超时了～这次检索到的门店先放在下面，可以再问一次或点重试。',
+            cards,
+            sessionId,
+            firstTokenMs,
+            totalMs: Date.now() - t0,
+          })
+        } else if (aborted) {
+          send('error', { code: 'timeout', message: '回答生成超时，请重试', retryable: true })
+        } else {
+          send('error', {
+            code: 'agent_upstream_failed',
+            message: String(e?.message || e).slice(0, 200),
+            retryable: true,
+          })
+        }
+        close()
+      } finally {
+        clearInterval(softTimer)
+        clearTimeout(hardTimer)
+        clearInterval(heartbeat)
+      }
+    },
+    cancel() {
+      cancelled = true
+    },
+  })
+
+  return new Response(stream, {
+    headers: {
+      'Content-Type': 'text/event-stream; charset=utf-8',
+      'Cache-Control': 'no-store, no-transform',
+      'X-Accel-Buffering': 'no',
+      ...cors,
+    },
   })
 }

@@ -9,6 +9,27 @@ const base = process.env.VITE_BASE || '/'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   base,
+  build: {
+    target: 'es2020',
+    cssCodeSplit: true,
+    // 拆包策略：把体积大、变更少、或只有个别路由用到的依赖分出独立 chunk。
+    // 配合 App.tsx 的路由级 lazy，使首屏只承担 Layout + 首页 + react 运行时。
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return
+          // chart.js 只被「商圈分析」使用，必须隔离，否则会被打进首屏
+          if (id.includes('chart.js') || id.includes('react-chartjs-2')) return 'vendor-chart'
+          // lucide-react 图标库体积大且极少变更，独立 chunk 命中长期缓存
+          if (id.includes('lucide-react')) return 'vendor-icons'
+          // react / react-dom / scheduler / react-router 归入基础运行时
+          return 'vendor'
+        },
+      },
+    },
+    // 只在剩余 chunk 超过 300KB 时告警，避免拆包后噪音
+    chunkSizeWarningLimit: 300,
+  },
   server: {
     port: 5173,
     proxy: {

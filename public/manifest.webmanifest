@@ -1,0 +1,21 @@
+{
+  "name": "BFC 大豫园 AI 智能导购",
+  "short_name": "BFC 导购",
+  "description": "BFC 大豫园 AI 智能导购：问一句就能找到店铺、楼层、路线、优惠和活动。",
+  "lang": "zh-CN",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#FBF8F3",
+  "theme_color": "#C9A96E",
+  "categories": ["shopping", "lifestyle", "travel"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# 希望搜索引擎只收录对外的展示页，接口与内部管理页不抓取
+Disallow: /architecture
+
+Sitemap: https://bfc-shopping-guide.pages.dev/sitemap.xml
