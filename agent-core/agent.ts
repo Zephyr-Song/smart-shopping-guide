@@ -33,6 +33,10 @@ export interface Env {
   LLM_MODEL_FALLBACK?: string
   DECIDER_MIN_CONFIDENCE?: string
   DECIDER_TIMEOUT_MS?: string
+  // 关闭推理模型的「思考」阶段以提速（chat 场景不需要 CoT）。
+  // 实测 dots3-note-prev 经 chat_template_kwargs.enable_thinking=false 后首 token <1s。
+  // 设为 "false" 可恢复思考（质量优先时使用）。
+  LLM_DISABLE_THINKING?: string
   MEMORY_SUMMARY_EVERY?: string
   RATE_LIMIT_PER_MIN?: string
   KB_RESCUE_MIN_SCORE?: string
@@ -125,6 +129,17 @@ function collectCards(r: ToolResult, cards: AgentCard[]) {
   else if (r.kind === 'compare') cards.push({ type: 'compare', stores: r.data })
 }
 
+/**
+ * 推理型模型（dots3-note-prev 等）在实时对话场景应先关掉「思考」，否则会先吐一长段
+ * reasoning_content 再吐正文，首 token 拖到 10s+，复杂问题直接撞 45s 硬超时。
+ * 实测该网关认 chat_template_kwargs.enable_thinking=false（顶层 enable_thinking 无效）。
+ * LLM_DISABLE_THINKING=false 可恢复思考。
+ */
+function thinkingDisableFields(env: Env): Record<string, unknown> {
+  if (env.LLM_DISABLE_THINKING === 'false') return {}
+  return { chat_template_kwargs: { enable_thinking: false } }
+}
+
 async function llm(
   env: Env,
   messages: any[],
@@ -136,7 +151,7 @@ async function llm(
   if (env.LLM_MODEL_FALLBACK && env.LLM_MODEL_FALLBACK !== models[0]) models.push(env.LLM_MODEL_FALLBACK)
   let lastErr = 'LLM request failed'
   for (const model of models) {
-    const body: any = { model, messages, temperature: opts?.temperature ?? 0.3 }
+    const body: any = { model, messages, temperature: opts?.temperature ?? 0.3, ...thinkingDisableFields(env) }
     if (opts?.maxTokens) body.max_tokens = opts.maxTokens
     if (opts?.tools !== false) {
       body.tools = TOOL_DEFS
@@ -841,6 +856,7 @@ async function llmStream(
     messages,
     temperature: opts.temperature ?? 0.5,
     stream: true,
+    ...thinkingDisableFields(env),
   }
   if (opts.maxTokens) body.max_tokens = opts.maxTokens
 

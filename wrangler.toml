@@ -24,6 +24,10 @@ DECIDER_MIN_CONFIDENCE = "0.55"
 # 超时后不再干等，改用关键词启发式直接选工具检索（见 agent-core/agent.ts guessTool）。
 # 设为 "0" 关闭该超时，恢复「一直等 decider」的原行为（质量优先时使用）。
 DECIDER_TIMEOUT_MS = "4500"
+# 关闭推理模型的「思考」阶段以提速（chat 实时场景不需要 CoT）。
+# 默认 "true"：dots3-note-prev 经 chat_template_kwargs.enable_thinking=false 后首 token <1s。
+# 设为 "false" 恢复思考（质量优先时使用，但会更慢、更易触发 45s 超时）。
+LLM_DISABLE_THINKING = "true"
 # 会话记忆：每累计 N 轮触发一次 LLM 滚动摘要
 MEMORY_SUMMARY_EVERY = "8"
 # 限流：每 session 每分钟最大请求数
