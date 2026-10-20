@@ -33,9 +33,9 @@ function zoneOf(store: Store): 'south' | 'north' {
 const SCALE = 1.4 // 数据单位 → 世界单位
 const FLOOR_H = 16 // 每层高度
 const NORTH_SHIFT = 100 * SCALE + 48 // 北区整体右移，避免与南区重叠
-const BOX_W = 5
-const BOX_D = 5
-const BOX_H = 9
+const BOX_W = 9
+const BOX_D = 9
+const BOX_H = 12
 
 /** 用 canvas 画一个文字标牌（程序化生成，不依赖任何外部素材） */
 function makeLabelSprite(text: string): THREE.Sprite {
@@ -211,6 +211,9 @@ export default function MallScene3D({
     const southGroup = new THREE.Group()
     const northGroup = new THREE.Group()
     scene.add(southGroup, northGroup)
+    // 店名标签单独成组：远看隐藏、拉近才显示，避免 90 个标签糊成一片
+    const labelGroup = new THREE.Group()
+    scene.add(labelGroup)
 
     const pickables: THREE.Mesh[] = []
     const byId = new Map<string, THREE.Mesh>()
@@ -227,7 +230,7 @@ export default function MallScene3D({
         roughness: 0.45,
         metalness: 0.25,
         emissive: new THREE.Color(colorHex),
-        emissiveIntensity: 0.12,
+        emissiveIntensity: 0.18,
       })
       const box = new THREE.Mesh(boxGeo, mat)
       box.castShadow = true
@@ -244,9 +247,10 @@ export default function MallScene3D({
 
       const label = makeLabelSprite(store.name)
       label.position.set(worldX, worldY + BOX_H / 2 + 4, worldZ)
-      box.userData = { store, baseEmissive: 0.12, label }
+      box.userData = { store, baseEmissive: 0.18, label }
 
-      ;(zone === 'south' ? southGroup : northGroup).add(box, label)
+      ;(zone === 'south' ? southGroup : northGroup).add(box)
+      labelGroup.add(label)
       pickables.push(box)
       byId.set(store.id, box)
     }
@@ -269,9 +273,65 @@ export default function MallScene3D({
         }),
       )
       const cx = (s.zone === 'north' ? 50 * SCALE + NORTH_SHIFT : 50 * SCALE)
-      slab.position.set(cx, levelY(s.level) - 3, 50 * SCALE)
+      slab.position.set(cx, levelY(s.level) - 0.6, 50 * SCALE)
       slab.receiveShadow = true
       ;(s.zone === 'south' ? southGroup : northGroup).add(slab)
+    }
+
+    // —— 楼体外壳：让每个区读起来像一栋楼，而非悬浮色块 ——
+    const footprint = 100 * SCALE // 140
+    const groundY = -2
+    const roofY = levelY(maxLevel) + FLOOR_H + 2 // 顶楼之上留出屋顶高度
+    const buildingH = roofY - groundY
+
+    for (const zone of ['south', 'north'] as const) {
+      const cx = zone === 'north' ? 50 * SCALE + NORTH_SHIFT : 50 * SCALE
+      const cz = 50 * SCALE
+      const g = zone === 'south' ? southGroup : northGroup
+
+      // 玻璃幕墙外壳（半透明，罩住整栋楼，内部亮灯铺位仍清晰可见）
+      const shell = new THREE.Mesh(
+        new THREE.BoxGeometry(footprint, buildingH, footprint),
+        new THREE.MeshStandardMaterial({
+          color: 0x9fc8dc,
+          roughness: 0.15,
+          metalness: 0.15,
+          transparent: true,
+          opacity: 0.12,
+          depthWrite: false,
+        }),
+      )
+      shell.position.set(cx, groundY + buildingH / 2, cz)
+      shell.renderOrder = 2
+      g.add(shell)
+
+      // 屋顶
+      const roof = new THREE.Mesh(
+        new THREE.BoxGeometry(footprint + 6, 2.5, footprint + 6),
+        new THREE.MeshStandardMaterial({ color: 0x241f18, roughness: 0.8, metalness: 0.1 }),
+      )
+      roof.position.set(cx, roofY + 1, cz)
+      roof.castShadow = true
+      roof.receiveShadow = true
+      g.add(roof)
+
+      // 基座（裙楼）
+      const plinth = new THREE.Mesh(
+        new THREE.BoxGeometry(footprint + 12, 3, footprint + 12),
+        new THREE.MeshStandardMaterial({ color: 0x2a241c, roughness: 0.9, metalness: 0.05 }),
+      )
+      plinth.position.set(cx, groundY - 1.5, cz)
+      plinth.receiveShadow = true
+      g.add(plinth)
+
+      // 四角立柱
+      const colMat = new THREE.MeshStandardMaterial({ color: 0x4a4238, roughness: 0.5, metalness: 0.4 })
+      const half = footprint / 2
+      for (const [dx, dz] of [[-half, -half], [half, -half], [-half, half], [half, half]] as const) {
+        const col = new THREE.Mesh(new THREE.BoxGeometry(3, buildingH, 3), colMat)
+        col.position.set(cx + dx, groundY + buildingH / 2, cz + dz)
+        g.add(col)
+      }
     }
 
     // —— 区名标牌 ——
@@ -379,6 +439,8 @@ export default function MallScene3D({
         }
       }
       st.controls.update()
+      // 店名标签按相机距离显隐：远景只看楼宇，拉近后浮现店名（避免 90 个标签糊脸）
+      labelGroup.visible = st.camera.position.distanceTo(st.controls.target) < 260
       st.renderer.render(st.scene, st.camera)
       st.raf = requestAnimationFrame(animate)
     }
