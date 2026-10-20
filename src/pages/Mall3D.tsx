@@ -1,21 +1,60 @@
 import { useMemo, useState } from 'react'
-import { Box, MapPin, Search, MousePointerClick, Rotate3d, Layers3, Info } from 'lucide-react'
+import { Box, MapPin, Search, MousePointerClick, Rotate3d, Layers3, Info, BookOpen } from 'lucide-react'
 import { STORES, CATEGORIES, type Store } from '../data/mockData'
 import MallScene3D, { type CategoryColor } from '../components/mall3d/MallScene3D'
+import StoreDrawer, { type DrawerStore } from '../components/StoreDrawer'
 
 const CATEGORY_COLORS: CategoryColor[] = CATEGORIES.map(c => ({ name: c.name, color: c.color }))
+const CATEGORY_ICON = new Map(CATEGORIES.map(c => [c.name, c.icon]))
 
 type ZoneFilter = 'all' | 'south' | 'north'
 
+/** Store → 探店抽屉所需的最小结构（zone 由 id 前缀推出，emoji 由品类映射） */
+function toDrawerStore(s: Store): DrawerStore {
+  return {
+    name: s.name,
+    emoji: CATEGORY_ICON.get(s.category) ?? '🏬',
+    floor: s.floor,
+    zone: s.id.startsWith('s') ? 'S' : 'N',
+    desc: s.description,
+    category: s.category,
+  }
+}
+
+/** 楼层字符串 → 层高数字（S-L4→4, N-B1→-1） */
+function levelOf(floor: string): number {
+  const nums = floor.match(/\d+/g)?.map(Number) ?? [1]
+  let level = nums[nums.length - 1]
+  if (/B/i.test(floor)) level = -level
+  return level
+}
+
 export default function Mall3D() {
   const [zone, setZone] = useState<ZoneFilter>('all')
+  const [floor, setFloor] = useState<number | 'all'>('all')
   const [selected, setSelected] = useState<Store | null>(null)
+  const [drawerStore, setDrawerStore] = useState<DrawerStore | null>(null)
   const [query, setQuery] = useState('')
   const [resetSignal, setResetSignal] = useState(0)
 
+  // 层高 → 显示标签（B3..L4，升序）
+  const LEVELS = useMemo(() => {
+    const m = new Map<number, string>()
+    for (const s of STORES) {
+      const lv = levelOf(s.floor)
+      if (!m.has(lv)) m.set(lv, lv < 0 ? `B${-lv}` : `L${lv}`)
+    }
+    return [...m.entries()].sort((a, b) => a[0] - b[0])
+  }, [])
+
   const visibleStores = useMemo(
-    () => STORES.filter(s => zone === 'all' || (zone === 'south' ? s.id.startsWith('s') : s.id.startsWith('n'))),
-    [zone],
+    () =>
+      STORES.filter(
+        s =>
+          (zone === 'all' || (zone === 'south' ? s.id.startsWith('s') : s.id.startsWith('n'))) &&
+          (floor === 'all' || levelOf(s.floor) === floor),
+      ),
+    [zone, floor],
   )
 
   const onSelectFromScene = (store: Store | null) => {
@@ -104,12 +143,43 @@ export default function Mall3D() {
         </button>
       </div>
 
+      {/* 楼层切换 */}
+      <div className="flex items-center gap-2 flex-wrap">
+        <span className="text-xs text-bfc-warm-gray flex items-center gap-1">
+          <Layers3 className="w-3.5 h-3.5" />楼层
+        </span>
+        <button
+          onClick={() => setFloor('all')}
+          className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all cursor-pointer ${
+            floor === 'all'
+              ? 'bg-bfc-charcoal text-white border-bfc-charcoal'
+              : 'bg-white text-bfc-warm-gray border-bfc-gold-200 hover:border-bfc-gold-300'
+          }`}
+        >
+          全部
+        </button>
+        {LEVELS.map(([lv, label]) => (
+          <button
+            key={lv}
+            onClick={() => setFloor(lv)}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all cursor-pointer ${
+              floor === lv
+                ? 'bg-bfc-charcoal text-white border-bfc-charcoal'
+                : 'bg-white text-bfc-warm-gray border-bfc-gold-200 hover:border-bfc-gold-300'
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
       {/* 3D viewport */}
       <div className="relative w-full h-[68vh] min-h-[520px] rounded-2xl overflow-hidden border border-bfc-gold-200 bg-[#14110e]">
         <MallScene3D
           stores={STORES}
           categories={CATEGORY_COLORS}
           zoneFilter={zone}
+          floorFilter={floor === 'all' ? null : floor}
           focusStoreId={focusId}
           resetSignal={resetSignal}
           onSelect={onSelectFromScene}
@@ -195,8 +265,14 @@ export default function Mall3D() {
             )}
 
             <button
+              onClick={() => setDrawerStore(toDrawerStore(selected))}
+              className="mt-3 w-full flex items-center justify-center gap-1.5 py-2 rounded-xl text-sm font-medium border border-bfc-gold-300 text-bfc-gold-700 hover:bg-bfc-gold-50 transition-colors cursor-pointer"
+            >
+              <BookOpen className="w-4 h-4" /> 查看探店笔记
+            </button>
+            <button
               onClick={() => focusByName(selected.name)}
-              className="mt-3 w-full flex items-center justify-center gap-1.5 py-2 rounded-xl text-sm font-medium bg-bfc-gold-500 text-white hover:bg-bfc-gold-600 transition-colors cursor-pointer"
+              className="mt-2 w-full flex items-center justify-center gap-1.5 py-2 rounded-xl text-sm font-medium bg-bfc-gold-500 text-white hover:bg-bfc-gold-600 transition-colors cursor-pointer"
             >
               <MapPin className="w-4 h-4" /> 在 3D 中定位
             </button>
@@ -205,8 +281,11 @@ export default function Mall3D() {
       </div>
 
       <p className="text-xs text-bfc-warm-gray/80 text-center">
-        提示：本页为增量优化方案中的「3D 导览骨架」，几何体与店铺标签均由代码程序化生成，未加载任何外部 3D 模型或贴图。
+        提示：几何体与店铺标签均由代码程序化生成，未加载任何外部 3D 模型或贴图；点击方块可查看该店的大众点评 / 小红书探店笔记。
       </p>
+
+      {/* 探店抽屉：点击店铺信息卡里的「查看探店笔记」触发 */}
+      <StoreDrawer store={drawerStore} onClose={() => setDrawerStore(null)} />
     </div>
   )
 }

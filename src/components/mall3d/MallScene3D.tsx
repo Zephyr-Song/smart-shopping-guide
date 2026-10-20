@@ -12,6 +12,8 @@ interface MallScene3DProps {
   stores: Store[]
   categories: CategoryColor[]
   zoneFilter?: 'all' | 'south' | 'north'
+  /** 按层高过滤（null/undefined = 全部），跨南区/北区 */
+  floorFilter?: number | null
   focusStoreId?: string | null
   resetSignal?: number
   onSelect?: (store: Store | null) => void
@@ -94,6 +96,7 @@ export default function MallScene3D({
   stores,
   categories,
   zoneFilter = 'all',
+  floorFilter,
   focusStoreId,
   onSelect,
   onHover,
@@ -370,12 +373,22 @@ export default function MallScene3D({
       onHoverRef.current?.(store ?? null)
     }
 
+    // 判断「有效可见」：Raycaster 不检查 visible，需手动排除被楼层/区域隐藏的方块
+    const isEffectivelyVisible = (obj: THREE.Object3D): boolean => {
+      let o: THREE.Object3D | null = obj
+      while (o) {
+        if (!o.visible) return false
+        o = o.parent
+      }
+      return true
+    }
+
     const pickAt = (clientX: number, clientY: number): THREE.Mesh | null => {
       const rect = renderer.domElement.getBoundingClientRect()
       pointer.x = ((clientX - rect.left) / rect.width) * 2 - 1
       pointer.y = -((clientY - rect.top) / rect.height) * 2 + 1
       raycaster.setFromCamera(pointer, camera)
-      const hits = raycaster.intersectObjects(pickables, false)
+      const hits = raycaster.intersectObjects(pickables, false).filter(h => isEffectivelyVisible(h.object))
       return (hits[0]?.object as THREE.Mesh) ?? null
     }
 
@@ -507,6 +520,20 @@ export default function MallScene3D({
     st.southGroup.visible = zoneFilter === 'all' || zoneFilter === 'south'
     st.northGroup.visible = zoneFilter === 'all' || zoneFilter === 'north'
   }, [zoneFilter])
+
+  // 楼层显隐：按层高（level）显隐店铺方块与标签，跨南区/北区；楼宇外壳保持完整
+  useEffect(() => {
+    const st = stateRef.current
+    if (!st) return
+    const showAll = floorFilter == null
+    st.byId.forEach(mesh => {
+      const store = mesh.userData.store as Store
+      const show = showAll || floorLevel(store.floor) === floorFilter
+      mesh.visible = show
+      const label = mesh.userData.label as THREE.Sprite
+      if (label) label.visible = show
+    })
+  }, [floorFilter])
 
   // 聚焦某店铺：移动 target + 高亮
   useEffect(() => {
