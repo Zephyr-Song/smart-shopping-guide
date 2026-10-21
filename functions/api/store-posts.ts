@@ -71,16 +71,31 @@ export async function onRequest(context: PagesContext): Promise<Response> {
 
   try {
     const isMall = brand === '__MALL__'
-    const res = isMall
-      ? await env.DB.prepare(
-          `SELECT * FROM store_posts ORDER BY liked_count DESC, crawled_at DESC LIMIT ${FETCH}`,
-        ).all<StorePostRow>()
-      : await env.DB.prepare(
+    let rows: StorePostRow[] = []
+    if (isMall) {
+      const res = await env.DB.prepare(
+        `SELECT * FROM store_posts ORDER BY liked_count DESC, crawled_at DESC LIMIT ${FETCH}`,
+      ).all<StorePostRow>()
+      rows = res.results || []
+    } else {
+      // 优先按 brand OR frontend 匹配（frontend 用于把「Lanvin」这类展示名映射到 D1 的 'LANVIN'）。
+      // 部分全新环境前端列尚未创建（迁移未跑），做一次降级只按 brand，避免整块小红书功能挂掉。
+      try {
+        const res = await env.DB.prepare(
+          `SELECT * FROM store_posts WHERE brand = ? OR frontend = ? ORDER BY liked_count DESC, id DESC LIMIT ${FETCH}`,
+        )
+          .bind(brand, brand)
+          .all<StorePostRow>()
+        rows = res.results || []
+      } catch {
+        const res = await env.DB.prepare(
           `SELECT * FROM store_posts WHERE brand = ? ORDER BY liked_count DESC, id DESC LIMIT ${FETCH}`,
         )
           .bind(brand)
           .all<StorePostRow>()
-    const rows = res.results || []
+        rows = res.results || []
+      }
+    }
 
     // —— 治理判定 ——
     const now = Date.now()

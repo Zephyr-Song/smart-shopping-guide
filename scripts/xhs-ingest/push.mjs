@@ -64,7 +64,37 @@ const BRAND_TOKENS = [
   ['Pet&Fresh 派特鲜生', ['Pet&Fresh 派特鲜生', '派特鲜生', 'PET&FRESH']],
   ['AIRPARK 人类友好公园', ['AIRPARK 人类友好公园', 'AIRPARK']],
   ['K·1 PET', ['K·1 PET']],
+  // —— 本轮补爬缺失品牌（先小批量验证，再扩全量）——
+  ['Starbucks', ['Starbucks', '星巴克']],
+  ['MANNER', ['MANNER', 'MANNER Coffee']],
+  ['丘大叔米粉', ['丘大叔米粉', '丘大叔']],
+  ['莆田', ['莆田', '莆田餐厅', 'Putien']],
+  ['陈香贵', ['陈香贵']],
+  ['东发道茶冰厅', ['东发道茶冰厅', '东发道']],
 ]
+
+// 品牌名 → 前端 store.name 映射：D1 里 brand 是小红书抓取时的品牌写法（大小写/重音/空格差异），
+// 而前端抽屉是按 store.name 查询的。把 frontend 设成真实 store.name，OR frontend=? 才能命中。
+// （与 dianping-ingest 的 brand/frontend 双列思路一致）
+const BRAND_TO_FRONTEND = {
+  'DA VITTORIO SHANGHAI': 'DA Vittorio Shanghai',
+  'LA PRAIRIE': '莱珀妮 La Prairie',
+  LANVIN: 'Lanvin',
+  'Maison Kitsuné': 'Maison Kitsune',
+  VERSACE: 'Versace',
+  alexanderwang: 'Alexander Wang',
+  // 以下 brand 已与 store.name 完全一致，保留以便未来抓取归一
+  BALLY: 'BALLY',
+  'I.T': 'I.T',
+  'Jimmy Choo': 'Jimmy Choo',
+  PHANTACI: 'PHANTACI',
+  'Paul Smith': 'Paul Smith',
+  Wolford: 'Wolford',
+  喜茶: '喜茶',
+  新荣记: '新荣记',
+  泰珍荟: '泰珍荟',
+  老吉堂: '老吉堂',
+}
 
 // 品牌名过于通用 / 搜索噪声主导的店铺：小红书按关键词搜到的多为无关内容
 // （地名、影视、K-pop、通用短语等），误配展示会误导用户 → 直接丢弃不入库。
@@ -168,8 +198,11 @@ function main() {
   if (rows.size === 0) { console.error('NO_NOTES: 文件存在但未解析出笔记'); process.exit(1) }
   const now = Date.now()
   const lines = [...rows.values()].map(r =>
-    `INSERT OR REPLACE INTO store_posts (brand, note_id, title, "desc", cover_url, author, avatar_url, liked_count, note_url, note_time, crawled_at) VALUES (${esc(r.brand)}, ${esc(r.note_id)}, ${esc(r.title)}, ${esc(r.desc)}, ${esc(r.cover_url)}, ${esc(r.author)}, ${esc(r.avatar_url)}, ${r.liked_count}, ${esc(r.note_url)}, ${esc(r.note_time)}, ${now});`
+    `INSERT OR REPLACE INTO store_posts (brand, frontend, note_id, title, "desc", cover_url, author, avatar_url, liked_count, note_url, note_time, crawled_at) VALUES (${esc(r.brand)}, ${esc(BRAND_TO_FRONTEND[r.brand] || r.brand)}, ${esc(r.note_id)}, ${esc(r.title)}, ${esc(r.desc)}, ${esc(r.cover_url)}, ${esc(r.author)}, ${esc(r.avatar_url)}, ${r.liked_count}, ${esc(r.note_url)}, ${esc(r.note_time)}, ${now});`
   )
+  // upsert：只按 note_id 覆盖/新增，绝不 DELETE。
+  // （曾用「先删再灌」，结果 jsonl 轮转收缩时误删了 8 个品牌的 147 条历史笔记——
+  //   后经 D1 time-travel 才恢复。upsert 保证老数据永远保留，frontend 由上方 BRAND_TO_FRONTEND 归一。）
   writeFileSync(SQL_OUT, lines.join('\n'), 'utf-8')
 
   const brands = {}
