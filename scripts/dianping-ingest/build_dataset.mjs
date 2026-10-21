@@ -214,6 +214,23 @@ const extra = [
     dishes:['狐狸Logo针织','学院风开衫','托特包','保暖马甲'],
     snippet:'法日融合品牌，BFC南区1F，狐狸学院风毛衣与泡芙外套，折扣季低至6折。',
     url:'https://www.dianping.com/search/keyword/2/0_Maison%20Kitsun%C3%A9' },
+  // ===== 第四轮：核实「是否真搜不到」（Paul Smith/J.Lindeberg/Sir Rudy's/Wolford）=====
+  { frontend:'Paul Smith', brand:'Paul Smith(BFC外滩金融中心店)', rating:null, avgPrice:null,
+    dishes:['印花西装','条纹针织Polo','撞色长裤','绅士配饰'],
+    snippet:'中国上海旗舰店，BFC南区1层S103（2024年10月开幕），试衣间走廊贴满6385张复古英国巴士车票。',
+    url:'https://www.dianping.com/search/keyword/2/0_Paul%20Smith' },
+  { frontend:'J.Lindeberg', brand:'J.LINDEBERG(BFC外滩金融中心店)', rating:'4.7', avgPrice:null,
+    dishes:['高尔夫Polo','商务休闲Polo','吸湿速干长裤','休闲短裤'],
+    snippet:'瑞典轻奢时尚运动品牌，BFC南区2F，男士高尔夫Polo约¥1290-1390，综合评分4.7。',
+    url:'https://www.dianping.com/search/keyword/2/0_J.Lindeberg' },
+  { frontend:"Sir Rudy's Pro Shop", brand:"Sir Rudy's Pro Shop(BFC外滩金融中心店)", rating:null, avgPrice:580,
+    dishes:['球杆量身定制','高尔夫球具','高尔夫配件'],
+    snippet:'BFC南区2F高尔夫专业装备店，球杆量身定制约¥580，送礼自用两相宜。',
+    url:'https://www.dianping.com/search/keyword/2/0_Sir%20Rudy%27s%20Pro%20Shop' },
+  { frontend:'Wolford', brand:'Wolford(BFC外滩金融中心店)', rating:null, avgPrice:null,
+    dishes:['连裤袜','丝袜','连体服','针织内搭'],
+    snippet:'奥地利奢侈内衣品牌BFC店，Elisabeth Tights连裤袜（原价¥500）与秋冬内搭、大衣外套。',
+    url:'https://www.dianping.com/search/keyword/2/0_Wolford' },
 ]
 const extraMap = Object.fromEntries(extra.map(e => [e.frontend, e]))
 
