@@ -162,17 +162,15 @@
     "frontend": "炙焰炉子炉馆"
   },
   {
-    "brand": "A&M CROWNED SALON",
+    "brand": "A&M CROWNED SALON(待核实)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "护理项目",
-      "发型设计",
-      "美甲美睫",
-      "套餐"
+      "美发",
+      "造型"
     ],
-    "snippet": "S-L3（点击在大众点评查看门店详情、团购与用户评价）",
+    "snippet": "待人工核实：多轮搜索未能在公开渠道找到「A&M CROWNED SALON」的大众点评页面或BFC商户资料（BFC南区3F美颜业态为丝域养发/刘娟美甲/Ai美发沙龙），请以点评App现场搜索为准。",
     "url": "https://www.dianping.com/search/keyword/2/0_A%26M%20CROWNED%20SALON",
     "frontend": "A&M CROWNED SALON"
   },
@@ -536,17 +534,15 @@
     "frontend": "b3 Coffee"
   },
   {
-    "brand": "永璞",
+    "brand": "永璞咖啡(BFC无门店)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "招牌饮品",
-      "季节限定",
-      "咖啡/茶",
-      "小食"
+      "冷萃咖啡液",
+      "闪萃咖啡液"
     ],
-    "snippet": "S-L1（点击在大众点评查看门店详情、团购与用户评价）",
+    "snippet": "数据勘误：永璞咖啡上海实体店位于徐家汇书院/永嘉路/愚园路（百度百科），BFC仅于外滩枫径举办过快闪活动，并无门店——前端数据建议下架。",
     "url": "https://www.dianping.com/search/keyword/2/0_%E6%B0%B8%E7%92%9E",
     "frontend": "永璞"
   },
@@ -612,17 +608,17 @@
     "frontend": "么蛮"
   },
   {
-    "brand": "混果汁",
+    "brand": "混果汁(上海BFC外滩金融中心店)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "招牌饮品",
-      "季节限定",
-      "咖啡/茶",
-      "小食"
+      "鲜榨果汁",
+      "木瓜香蕉牛奶",
+      "牛油果果昔",
+      "西瓜汁"
     ],
-    "snippet": "S-B1（点击在大众点评查看门店详情、团购与用户评价）",
+    "snippet": "BFC外滩金融中心店鲜榨果汁专门店，单品约18元起，途牛周边餐厅榜在册。",
     "url": "https://www.dianping.com/search/keyword/2/0_%E6%B7%B7%E6%9E%9C%E6%B1%81",
     "frontend": "混果汁"
   },
@@ -731,18 +727,17 @@
     "frontend": "周大福"
   },
   {
-    "brand": "FIVE DOCTORS",
+    "brand": "五个女博士(BFC外滩金融中心店)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "护理项目",
-      "发型设计",
-      "美甲美睫",
-      "套餐"
+      "胶原蛋白肽维C饮品",
+      "胶原蛋白肽EGCG饮",
+      "口服美容"
     ],
-    "snippet": "S-B1（点击在大众点评查看门店详情、团购与用户评价）",
-    "url": "https://www.dianping.com/search/keyword/2/0_FIVE%20DOCTORS",
+    "snippet": "口服美容品牌「五个女博士」上海首店，BFC南区地下一层S-B120，粉色主题，2024年初开业（非医美诊所）。",
+    "url": "https://www.dianping.com/search/keyword/2/0_%E4%BA%94%E4%B8%AA%E5%A5%B3%E5%8D%9A%E5%A3%AB",
     "frontend": "FIVE DOCTORS"
   },
   {
@@ -823,17 +818,17 @@
     "frontend": "小米"
   },
   {
-    "brand": "哈曼卡顿",
+    "brand": "哈曼卡顿授权体验店(上海BFC店)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "旗舰新品",
-      "智能设备",
-      "配件",
-      "体验"
+      "音乐水晶4代蓝牙音箱",
+      "琉璃音箱",
+      "Soundsticks",
+      "JBL Tour One M2耳机"
     ],
-    "snippet": "S-B2（点击在大众点评查看门店详情、团购与用户评价）",
+    "snippet": "harman/kardon授权体验店，BFC南区B2层S-B219A单元（JBL中国官网经销商名录在册），音乐水晶4代原价¥2399，2024暑期全场9折。",
     "url": "https://www.dianping.com/search/keyword/2/0_%E5%93%88%E6%9B%BC%E5%8D%A1%E9%A1%BF",
     "frontend": "哈曼卡顿"
   },
@@ -1178,17 +1173,14 @@
     "frontend": "不入川豆花馆"
   },
   {
-    "brand": "米崎",
+    "brand": "米崎(待核实)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "招牌主食",
-      "小食",
-      "套餐",
-      "饮品"
+      "日式便当"
     ],
-    "snippet": "N-B1（点击在大众点评查看门店详情、团购与用户评价）",
+    "snippet": "待人工核实：多轮搜索未能在公开渠道找到「米崎」的大众点评页面或BFC商户资料，无法确认该店是否存在，请以点评App现场搜索为准。",
     "url": "https://www.dianping.com/search/keyword/2/0_%E7%B1%B3%E5%B4%8E",
     "frontend": "米崎"
   },
@@ -1256,17 +1248,14 @@
     "frontend": "陈香贵"
   },
   {
-    "brand": "小吃堂",
+    "brand": "小吃堂(待核实)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "招牌主食",
-      "小食",
-      "套餐",
-      "饮品"
+      "各地小吃"
     ],
-    "snippet": "N-B1（点击在大众点评查看门店详情、团购与用户评价）",
+    "snippet": "待人工核实：多轮搜索未能在公开渠道找到「小吃堂」的大众点评页面或BFC商户资料，无法确认该店是否存在，请以点评App现场搜索为准。",
     "url": "https://www.dianping.com/search/keyword/2/0_%E5%B0%8F%E5%90%83%E5%A0%82",
     "frontend": "小吃堂"
   },
@@ -1315,18 +1304,18 @@
     "frontend": "PET MART"
   },
   {
-    "brand": "大丰和风食堂",
+    "brand": "大馥和风食堂(BFC外滩金融中心店)",
     "source": "dianping",
-    "rating": null,
-    "avgPrice": null,
+    "rating": "4.0",
+    "avgPrice": 88,
     "dishes": [
-      "招牌主食",
-      "小食",
-      "套餐",
-      "饮品"
+      "特级菲力牛肉饭",
+      "烧肉拼盘",
+      "鹅肝和牛汉堡",
+      "日式定食"
     ],
-    "snippet": "N-B2（点击在大众点评查看门店详情、团购与用户评价）",
-    "url": "https://www.dianping.com/search/keyword/2/0_%E5%A4%A7%E4%B8%B0%E5%92%8C%E9%A3%8E%E9%A3%9F%E5%A0%82",
+    "snippet": "BFC和风定食食堂（品牌名「大馥」），中午常排长队，人均约88-130元，大众点评多篇真实评价。",
+    "url": "https://www.dianping.com/review/477199125",
     "frontend": "大丰和风食堂"
   },
   {
@@ -1345,18 +1334,19 @@
     "frontend": "茶姬"
   },
   {
-    "brand": "湖南饭店",
+    "brand": "锅气·湖南饭店(BFC外滩金融中心店)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "招牌菜",
-      "时令菜",
-      "点心",
-      "汤品"
+      "小炒黄牛肉",
+      "阳雀湖辣椒炒肉",
+      "擂辣椒皮蛋茄子",
+      "现熬绿豆沙",
+      "锅气柴火金钱蛋"
     ],
-    "snippet": "N-B2（点击在大众点评查看门店详情、团购与用户评价）",
-    "url": "https://www.dianping.com/search/keyword/2/0_%E6%B9%96%E5%8D%97%E9%A5%AD%E5%BA%97",
+    "snippet": "湖南小炒连锁「锅气」BFC店（途牛周边餐厅榜在册）。招牌铁锅小炒黄牛肉、土猪辣椒炒肉，金龙鱼大米饭畅吃；连锁门店评分4.2-4.3、人均¥55-60（BFC店单项数据待App内核实）。",
+    "url": "https://www.dianping.com/search/keyword/2/0_%E9%94%85%E6%B0%94%E6%B9%96%E5%8D%97%E9%A5%AD%E5%BA%97",
     "frontend": "湖南饭店"
   },
   {
@@ -1375,18 +1365,15 @@
     "frontend": "东发道茶冰厅"
   },
   {
-    "brand": "丘大叔米粉",
+    "brand": "丘大叔(未在上海开店)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "招牌主食",
-      "小食",
-      "套餐",
-      "饮品"
+      "柠檬茶"
     ],
-    "snippet": "N-B2（点击在大众点评查看门店详情、团购与用户评价）",
-    "url": "https://www.dianping.com/search/keyword/2/0_%E4%B8%98%E5%A4%A7%E5%8F%94%E7%B1%B3%E7%B2%89",
+    "snippet": "数据勘误：丘大叔实为广东柠檬茶品牌，门店均在广东省内，上海无门店——BFC并无此店，前端数据建议下架。",
+    "url": "https://www.dianping.com/search/keyword/2/0_%E4%B8%98%E5%A4%A7%E5%8F%94",
     "frontend": "丘大叔米粉"
   },
   {
@@ -1420,33 +1407,32 @@
     "frontend": "九木杂物社"
   },
   {
-    "brand": "多抓鱼",
+    "brand": "多抓鱼(BFC无门店)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "文创周边",
-      "杂货",
-      "文具",
-      "礼品"
+      "二手书",
+      "二手服饰"
     ],
-    "snippet": "N-B2（点击在大众点评查看门店详情、团购与用户评价）",
+    "snippet": "数据勘误：多抓鱼循环商店位于徐汇安福路300号（681㎡三层），上海仅此一家；BFC北区文创里B2的书店是「阅外滩」——前端数据建议下架或改为阅外滩。",
     "url": "https://www.dianping.com/search/keyword/2/0_%E5%A4%9A%E6%8A%93%E9%B1%BC",
     "frontend": "多抓鱼"
   },
   {
-    "brand": "READ&SOCIAL",
+    "brand": "阅外滩书店(READ&SOCIAL@THE BUND)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "文创周边",
-      "杂货",
-      "文具",
-      "礼品"
+      "艺术画册",
+      "限量版图书",
+      "文创潮玩",
+      "质馆咖啡",
+      "亲子儿童区"
     ],
-    "snippet": "N-B2（点击在大众点评查看门店详情、团购与用户评价）",
-    "url": "https://www.dianping.com/search/keyword/2/0_READ%26SOCIAL",
+    "snippet": "BFC北区文创里B2层约1000㎡开放式阅读社交空间，2020年7月3日开业，真草露天庭院+质馆咖啡+故宫/豫园文创，设亲子儿童区与沙龙阶梯区（青年报/澎湃/上海文旅局多源证实）。",
+    "url": "https://www.dianping.com/shop/167806217",
     "frontend": "READ&SOCIAL"
   },
   {
