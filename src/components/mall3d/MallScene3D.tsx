@@ -299,11 +299,11 @@ export default function MallScene3D({
     // 材质：花岗岩 / 玻璃 / 青铜 / 深石
     const graniteMat = new THREE.MeshStandardMaterial({ color: 0x8c8578, roughness: 0.88, metalness: 0.06 })
     const glassMat = new THREE.MeshStandardMaterial({
-      color: 0x93b8cf,
-      roughness: 0.12,
-      metalness: 0.22,
+      color: 0x9fc6dd,
+      roughness: 0.1,
+      metalness: 0.28,
       transparent: true,
-      opacity: 0.15,
+      opacity: 0.42,
       depthWrite: false,
     })
     const bronzeMat = new THREE.MeshStandardMaterial({ color: 0xc9a227, roughness: 0.4, metalness: 0.95 })
@@ -317,12 +317,12 @@ export default function MallScene3D({
       g.add(podium)
     }
 
-    // —— 南端双子塔 ——
+    // —— 南端双子塔（明显两座，间距拉开） ——
     for (let t = 0; t < 2; t++) {
-      const cx = southCx + (t === 0 ? -38 : 38) // 西塔 / 东塔
+      const cx = southCx + (t === 0 ? -56 : 56) // 西塔 / 东塔，间距 112-宽度=清晰两座
       const cz = southCz
-      const tw = 60
-      const td = 86
+      const tw = 54
+      const td = 84
       const tower = new THREE.Mesh(new THREE.BoxGeometry(tw, towerH, td), glassMat)
       tower.position.set(cx, groundY + towerH / 2, cz)
       tower.renderOrder = 1
@@ -343,10 +343,10 @@ export default function MallScene3D({
     {
       const cx = northCx
       const cz = northCz
-      const bw = footprint * 0.46
-      const bd = footprint * 0.92
+      const bw = footprint * 0.4
+      const bd = footprint * 0.9
       const bh = (podiumTop - groundY) * 1.25 // 低于双子塔
-      for (const dx of [-footprint * 0.26, footprint * 0.26]) {
+      for (const dx of [-footprint * 0.32, footprint * 0.32]) { // 明显两座，中间留出街道间隙
         const block = new THREE.Mesh(new THREE.BoxGeometry(bw, bh, bd), glassMat)
         block.position.set(cx + dx, groundY + bh / 2, cz)
         block.renderOrder = 1
@@ -374,10 +374,10 @@ export default function MallScene3D({
     }
     const artCx = (southCx + northCx) / 2
     const artCz = 50 * SCALE - 44
-    const artW = 40
-    const artD = 28
-    const artDeckY = 16 // 架空层高度（两柱撑起的「戏台」）
-    const artCoreH = 30
+    const artW = 58 // 放大：成为醒目的中央体量
+    const artD = 44
+    const artDeckY = 22 // 架空层高度（两柱撑起的「戏台」）
+    const artCoreH = 46
     // 两根立柱（架空）
     for (const px of [-artW / 2 + 6, artW / 2 - 6]) {
       const pillar = new THREE.Mesh(new THREE.BoxGeometry(6, artDeckY, 6), darkStoneMat)
@@ -388,8 +388,11 @@ export default function MallScene3D({
     const artCore = new THREE.Mesh(new THREE.BoxGeometry(artW * 0.72, artCoreH, artD * 0.72), bronzeMat)
     artCore.position.set(artCx, groundY + artDeckY + artCoreH / 2, artCz)
     scene.add(artCore)
-    // 金色流苏幕帘（三层同心 · 波浪底边）
+    // 金色流苏幕帘（三层同心 · 波浪底边）——单独成组，做缓慢旋转复现「会跳舞的房子」
     const artTopY = groundY + artDeckY + artCoreH
+    const tasselGroup = new THREE.Group()
+    tasselGroup.position.set(artCx, 0, artCz)
+    scene.add(tasselGroup)
     const tasselGeo = new THREE.CylinderGeometry(1.05, 1.05, 1, 8)
     for (const layer of [
       { off: 0, color: 0xd8b24a },
@@ -404,8 +407,8 @@ export default function MallScene3D({
         const len = Math.max(10, 26 + 17 * Math.sin(t * Math.PI * 7)) // 类正弦波浪底边
         const tube = new THREE.Mesh(tasselGeo, mat)
         tube.scale.y = len
-        tube.position.set(artCx + p.x, artTopY - len / 2, artCz + p.z)
-        scene.add(tube)
+        tube.position.set(p.x, artTopY - len / 2, p.z) // 相对幕帘组中心
+        tasselGroup.add(tube)
       }
     }
 
@@ -417,6 +420,9 @@ export default function MallScene3D({
     const northLabel = makeZoneLabel('北区 North Retail')
     northLabel.position.set(50 * SCALE + NORTH_SHIFT, topY, 50 * SCALE)
     northGroup.add(northLabel)
+    const artLabel = makeZoneLabel('复星艺术中心 Fosun Art Center')
+    artLabel.position.set(artCx, artTopY + 14, artCz)
+    scene.add(artLabel)
 
     // —— 射线拾取 ——
     const raycaster = new THREE.Raycaster()
@@ -524,6 +530,8 @@ export default function MallScene3D({
         }
       }
       st.controls.update()
+      // 复星艺术中心金色流苏幕帘：缓慢旋转，复现「会跳舞的房子」
+      tasselGroup.rotation.y += 0.0016
       // 店名标签按相机距离显隐：远景只看楼宇，拉近后浮现店名（避免 90 个标签糊脸）
       labelGroup.visible = st.camera.position.distanceTo(st.controls.target) < 260
       st.renderer.render(st.scene, st.camera)
