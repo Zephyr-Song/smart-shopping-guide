@@ -37,3 +37,8 @@ worker/.wrangler/
 
 # Local model / extension downloads (18MB binaries)
 .dl/
+
+# Local backups / scratch (never commit)
+.env.local.*
+_bfc_secrets.txt
+*.bak-*
