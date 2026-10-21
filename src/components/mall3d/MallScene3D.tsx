@@ -164,7 +164,7 @@ export default function MallScene3D({
       0.1,
       2000,
     )
-    camera.position.set(NORTH_SHIFT / 2, 175, 380)
+    camera.position.set(NORTH_SHIFT / 2 + 70, 210, 470)
 
     const controls = new OrbitControls(camera, renderer.domElement)
     controls.enableDamping = true
@@ -172,7 +172,7 @@ export default function MallScene3D({
     controls.maxPolarAngle = Math.PI / 2.15
     controls.minDistance = 60
     controls.maxDistance = 560
-    controls.target.set(NORTH_SHIFT / 2, 58, 50 * SCALE - 70)
+    controls.target.set(NORTH_SHIFT / 2 + 70, 70, 20)
 
     // —— 灯光 ——
     scene.add(new THREE.AmbientLight(0xfff3e0, 0.55))
@@ -281,95 +281,132 @@ export default function MallScene3D({
       ;(s.zone === 'south' ? southGroup : northGroup).add(slab)
     }
 
-    // —— 楼体外壳：让每个区读起来像一栋楼，而非悬浮色块 ——
+    // ===== BFC 外滩金融中心 · 程序化重建（参考真实建筑）=====
+    // Foster+Partners + Heatherwick Studio，42 万㎡ / 8 栋楼：
+    //   · 南端 180m 双子塔：玻璃幕墙 + 花岗岩框架 + 青铜冠带
+    //   · 中央广场复星艺术中心「会跳舞的房子」：青铜基座架空 + 675 根金色流苏幕帘（三层、波浪底边）
+    //   · 北侧较低楼群（写字楼/酒店）：石材+玻璃，呼应老外滩比例
+    //   · 材质语言：高性能玻璃 + 手工花岗岩框 + 青铜嵌板
     const footprint = 100 * SCALE // 140
     const groundY = -2
-    const roofY = levelY(maxLevel) + FLOOR_H + 2 // 顶楼之上留出屋顶高度
-    const buildingH = roofY - groundY
-
-    for (const zone of ['south', 'north'] as const) {
-      const cx = zone === 'north' ? 50 * SCALE + NORTH_SHIFT : 50 * SCALE
-      const cz = 50 * SCALE
-      const g = zone === 'south' ? southGroup : northGroup
-
-      // 玻璃幕墙外壳（半透明，罩住整栋楼，内部亮灯铺位仍清晰可见）
-      const shell = new THREE.Mesh(
-        new THREE.BoxGeometry(footprint, buildingH, footprint),
-        new THREE.MeshStandardMaterial({
-          color: 0x9fc8dc,
-          roughness: 0.15,
-          metalness: 0.15,
-          transparent: true,
-          opacity: 0.12,
-          depthWrite: false,
-        }),
-      )
-      shell.position.set(cx, groundY + buildingH / 2, cz)
-      shell.renderOrder = 2
-      g.add(shell)
-
-      // 屋顶
-      const roof = new THREE.Mesh(
-        new THREE.BoxGeometry(footprint + 6, 2.5, footprint + 6),
-        new THREE.MeshStandardMaterial({ color: 0x241f18, roughness: 0.8, metalness: 0.1 }),
-      )
-      roof.position.set(cx, roofY + 1, cz)
-      roof.castShadow = true
-      roof.receiveShadow = true
-      g.add(roof)
-
-      // 基座（裙楼）
-      const plinth = new THREE.Mesh(
-        new THREE.BoxGeometry(footprint + 12, 3, footprint + 12),
-        new THREE.MeshStandardMaterial({ color: 0x2a241c, roughness: 0.9, metalness: 0.05 }),
-      )
-      plinth.position.set(cx, groundY - 1.5, cz)
-      plinth.receiveShadow = true
-      g.add(plinth)
-
-      // 四角立柱
-      const colMat = new THREE.MeshStandardMaterial({ color: 0x4a4238, roughness: 0.5, metalness: 0.4 })
-      const half = footprint / 2
-      for (const [dx, dz] of [[-half, -half], [half, -half], [-half, half], [half, half]] as const) {
-        const col = new THREE.Mesh(new THREE.BoxGeometry(3, buildingH, 3), colMat)
-        col.position.set(cx + dx, groundY + buildingH / 2, cz + dz)
-        g.add(col)
-      }
-    }
-
-    // —— BFC 外观致敬：南楼「金色竹幕」立面 + 双楼金色屋顶收边 ——
-    // 复星艺术中心标志性的黄铜「流苏/竹幕」是 BFC 最强视觉记忆点；
-    // 这里用程序化竖排黄铜圆柱在南楼临街两面复现这一意象（风格化致敬，非照片级还原）。
-    const bambooGeo = new THREE.CylinderGeometry(1.2, 1.2, buildingH + 4, 10)
-    const bambooMat = new THREE.MeshStandardMaterial({ color: 0xc9a227, metalness: 1.0, roughness: 0.32 })
+    const podiumTop = levelY(maxLevel) + 2 // 商场裙楼顶（店铺所在）
+    const towerH = (podiumTop - groundY) * 1.5 // 双子塔高度（远高于裙楼，读作「塔」）
     const southCx = 50 * SCALE
     const southCz = 50 * SCALE
-    const halfFoot = footprint / 2
-    const N = 24
-    const bambooOff = 3 // 竹幕外挂在玻璃立面之外
-    for (let i = 0; i <= N; i++) {
-      const t = i / N
-      const along = -halfFoot + t * footprint
-      // 临街正面（z 负侧）
-      const front = new THREE.Mesh(bambooGeo, bambooMat)
-      front.position.set(southCx + along, groundY + buildingH / 2, southCz - halfFoot - bambooOff)
-      southGroup.add(front)
-      // 西侧立面（x 负侧）
-      if (i > 0 && i < N) {
-        const side = new THREE.Mesh(bambooGeo, bambooMat)
-        side.position.set(southCx - halfFoot - bambooOff, groundY + buildingH / 2, southCz + along)
-        southGroup.add(side)
+    const northCx = 50 * SCALE + NORTH_SHIFT
+    const northCz = 50 * SCALE
+
+    // 材质：花岗岩 / 玻璃 / 青铜 / 深石
+    const graniteMat = new THREE.MeshStandardMaterial({ color: 0x8c8578, roughness: 0.88, metalness: 0.06 })
+    const glassMat = new THREE.MeshStandardMaterial({
+      color: 0x93b8cf,
+      roughness: 0.12,
+      metalness: 0.22,
+      transparent: true,
+      opacity: 0.15,
+      depthWrite: false,
+    })
+    const bronzeMat = new THREE.MeshStandardMaterial({ color: 0xc9a227, roughness: 0.4, metalness: 0.95 })
+    const darkStoneMat = new THREE.MeshStandardMaterial({ color: 0x2b2620, roughness: 0.9, metalness: 0.05 })
+
+    // —— 花岗岩裙楼基座（双区，承载店铺）——
+    for (const [cx, cz, g] of [[southCx, southCz, southGroup], [northCx, northCz, northGroup]] as const) {
+      const podium = new THREE.Mesh(new THREE.BoxGeometry(footprint + 10, 2.5, footprint + 10), graniteMat)
+      podium.position.set(cx, groundY + 1.25, cz)
+      podium.receiveShadow = true
+      g.add(podium)
+    }
+
+    // —— 南端双子塔 ——
+    for (let t = 0; t < 2; t++) {
+      const cx = southCx + (t === 0 ? -38 : 38) // 西塔 / 东塔
+      const cz = southCz
+      const tw = 60
+      const td = 86
+      const tower = new THREE.Mesh(new THREE.BoxGeometry(tw, towerH, td), glassMat)
+      tower.position.set(cx, groundY + towerH / 2, cz)
+      tower.renderOrder = 1
+      southGroup.add(tower)
+      // 花岗岩四角框架
+      for (const [dx, dz] of [[-tw / 2, -td / 2], [tw / 2, -td / 2], [-tw / 2, td / 2], [tw / 2, td / 2]] as const) {
+        const col = new THREE.Mesh(new THREE.BoxGeometry(4.5, towerH, 4.5), graniteMat)
+        col.position.set(cx + dx, groundY + towerH / 2, cz + dz)
+        southGroup.add(col)
+      }
+      // 青铜冠带
+      const crown = new THREE.Mesh(new THREE.BoxGeometry(tw + 5, 2.2, td + 5), bronzeMat)
+      crown.position.set(cx, groundY + towerH, cz)
+      southGroup.add(crown)
+    }
+
+    // —— 北侧楼群（写字楼/酒店，石材+玻璃）——
+    {
+      const cx = northCx
+      const cz = northCz
+      const bw = footprint * 0.46
+      const bd = footprint * 0.92
+      const bh = (podiumTop - groundY) * 1.25 // 低于双子塔
+      for (const dx of [-footprint * 0.26, footprint * 0.26]) {
+        const block = new THREE.Mesh(new THREE.BoxGeometry(bw, bh, bd), glassMat)
+        block.position.set(cx + dx, groundY + bh / 2, cz)
+        block.renderOrder = 1
+        northGroup.add(block)
+        for (const [fx, fz] of [[-bw / 2, -bd / 2], [bw / 2, -bd / 2], [-bw / 2, bd / 2], [bw / 2, bd / 2]] as const) {
+          const col = new THREE.Mesh(new THREE.BoxGeometry(4, bh, 4), graniteMat)
+          col.position.set(cx + dx + fx, groundY + bh / 2, cz + fz)
+          northGroup.add(col)
+        }
+        const crown = new THREE.Mesh(new THREE.BoxGeometry(bw + 4, 2, bd + 4), bronzeMat)
+        crown.position.set(cx + dx, groundY + bh, cz)
+        northGroup.add(crown)
       }
     }
 
-    // 金色屋顶收边（双楼，呼应 BFC 暖金主调）
-    const goldBandMat = new THREE.MeshStandardMaterial({ color: 0xc9a227, metalness: 0.9, roughness: 0.35 })
-    for (const zone of ['south', 'north'] as const) {
-      const cx = zone === 'north' ? 50 * SCALE + NORTH_SHIFT : 50 * SCALE
-      const g = zone === 'south' ? southGroup : northGroup
-      const band = new THREE.Mesh(new THREE.BoxGeometry(footprint + 4, 1.6, footprint + 4), goldBandMat)
-      band.position.set(cx, roofY + 0.2, 50 * SCALE)
-      g.add(band)
+    // —— 复星艺术中心「会跳舞的房子」（金色流苏幕帘）——
+    // 真实特征：青铜基座架空于两柱（呼应中国戏台）、675 根金色流苏挂三层轨道、底边类正弦波浪。
+    const rectPoint = (t: number, hw: number, hd: number) => {
+      const per = 2 * (2 * hw + 2 * hd)
+      const d = t * per
+      if (d < 2 * hw) return { x: -hw + d, z: -hd }
+      if (d < 2 * hw + 2 * hd) return { x: hw, z: -hd + (d - 2 * hw) }
+      if (d < 4 * hw + 2 * hd) return { x: hw - (d - 2 * hw - 2 * hd), z: hd }
+      return { x: -hw, z: hd - (d - 4 * hw - 2 * hd) }
+    }
+    const artCx = (southCx + northCx) / 2
+    const artCz = 50 * SCALE - 44
+    const artW = 40
+    const artD = 28
+    const artDeckY = 16 // 架空层高度（两柱撑起的「戏台」）
+    const artCoreH = 30
+    // 两根立柱（架空）
+    for (const px of [-artW / 2 + 6, artW / 2 - 6]) {
+      const pillar = new THREE.Mesh(new THREE.BoxGeometry(6, artDeckY, 6), darkStoneMat)
+      pillar.position.set(artCx + px, groundY + artDeckY / 2, artCz)
+      scene.add(pillar)
+    }
+    // 青铜核心体量
+    const artCore = new THREE.Mesh(new THREE.BoxGeometry(artW * 0.72, artCoreH, artD * 0.72), bronzeMat)
+    artCore.position.set(artCx, groundY + artDeckY + artCoreH / 2, artCz)
+    scene.add(artCore)
+    // 金色流苏幕帘（三层同心 · 波浪底边）
+    const artTopY = groundY + artDeckY + artCoreH
+    const tasselGeo = new THREE.CylinderGeometry(1.05, 1.05, 1, 8)
+    for (const layer of [
+      { off: 0, color: 0xd8b24a },
+      { off: 2.8, color: 0xc9962c },
+      { off: 5.6, color: 0xe8cb78 },
+    ]) {
+      const mat = new THREE.MeshStandardMaterial({ color: layer.color, metalness: 1, roughness: 0.33 })
+      const NT = 64
+      for (let i = 0; i < NT; i++) {
+        const t = i / NT
+        const p = rectPoint(t, artW / 2 + layer.off, artD / 2 + layer.off)
+        const len = Math.max(10, 26 + 17 * Math.sin(t * Math.PI * 7)) // 类正弦波浪底边
+        const tube = new THREE.Mesh(tasselGeo, mat)
+        tube.scale.y = len
+        tube.position.set(artCx + p.x, artTopY - len / 2, artCz + p.z)
+        scene.add(tube)
+      }
     }
 
     // —— 区名标牌 ——
