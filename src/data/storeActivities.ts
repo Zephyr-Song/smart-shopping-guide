@@ -1,5 +1,5 @@
 // 店铺活动数据：全网公开信息检索整理（检索日期见 RETRIEVED_AT）
-// key 与品牌名保持一致（BrandExplore / Offers 两页共用）
+// key 与品牌名保持一致（BrandExplore 页面与店铺详情抽屉共用）
 export interface StoreActivity {
   title: string
   desc: string

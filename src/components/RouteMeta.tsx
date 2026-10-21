@@ -31,10 +31,6 @@ const META: Record<string, Meta> = {
     title: `品牌探索 · ${SITE_NAME}`,
     description: '浏览 BFC 大豫园入驻品牌，按国家、品类和风格筛选，查看门店位置与品牌故事。',
   },
-  '/offers': {
-    title: `限时优惠 · ${SITE_NAME}`,
-    description: 'BFC 大豫园当前在售优惠与活动，按门店和品类查看，到店即可使用。',
-  },
   '/calendar': {
     title: `营销日历 · ${SITE_NAME}`,
     description: 'BFC 大豫园活动时间表，按日期查看展览、演出、快闪与节日活动安排。',
@@ -42,10 +38,6 @@ const META: Record<string, Meta> = {
   '/analytics': {
     title: `商圈分析 · ${SITE_NAME}`,
     description: 'BFC 大豫园客流、业态与消费结构数据看板，用于评估 AI 导购对线下商业的影响。',
-  },
-  '/architecture': {
-    title: `系统架构 · ${SITE_NAME}`,
-    description: 'BFC 智能导购的技术架构说明：React SPA、Cloudflare Pages Functions 与 D1 会话记忆。',
   },
   '/explore': {
     title: `3D 立体导览 · ${SITE_NAME}`,

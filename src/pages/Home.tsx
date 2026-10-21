@@ -11,7 +11,6 @@ import {
   Gem,
   Search,
   Compass,
-  Ticket,
 } from 'lucide-react'
 
 const FEATURES = [
@@ -44,12 +43,6 @@ const FEATURES = [
     title: '商圈分析',
     desc: '客流趋势、转化漏斗、客群画像、营销ROI全景数据',
     path: '/analytics',
-  },
-  {
-    icon: Ticket,
-    title: '限时优惠',
-    desc: '当前可享折扣 / 满减 / 赠礼，品牌活动一站速览',
-    path: '/offers',
   },
 ]
 

@@ -54,14 +54,6 @@ const ROUTES = [
     priority: '0.8',
   },
   {
-    path: '/offers',
-    title: `限时优惠 · ${SITE}`,
-    description: 'BFC 大豫园当前在售优惠与活动，按门店和品类查看，到店即可使用。',
-    h1: '限时优惠',
-    lead: '当前在售优惠与活动，按门店与品类查看。',
-    priority: '0.8',
-  },
-  {
     path: '/calendar',
     title: `营销日历 · ${SITE}`,
     description: 'BFC 大豫园活动时间表，按日期查看展览、演出、快闪与节日活动安排。',
@@ -76,15 +68,6 @@ const ROUTES = [
     h1: '商圈分析',
     lead: '客流、业态与消费结构数据看板。',
     priority: '0.5',
-  },
-  {
-    path: '/architecture',
-    title: `系统架构 · ${SITE}`,
-    description: 'BFC 智能导购的技术架构说明：React SPA、Cloudflare Pages Functions 与 D1 会话记忆。',
-    h1: '系统架构',
-    lead: 'React SPA + Cloudflare Pages Functions + D1 的技术架构说明。',
-    priority: '0.3',
-    noindex: true,
   },
   {
     path: '/explore',
@@ -219,7 +202,7 @@ async function main() {
       r => `  <url>
     <loc>${ORIGIN}${r.path}</loc>
     <lastmod>${new Date().toISOString().slice(0, 10)}</lastmod>
-    <changefreq>${r.path === '/offers' ? 'daily' : 'weekly'}</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>${r.priority}</priority>
   </url>`,
     )

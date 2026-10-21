@@ -11,8 +11,6 @@ const MallMap = lazy(() => import('./pages/MallMap'))
 const MarketingCalendar = lazy(() => import('./pages/MarketingCalendar'))
 const Analytics = lazy(() => import('./pages/Analytics'))
 const BrandExplore = lazy(() => import('./pages/BrandExplore'))
-const Offers = lazy(() => import('./pages/Offers'))
-const Architecture = lazy(() => import('./pages/Architecture'))
 const Mall3D = lazy(() => import('./pages/Mall3D'))
 
 /** 路由切换时的占位骨架：结构与真实页面接近，避免白屏跳动 */
@@ -73,22 +71,6 @@ function App() {
           element={
             <Suspense fallback={<RouteFallback />}>
               <BrandExplore />
-            </Suspense>
-          }
-        />
-        <Route
-          path="offers"
-          element={
-            <Suspense fallback={<RouteFallback />}>
-              <Offers />
-            </Suspense>
-          }
-        />
-        <Route
-          path="architecture"
-          element={
-            <Suspense fallback={<RouteFallback />}>
-              <Architecture />
             </Suspense>
           }
         />

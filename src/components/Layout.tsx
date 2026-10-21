@@ -12,8 +12,6 @@ import {
   Calendar,
   Store,
   Compass,
-  Layers,
-  Ticket,
   Box,
 } from 'lucide-react'
 
@@ -23,9 +21,7 @@ const NAV_ITEMS = [
   { path: '/map', label: '商场地图', icon: Map },
   { path: '/calendar', label: '营销日历', icon: Calendar },
   { path: '/brands', label: '品牌探索', icon: Store },
-  { path: '/offers', label: '限时优惠', icon: Ticket },
   { path: '/analytics', label: '商圈分析', icon: BarChart3 },
-  { path: '/architecture', label: '系统架构', icon: Layers },
   { path: '/explore', label: '3D 导览', icon: Box },
 ]
 
