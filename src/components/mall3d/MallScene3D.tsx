@@ -132,6 +132,13 @@ export default function MallScene3D({
     const mount = mountRef.current
     if (!mount) return
 
+    // 无障碍：尊重「减少动态效果」系统偏好（方案 P3「动画遵循 reduced-motion」）。
+    // 开启时停止装饰性自动旋转（金色流苏幕帘），但保留用户手动拖拽交互与渲染。
+    const prefersReducedMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
     const colorMap = new Map(categories.map(c => [c.name, c.color]))
     const fallbackColor = '#9ca3af'
 
@@ -531,7 +538,8 @@ export default function MallScene3D({
       }
       st.controls.update()
       // 复星艺术中心金色流苏幕帘：缓慢旋转，复现「会跳舞的房子」
-      tasselGroup.rotation.y += 0.0016
+      // reduced-motion 开启时跳过装饰性自转（无障碍）
+      if (!prefersReducedMotion) tasselGroup.rotation.y += 0.0016
       // 店名标签按相机距离显隐：远景只看楼宇，拉近后浮现店名（避免 90 个标签糊脸）
       labelGroup.visible = st.camera.position.distanceTo(st.controls.target) < 260
       st.renderer.render(st.scene, st.camera)

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { X, Globe, Store, Ticket, Heart, RefreshCw, ExternalLink, Star } from 'lucide-react'
+import SeoJsonLd from './SeoJsonLd'
 import {
   MALL_PERKS,
   getStoreActivities,
@@ -243,6 +244,24 @@ export default function StoreDrawer({ store, onClose }: { store: DrawerStore | n
 
   return (
     <div className="fixed inset-0 z-[70]">
+      {/* 门店详情结构化数据：Store（字段与抽屉可见内容一致） */}
+      <SeoJsonLd
+        id="store"
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'Store',
+          name: store.name,
+          description: store.desc || `${store.name}（BFC 大豫园 ${store.zone === 'S' ? '南区' : '北区'} ${store.floor}）`,
+          ...(store.category ? { category: store.category } : {}),
+          address: {
+            '@type': 'PostalAddress',
+            addressLocality: '上海市黄浦区',
+            streetAddress: '中山东二路600号',
+            addressCountry: 'CN',
+          },
+          parentOrganization: { '@type': 'Organization', name: 'BFC 外滩金融中心 · 大豫园' },
+        }}
+      />
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
       <aside className="absolute right-0 top-0 h-full w-full max-w-md bg-bfc-cream shadow-2xl flex flex-col">
         {/* 头部 */}

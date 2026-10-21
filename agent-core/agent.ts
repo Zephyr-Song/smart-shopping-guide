@@ -649,6 +649,19 @@ export async function readAgentBody(request: Request, env: Env): Promise<BodyRes
 }
 
 // ---------------------------------------------------------------------------
+// 可观测性：服务端结构化日志（方案 P2「可观测性」）
+//   字段对齐验收口径：requestId / route / firstTokenMs / totalMs / errorCode / sessionId。
+//   仅记录元数据，不记录对话原文或手机号等敏感内容。
+// ---------------------------------------------------------------------------
+function logAgentEvent(e: Record<string, unknown>) {
+  try {
+    console.log(JSON.stringify({ ts: new Date().toISOString(), service: 'bfc-agent', ...e }))
+  } catch {
+    /* 日志失败不影响主流程 */
+  }
+}
+
+// ---------------------------------------------------------------------------
 // 主入口：共享内核（Pages Functions 与独立 Worker 都调用它）
 // ---------------------------------------------------------------------------
 export async function handleAgent(request: Request, env: Env, ctx: Ctx): Promise<Response> {
@@ -1122,6 +1135,16 @@ export async function handleAgentStream(request: Request, env: Env, ctx: Ctx): P
         }
 
         // done 携带最终答案，前端以它覆盖流式原文（防止协议残留漏出）
+        logAgentEvent({
+          event: 'agent_done',
+          reason: 'complete',
+          requestId,
+          route,
+          sessionId,
+          cards: cards.length,
+          firstTokenMs,
+          totalMs: Date.now() - t0,
+        })
         send('done', {
           requestId,
           reason: 'complete',
@@ -1137,6 +1160,7 @@ export async function handleAgentStream(request: Request, env: Env, ctx: Ctx): P
         const aborted = genAbort.signal.aborted
         if (aborted && cards.length) {
           // 超时但已检索到卡片 → 用卡片收尾，保留重试入口
+          logAgentEvent({ event: 'agent_done', reason: 'soft_timeout', requestId, route, sessionId, cards: cards.length, firstTokenMs, totalMs: Date.now() - t0 })
           send('done', {
             requestId,
             reason: 'soft_timeout',
@@ -1148,8 +1172,10 @@ export async function handleAgentStream(request: Request, env: Env, ctx: Ctx): P
             totalMs: Date.now() - t0,
           })
         } else if (aborted) {
+          logAgentEvent({ event: 'agent_error', requestId, route, sessionId, errorCode: 'timeout', firstTokenMs, totalMs: Date.now() - t0 })
           send('error', { code: 'timeout', message: '回答生成超时，请重试', retryable: true })
         } else {
+          logAgentEvent({ event: 'agent_error', requestId, route, sessionId, errorCode: 'agent_upstream_failed', detail: String(e?.message || e).slice(0, 200), firstTokenMs, totalMs: Date.now() - t0 })
           send('error', {
             code: 'agent_upstream_failed',
             message: String(e?.message || e).slice(0, 200),
