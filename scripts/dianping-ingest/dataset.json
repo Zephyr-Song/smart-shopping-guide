@@ -66,36 +66,35 @@
     "frontend": "泰珍荟"
   },
   {
-    "brand": "高桌牛排馆",
+    "brand": "高桌牛排馆 Primotable by Jstone(BFC外滩金融中心店)",
     "source": "dianping",
-    "rating": null,
+    "rating": "4.9",
     "avgPrice": 600,
     "dishes": [
       "惠灵顿牛排",
-      "小战斧带骨肉眼",
-      "黑松露松茸拌饭",
-      "香烤斑节虾",
-      "高桌海鲜汤"
+      "战斧牛排",
+      "炙烤和牛西冷",
+      "黑松露蘑菇汤"
     ],
-    "snippet": "星空牛排馆外滩夜景浪漫，惠灵顿牛排与战斧肉眼汁水丰盈，约会聚餐首选。",
-    "url": "https://m.dianping.com/shopshare/k7a4kh4DdobE8Exa",
+    "snippet": "BFC南区4楼高端西餐牛排馆，惠灵顿牛排与战斧牛排招牌，人均约600元。",
+    "url": "https://www.dianping.com/search/keyword/2/0_%E9%AB%98%E6%A1%8C%E7%89%9B%E6%8E%92%E9%A6%86",
     "frontend": "高桌"
   },
   {
-    "brand": "晴空",
+    "brand": "晴空·日本料理(BFC外滩金融中心店)",
     "source": "dianping",
-    "rating": "4.5",
-    "avgPrice": 2183,
+    "rating": "5.0",
+    "avgPrice": 2111,
     "dishes": [
-      "松叶蟹釜饭",
       "蟹肉真丈",
-      "黑鲍冷素面",
       "涮松茸和牛",
+      "柔煮章鱼",
+      "松茸和牛釜饭",
       "喉黑鱼九条葱釜饭",
-      "金枪鱼"
+      "金枪鱼牡丹虾刺身"
     ],
-    "snippet": "BFC南区4F S405的东京米其林三星神田流派怀石料理，板前仅六席，人均约2183元，松叶蟹釜饭与蟹肉真丈为招牌。",
-    "url": "https://m.dianping.com/shop/1242086453",
+    "snippet": "深圳饕客圈知名日料店落户外滩，BFC南区4层怀石料理，真味即是淡，人均约2111元。",
+    "url": "https://m.dianping.com/ugcdetail/442042536",
     "frontend": "晴空"
   },
   {
@@ -149,17 +148,16 @@
     "frontend": "MEET THE BUND"
   },
   {
-    "brand": "炙焰炉子炉馆",
+    "brand": "炙焰炉子炉馆(BFC外滩金融中心店)",
     "source": "dianping",
     "rating": null,
-    "avgPrice": null,
+    "avgPrice": 77,
     "dishes": [
-      "招牌菜",
-      "时令菜",
-      "点心",
-      "汤品"
+      "炉子烤肉",
+      "铁板料理",
+      "明火烤炉"
     ],
-    "snippet": "S-L3（点击在大众点评查看门店详情、团购与用户评价）",
+    "snippet": "明火烤炉创意料理，人均约77元。",
     "url": "https://www.dianping.com/search/keyword/2/0_%E7%82%99%E7%84%B0%E7%82%89%E5%AD%90%E7%82%89%E9%A6%86",
     "frontend": "炙焰炉子炉馆"
   },
@@ -179,47 +177,45 @@
     "frontend": "A&M CROWNED SALON"
   },
   {
-    "brand": "MOMODA",
+    "brand": "Momoda宝宝戏剧(BFC店)",
     "source": "dianping",
     "rating": null,
-    "avgPrice": null,
+    "avgPrice": 430,
     "dishes": [
-      "人气单品",
-      "创意菜",
-      "甜品",
-      "饮品"
+      "宝宝戏剧",
+      "亲子互动剧",
+      "感官启蒙",
+      "演出工作坊"
     ],
-    "snippet": "S-L3（点击在大众点评查看门店详情、团购与用户评价）",
-    "url": "https://www.dianping.com/search/keyword/2/0_MOMODA",
+    "snippet": "BFC南区3层S321，国内原创0-3岁全感开发沉浸式婴幼儿戏剧，单次票价约430元。",
+    "url": "https://www.dianping.com/search/keyword/2/0_Momoda%E5%AE%9D%E5%AE%9D%E6%88%8F%E5%89%A7",
     "frontend": "MOMODA"
   },
   {
-    "brand": "OUTCICS",
+    "brand": "OUTCiRCS(BFC店)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "当季新款",
-      "联名系列",
-      "基础百搭",
-      "配饰"
+      "极简风尚服饰",
+      "黑白灰单品",
+      "潮流配饰"
     ],
-    "snippet": "S-L2（点击在大众点评查看门店详情、团购与用户评价）",
-    "url": "https://www.dianping.com/search/keyword/2/0_OUTCICS",
+    "snippet": "BFC南区2F，玩转日常趣味与态度的时髦买手店，极简风黑白灰高级配色。",
+    "url": "https://www.dianping.com/search/keyword/2/0_OUTCiRCS",
     "frontend": "OUTCICS"
   },
   {
-    "brand": "ON/OFF",
+    "brand": "ON/OFF(BFC店)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "当季新款",
-      "联名系列",
-      "基础百搭",
-      "配饰"
+      "潮流服饰",
+      "设计师品牌",
+      "时尚配饰"
     ],
-    "snippet": "S-L2（点击在大众点评查看门店详情、团购与用户评价）",
+    "snippet": "BFC南区2F潮流集合空间，时髦调性与日常趣味兼具。",
     "url": "https://www.dianping.com/search/keyword/2/0_ON%2FOFF",
     "frontend": "ON/OFF"
   },
@@ -269,33 +265,33 @@
     "frontend": "gudgood"
   },
   {
-    "brand": "Alexander Wang",
+    "brand": "alexanderwang(BFC外滩金融中心店)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "当季新品",
-      "经典款",
-      "限量系列",
-      "配饰"
+      "徽标卫衣",
+      "印花短袖",
+      "牛仔",
+      "水钻配饰"
     ],
-    "snippet": "S-L1（点击在大众点评查看门店详情、团购与用户评价）",
-    "url": "https://www.dianping.com/search/keyword/2/0_Alexander%20Wang",
+    "snippet": "纽约潮牌，BFC南区1F，徽标螺纹拉链连帽衫与印花短袖，折扣季6折起。",
+    "url": "https://www.dianping.com/search/keyword/2/0_alexanderwang",
     "frontend": "Alexander Wang"
   },
   {
-    "brand": "I.T",
+    "brand": "I.T(BFC外滩金融中心店)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "当季新款",
-      "联名系列",
-      "基础百搭",
-      "配饰"
+      "潮牌集合",
+      "Acne Studios",
+      "OPENYY",
+      "设计师配饰"
     ],
-    "snippet": "S-L1（点击在大众点评查看门店详情、团购与用户评价）",
-    "url": "https://www.dianping.com/search/keyword/2/0_I.T",
+    "snippet": "BFC南区1F潮流集合店，Acne Studios等设计师品牌聚合，折扣季多件6折起、满千返百。",
+    "url": "https://www.dianping.com/search/keyword/2/0/I.T",
     "frontend": "I.T"
   },
   {
@@ -329,78 +325,79 @@
     "frontend": "Paul Smith"
   },
   {
-    "brand": "华为",
+    "brand": "华为授权体验店(BFC外滩金融中心)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "旗舰新品",
-      "智能设备",
-      "配件",
-      "体验"
+      "手机",
+      "平板",
+      "智能穿戴",
+      "智慧屏",
+      "全屋智能"
     ],
-    "snippet": "S-L1（点击在大众点评查看门店详情、团购与用户评价）",
-    "url": "https://www.dianping.com/search/keyword/2/0_%E5%8D%8E%E4%B8%BA",
+    "snippet": "BFC南区1层S119B，营业10:00-22:00，Pura系列新品首发与鸿蒙全场景体验。",
+    "url": "https://www.dianping.com/search/keyword/2/0_%E5%8D%8E%E4%B8%BA%E6%8E%88%E6%9D%83%E4%BD%93%E9%AA%8C%E5%BA%97",
     "frontend": "华为"
   },
   {
-    "brand": "BALLY",
+    "brand": "BALLY(BFC外滩店)",
     "source": "dianping",
-    "rating": null,
+    "rating": "4.5",
     "avgPrice": null,
     "dishes": [
-      "当季新品",
-      "经典款",
-      "限量系列",
-      "配饰"
+      "皮包",
+      "皮鞋",
+      "皮带",
+      "双肩包"
     ],
-    "snippet": "S-L1（点击在大众点评查看门店详情、团购与用户评价）",
-    "url": "https://www.dianping.com/search/keyword/2/0_BALLY",
+    "snippet": "瑞士皮具品牌BFC南区1F，大众点评4.5分，外滩商圈奢侈品好评榜第10名，折扣季低至5折。",
+    "url": "https://m.dianping.com/shop/751266139",
     "frontend": "BALLY"
   },
   {
-    "brand": "Jimmy Choo",
+    "brand": "JIMMY CHOO(BFC外滩金融中心店)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "当季新品",
-      "经典款",
-      "限量系列",
-      "配饰"
+      "高跟鞋",
+      "平底鞋",
+      "手拿包",
+      "时尚配饰"
     ],
-    "snippet": "S-L1（点击在大众点评查看门店详情、团购与用户评价）",
+    "snippet": "英国奢侈鞋履品牌，BFC南区1F，经典闪粉高跟鞋与当季新款，折扣季低至5折。",
     "url": "https://www.dianping.com/search/keyword/2/0_Jimmy%20Choo",
     "frontend": "Jimmy Choo"
   },
   {
-    "brand": "Versace",
+    "brand": "VERSACE范思哲(BFC外滩金融中心店)",
     "source": "dianping",
-    "rating": null,
+    "rating": "4.0",
     "avgPrice": null,
     "dishes": [
-      "当季新品",
-      "经典款",
-      "限量系列",
-      "配饰"
+      "女装成衣",
+      "男装成衣",
+      "皮具配饰",
+      "墨镜"
     ],
-    "snippet": "S-L1（点击在大众点评查看门店详情、团购与用户评价）",
+    "snippet": "意大利奢侈品牌直营店，BFC南区一层S101（中山东二路588号），营业10:00-22:00，携程点评4.0分。",
     "url": "https://www.dianping.com/search/keyword/2/0_Versace",
     "frontend": "Versace"
   },
   {
-    "brand": "Lanvin",
+    "brand": "LANVIN 浪凡(BFC外滩金融中心店)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "当季新品",
-      "经典款",
-      "限量系列",
-      "配饰"
+      "猫包手袋",
+      "手拿包",
+      "羊毛围巾",
+      "腰带耳饰"
     ],
-    "snippet": "S-L1（点击在大众点评查看门店详情、团购与用户评价）",
-    "url": "https://www.dianping.com/search/keyword/2/0_Lanvin",
+    "snippet": "法国高定时装品牌亚洲旗舰店，BFC南区1F，经典猫包与配饰，折扣季低至5折起。",
+    "url": "https://www.dianping.com/search/keyword/2/0_LANVIN",
     "frontend": "Lanvin"
   },
   {
@@ -494,18 +491,18 @@
     "frontend": "DJULA"
   },
   {
-    "brand": "Maison Kitsune",
+    "brand": "Maison Kitsuné(BFC外滩金融中心店)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "当季新品",
-      "经典款",
-      "限量系列",
-      "配饰"
+      "狐狸Logo针织",
+      "学院风开衫",
+      "托特包",
+      "保暖马甲"
     ],
-    "snippet": "S-L1（点击在大众点评查看门店详情、团购与用户评价）",
-    "url": "https://www.dianping.com/search/keyword/2/0_Maison%20Kitsune",
+    "snippet": "法日融合品牌，BFC南区1F，狐狸学院风毛衣与泡芙外套，折扣季低至6折。",
+    "url": "https://www.dianping.com/search/keyword/2/0_Maison%20Kitsun%C3%A9",
     "frontend": "Maison Kitsune"
   },
   {
@@ -524,18 +521,18 @@
     "frontend": "Starbucks"
   },
   {
-    "brand": "b3 Coffee",
+    "brand": "b³咖啡 B3COFFEE(BFC店)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "招牌饮品",
-      "季节限定",
-      "咖啡/茶",
-      "小食"
+      "一豆三吃",
+      "瑰夏拿铁",
+      "生椰拿铁",
+      "瑰夏冷萃"
     ],
-    "snippet": "S-L1（点击在大众点评查看门店详情、团购与用户评价）",
-    "url": "https://www.dianping.com/search/keyword/2/0_b3%20Coffee",
+    "snippet": "BFC南区1F瑰夏专门店，哥伦比亚蕙兰SOE，咖啡+gelato\"一豆三吃\"。",
+    "url": "https://www.dianping.com/search/keyword/2/0_b3%E5%92%96%E5%95%A1",
     "frontend": "b3 Coffee"
   },
   {
@@ -569,48 +566,49 @@
     "frontend": "Tuna Maki"
   },
   {
-    "brand": "麦当劳",
+    "brand": "麦当劳(外滩BFC店)",
     "source": "dianping",
-    "rating": null,
-    "avgPrice": null,
+    "rating": "4.4",
+    "avgPrice": 34,
     "dishes": [
-      "招牌主食",
-      "小食",
-      "套餐",
-      "饮品"
+      "双层吉士汉堡",
+      "麦辣鸡腿堡",
+      "那么大鸡排",
+      "甜筒新地"
     ],
-    "snippet": "S-B1（点击在大众点评查看门店详情、团购与用户评价）",
-    "url": "https://www.dianping.com/search/keyword/2/0_%E9%BA%A6%E5%BD%93%E5%8A%B3",
+    "snippet": "BFC南区B1外滩BFC餐厅，综合评分4.4，人均约34元，工作日\"穷鬼套餐\"人气高。",
+    "url": "https://m.dianping.com/ugcdetail/414073161",
     "frontend": "麦当劳"
   },
   {
-    "brand": "SUBWAY",
+    "brand": "赛百味SUBWAY(BFC外滩金融中心店)",
     "source": "dianping",
     "rating": null,
-    "avgPrice": null,
+    "avgPrice": 31,
     "dishes": [
-      "招牌主食",
-      "小食",
-      "套餐",
-      "饮品"
+      "金枪鱼三明治",
+      "意大利香肠三明治",
+      "烤牛肉卷饼",
+      "现烤曲奇"
     ],
-    "snippet": "S-B1（点击在大众点评查看门店详情、团购与用户评价）",
-    "url": "https://www.dianping.com/search/keyword/2/0_SUBWAY",
+    "snippet": "BFC西式快餐，三明治现做现烤DIY搭配，外滩店人均约31元。",
+    "url": "https://www.dianping.com/search/keyword/2/0_%E8%B5%9B%E7%99%BE%E5%91%B3",
     "frontend": "SUBWAY"
   },
   {
-    "brand": "么蛮",
+    "brand": "么蛮 POKE POKE(BFC外滩金融中心店)",
     "source": "dianping",
-    "rating": null,
-    "avgPrice": null,
+    "rating": "4.3",
+    "avgPrice": 58,
     "dishes": [
-      "招牌主食",
-      "小食",
-      "套餐",
-      "饮品"
+      "招牌波奇饭",
+      "招牌海鲜面",
+      "夏威夷牛肉饭",
+      "鱼籽波奇",
+      "三文鱼头"
     ],
-    "snippet": "S-B1（点击在大众点评查看门店详情、团购与用户评价）",
-    "url": "https://www.dianping.com/search/keyword/2/0_%E4%B9%88%E8%9B%AE",
+    "snippet": "BFC外滩金融中心店(中山东二路558号)美式波奇饭，点评口味8.6/环境8.6/服务8.8，人均约58元。",
+    "url": "https://www.dianping.com/review/483816660",
     "frontend": "么蛮"
   },
   {
@@ -689,32 +687,31 @@
     "frontend": "BRANEW"
   },
   {
-    "brand": "丝域养发",
+    "brand": "丝域养发(BFC外滩金融中心店)",
     "source": "dianping",
     "rating": null,
-    "avgPrice": null,
+    "avgPrice": 300,
     "dishes": [
-      "护理项目",
-      "发型设计",
-      "美甲美睫",
-      "套餐"
+      "头部护理",
+      "头皮检测",
+      "珍珠养发",
+      "双胶原护理"
     ],
-    "snippet": "S-B1（点击在大众点评查看门店详情、团购与用户评价）",
+    "snippet": "BFC外滩金融中心F3专业养发馆，先做头皮检测再选项目，购物中心正规门店单次约90-200元。",
     "url": "https://www.dianping.com/search/keyword/2/0_%E4%B8%9D%E5%9F%9F%E5%85%BB%E5%8F%91",
     "frontend": "丝域养发"
   },
   {
-    "brand": "美妆灵感空间",
+    "brand": "aaddd美妆灵感空间(BFC店)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "护理项目",
-      "发型设计",
-      "美甲美睫",
-      "套餐"
+      "美妆护肤",
+      "香氛蜡烛",
+      "香薰礼盒"
     ],
-    "snippet": "S-B1（点击在大众点评查看门店详情、团购与用户评价）",
+    "snippet": "BFC南区B1美妆灵感空间，aaddd香氛与彩妆，逛街顺路补妆灵感。",
     "url": "https://www.dianping.com/search/keyword/2/0_%E7%BE%8E%E5%A6%86%E7%81%B5%E6%84%9F%E7%A9%BA%E9%97%B4",
     "frontend": "美妆灵感空间"
   },
@@ -887,49 +884,49 @@
     "frontend": "PonyStar"
   },
   {
-    "brand": "GALAXY AUTO STUDIO",
+    "brand": "GALAXY AUTO STUDIO(BFC店)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "车型体验",
-      "试驾",
-      "专属顾问",
-      "周边"
+      "车型展示",
+      "试驾体验",
+      "汽车周边",
+      "创意生活用品"
     ],
-    "snippet": "S-B3（点击在大众点评查看门店详情、团购与用户评价）",
+    "snippet": "汽车品牌创意体验空间，车型展示与试驾，兼售创意生活用品。",
     "url": "https://www.dianping.com/search/keyword/2/0_GALAXY%20AUTO%20STUDIO",
     "frontend": "GALAXY AUTO STUDIO"
   },
   {
-    "brand": "BFC FITNESS健身会馆",
+    "brand": "BFC FITNESS(BFC外滩金融中心店)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
+      "器械健身",
       "团课",
-      "私教",
-      "自由训练",
-      "体测"
+      "拳击燃脂课",
+      "25米泳池",
+      "桑拿蒸汽"
     ],
-    "snippet": "S1-5F（点击在大众点评查看门店详情、团购与用户评价）",
-    "url": "https://www.dianping.com/search/keyword/2/0_BFC%20FITNESS%E5%81%A5%E8%BA%AB%E4%BC%9A%E9%A6%86",
+    "snippet": "BFC S1栋5楼健身会馆，25米泳池+180度观景按摩池，营业7:00-22:00。",
+    "url": "https://m.dianping.com/ugcdetail/285676632",
     "frontend": "BFC FITNESS健身会馆"
   },
   {
-    "brand": "上海滩",
+    "brand": "上海滩餐厅(BFC外滩金融中心店)",
     "source": "dianping",
-    "rating": null,
+    "rating": "4.9",
     "avgPrice": 580,
     "dishes": [
-      "精品北京烤鸭",
-      "燕窝绿豆糕",
-      "十年陈花雕醉虾",
-      "江南红烧肉",
-      "黑松茸布袋"
+      "精品烤鸭",
+      "上海熏鱼",
+      "文火焖雪花牛肉",
+      "糟骨头黑豚肉碎蒸膏蟹"
     ],
-    "snippet": "创意本帮菜，环境优雅夜景浪漫，摆盘出品俱佳，大众点评必吃榜上榜。",
-    "url": "https://m.dianping.com/shop/93196174",
+    "snippet": "上海菜旗舰餐厅，精品烤鸭与文火焖雪花牛肉为招牌，人均约580元。",
+    "url": "https://www.dianping.com/search/keyword/2/0_%E4%B8%8A%E6%B5%B7%E6%BB%A9%E9%A4%90%E5%8E%85",
     "frontend": "上海滩餐厅"
   },
   {
@@ -996,33 +993,31 @@
     "frontend": "莱珀妮 La Prairie"
   },
   {
-    "brand": "陆家居",
+    "brand": "LULACASA陆家居(BFC全球展示中心)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "家居好物",
-      "香氛",
-      "器皿",
-      "配饰"
+      "意式定制家具",
+      "豪宅整装",
+      "欧洲家居名品"
     ],
-    "snippet": "N-L3-1F（点击在大众点评查看门店详情、团购与用户评价）",
+    "snippet": "维迈科建旗下意式高定家居品牌，BFC全球展示中心，一站式家居消费体验。",
     "url": "https://www.dianping.com/search/keyword/2/0_%E9%99%86%E5%AE%B6%E5%B1%85",
     "frontend": "陆家居"
   },
   {
-    "brand": "梅赛德斯-迈巴赫",
+    "brand": "梅赛德斯-迈巴赫·礼境城市品牌中心(BFC)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "车型体验",
-      "试驾",
-      "专属顾问",
-      "周边"
+      "车型品鉴",
+      "MANUFAKTUR匠心高定",
+      "礼境顾问服务"
     ],
-    "snippet": "N-L3-1F（点击在大众点评查看门店详情、团购与用户评价）",
-    "url": "https://www.dianping.com/search/keyword/2/0_%E6%A2%85%E8%B5%9B%E5%BE%B7%E6%96%AF-%E8%BF%88%E5%B7%B4%E8%B5%AB",
+    "snippet": "全球首座迈巴赫礼境城市品牌中心，BFC外滩金融中心558号，541平私享沙龙与数字化体验。",
+    "url": "https://www.dianping.com/search/keyword/2/0_%E8%BF%88%E5%B7%B4%E8%B5%AB",
     "frontend": "梅赛德斯-迈巴赫"
   },
   {
@@ -1198,18 +1193,19 @@
     "frontend": "米崎"
   },
   {
-    "brand": "沄南云海肴",
+    "brand": "沄南云海肴·云南菜(外滩店)",
     "source": "dianping",
     "rating": null,
-    "avgPrice": null,
+    "avgPrice": 80,
     "dishes": [
-      "招牌菜",
-      "时令菜",
-      "点心",
-      "汤品"
+      "经典汽锅鸡",
+      "菠萝饭",
+      "老奶洋芋",
+      "小锅米线",
+      "黑三剁"
     ],
-    "snippet": "N-B1（点击在大众点评查看门店详情、团购与用户评价）",
-    "url": "https://www.dianping.com/search/keyword/2/0_%E6%B2%84%E5%8D%97%E4%BA%91%E6%B5%B7%E8%82%B4",
+    "snippet": "云南菜名店外滩店，紫陶汽锅鸡与菠萝饭招牌，人均约80元。",
+    "url": "https://www.dianping.com/search/keyword/2/0_%E4%BA%91%E6%B5%B7%E7%91%B3",
     "frontend": "沄南云海肴"
   },
   {
@@ -1229,18 +1225,18 @@
     "frontend": "MANNER"
   },
   {
-    "brand": "林里柠檬茶",
+    "brand": "LINLEE林里·手打柠檬茶(BFC店)",
     "source": "dianping",
-    "rating": null,
-    "avgPrice": null,
+    "rating": "4.8",
+    "avgPrice": 19,
     "dishes": [
-      "招牌饮品",
-      "季节限定",
-      "咖啡/茶",
-      "小食"
+      "招牌手打柠檬茶",
+      "单丛鸭屎香柠檬茶",
+      "泰绿柠檬茶",
+      "五窲茉莉柠檬茶"
     ],
-    "snippet": "N-B1（点击在大众点评查看门店详情、团购与用户评价）",
-    "url": "https://www.dianping.com/search/keyword/2/0_%E6%9E%97%E9%87%8C%E6%9F%A0%E6%AA%AC%E8%8C%B6",
+    "snippet": "鲜切现锤广东香水柠檬茶，品牌评分4.8，人均约19元。",
+    "url": "https://www.dianping.com/search/keyword/2/0_LINLEE%E6%9E%97%E9%87%8C",
     "frontend": "林里柠檬茶"
   },
   {
@@ -1275,51 +1271,47 @@
     "frontend": "小吃堂"
   },
   {
-    "brand": "MARSMART 火星宠物超市",
+    "brand": "火星宠物超市 MARSMART(BFC概念店)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "宠物服饰",
+      "宠物用品集合",
       "宠物玩具",
-      "宠物用品",
-      "联名款宠物用品",
-      "猫狗周边"
+      "宠物鲜食",
+      "日常用品"
     ],
-    "snippet": "BFC北区B1上海首家特别概念店，火星主题高颜值宠物用品一站式购齐，萌化铲屎官。",
+    "snippet": "BFC北区B1大型宠物集合店，特别概念店引入7个头部宠物用品品牌，玩具约40-90元。",
     "url": "https://www.dianping.com/search/keyword/2/0_%E7%81%AB%E6%98%9F%E5%AE%A0%E7%89%A9%E8%B6%85%E5%B8%82",
     "frontend": "火星宠物超市"
   },
   {
-    "brand": "AIRPARK 人类友好公园",
+    "brand": "AIRPARK 人类友好公园(BFC店)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "室内遛狗空间",
-      "宠物美容洗护",
-      "宠物烘焙",
-      "饮品休闲区",
-      "宠物寄养"
+      "宠物活动草坪",
+      "洗护美容",
+      "宠物鲜食",
+      "狗狗礼服"
     ],
-    "snippet": "BFC北区B1全国首家室内人宠共生公园，560㎡包围式遛狗空间，含洗护、烘焙、饮品一站式服务。",
-    "url": "https://www.dianping.com/search/keyword/2/0_AirPark",
+    "snippet": "全国首家室内人宠共生公园，BFC北区B1约500平，狗狗公厕+咖啡区+洗护美容一站搞定。",
+    "url": "https://www.dianping.com/search/keyword/2/0_AIRPARK%E4%BA%BA%E7%B1%BB%E5%8F%8B%E5%A5%BD%E5%85%AC%E5%9B%AD",
     "frontend": "AirPark"
   },
   {
-    "brand": "阿飞和巴弟 PET MART",
+    "brand": "阿飞和巴弟PET MART(BFC店)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "迪士尼联名宠物食品",
+      "迪士尼主题宠物食品",
       "宠物用品",
-      "文创周边",
-      "猫咪店长互动",
-      "鲜食补给"
+      "宠物零食"
     ],
-    "snippet": "BFC全国首店，沉浸式迪士尼主题宠物产品零售店，集食品、用品、文创与猫咪店长于一家。",
-    "url": "https://www.dianping.com/search/keyword/2/0_PET%20MART",
+    "snippet": "BFC北区B1人宠友好专区，全国首家沉浸式迪士尼主题宠物产品零售店。",
+    "url": "https://www.dianping.com/search/keyword/2/0_%E9%98%BF%E9%A3%9E%E5%92%8C%E5%B7%B4%E5%BC%9F",
     "frontend": "PET MART"
   },
   {
@@ -1338,18 +1330,18 @@
     "frontend": "大丰和风食堂"
   },
   {
-    "brand": "茶姬",
+    "brand": "霸王茶姬 CHAGEE(BFC外滩金融中心店)",
     "source": "dianping",
-    "rating": null,
-    "avgPrice": null,
+    "rating": "4.8",
+    "avgPrice": 19,
     "dishes": [
-      "招牌饮品",
-      "季节限定",
-      "咖啡/茶",
-      "小食"
+      "伯牙绝弦",
+      "桂馥兰香",
+      "武夷大红袍",
+      "花田乌龙"
     ],
-    "snippet": "N-B2（点击在大众点评查看门店详情、团购与用户评价）",
-    "url": "https://www.dianping.com/search/keyword/2/0_%E8%8C%B6%E5%A7%AC",
+    "snippet": "国风茶饮，CHAGEE茶姬现萃BFC北区B2店，伯牙绝弦招牌，人均约18-20元。",
+    "url": "https://www.dianping.com/search/keyword/2/0_%E9%9C%B8%E7%8E%8B%E8%8C%B6%E5%A7%AC",
     "frontend": "茶姬"
   },
   {
@@ -1413,17 +1405,17 @@
     "frontend": "一点点"
   },
   {
-    "brand": "九木杂物社",
+    "brand": "九木杂物社(BFC店)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "文创周边",
-      "杂货",
-      "文具",
-      "礼品"
+      "文创文具",
+      "罐头猪LuLu联名",
+      "jELLYCAT萌物",
+      "手账贴纸"
     ],
-    "snippet": "N-B2（点击在大众点评查看门店详情、团购与用户评价）",
+    "snippet": "晨光旗下文创杂货集合店，BFC北区B2，LuLu联名杜邦纸包与jELLYCAT人气高。",
     "url": "https://www.dianping.com/search/keyword/2/0_%E4%B9%9D%E6%9C%A8%E6%9D%82%E7%89%A9%E7%A4%BE",
     "frontend": "九木杂物社"
   },
@@ -1458,18 +1450,17 @@
     "frontend": "READ&SOCIAL"
   },
   {
-    "brand": "CLAWGALLERY",
+    "brand": "卡洛CLAWGALLERY(BFC店)",
     "source": "dianping",
     "rating": null,
     "avgPrice": null,
     "dishes": [
-      "文创周边",
-      "杂货",
-      "文具",
-      "礼品"
+      "宠物写真",
+      "人宠摄影",
+      "影像定制"
     ],
-    "snippet": "N-B2（点击在大众点评查看门店详情、团购与用户评价）",
-    "url": "https://www.dianping.com/search/keyword/2/0_CLAWGALLERY",
+    "snippet": "BFC北区B1宠物摄影空间，用镜头捕捉毛孩子的亲情故事，预约摄影套系享8折。",
+    "url": "https://www.dianping.com/search/keyword/2/0_%E5%8D%A1%E6%B4%9BCLAWGALLERY",
     "frontend": "CLAWGALLERY"
   },
   {
